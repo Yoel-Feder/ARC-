@@ -1,0 +1,2768 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#FFFFFF"/>
+<meta name="description" content="A hands-on JavaScript academy. Learn by understanding, reading, and debugging code."/>
+<title>ARC — Learn to Think in Code</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap"/>
+<!-- Built file: styles.css, curriculum.js and app.js are inlined below so the page loads as one document. -->
+<style>
+/* ARC — "Light and clean" theme (option A)
+   Colors, fonts and sizes are defined once here as variables. Change them here to restyle the whole site. */
+:root {
+  --bg: #FFFFFF;
+  --surface: #FAFAF8;        /* soft panels */
+  --surface-2: #F3F3F0;      /* chips, inline code */
+  --line: #E7E7E3;           /* borders */
+  --line-strong: #D9D9D4;
+  --text: #1A1A1A;
+  --text-2: #33332F;         /* body text */
+  --muted: #5F5F5A;          /* secondary text (passes contrast on white) */
+  --accent: #2563EB;         /* blue */
+  --accent-text: #1D4ED8;
+  --accent-soft: #EFF4FF;
+  --good-bg: #F0FDF4; --good-line: #BBE5C8; --good-text: #14532D;
+  --bad-bg: #FEF2F2;  --bad-line: #F5C2C2;  --bad-text: #7F1D1D;
+  --warn-bg: #FFF8E6; --warn-line: #F3DFA8; --warn-text: #4A3B0F;
+  --console: #1A1A1A; --console-text: #F5F5F2; --console-muted: #A3A39C; --console-error: #FCA5A5;
+  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --sans: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+  --radius: 12px;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 16px; -webkit-font-smoothing: antialiased; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+::selection { background: #2563EB33; }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); padding: 1px 6px; border-radius: 4px; }
+h1, h2, h3 { margin: 0; }
+
+/* ---------- Small helpers ---------- */
+.row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.row.between { justify-content: space-between; }
+.row.end { justify-content: flex-end; }
+.flex1 { flex: 1; min-width: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-text); }
+.eyebrow.quiet { color: var(--muted); }
+
+/* ---------- Buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--bg); color: var(--text); font-size: 14px; font-weight: 500; transition: background .15s, border-color .15s; white-space: nowrap; }
+.btn:hover:not(:disabled) { background: var(--surface); border-color: #BDBDB6; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #FFFFFF; font-weight: 600; }
+.btn.primary:hover:not(:disabled) { background: var(--accent-text); border-color: var(--accent-text); }
+.btn.ghost { border-color: transparent; background: transparent; color: var(--muted); }
+.btn.ghost:hover:not(:disabled) { background: var(--surface-2); color: var(--text); }
+.btn.sm { padding: 7px 12px; font-size: 13px; }
+.btn.wide { width: 100%; padding: 13px 18px; font-size: 15px; }
+.btn.icon { width: 36px; height: 36px; padding: 0; }
+.link-btn { background: none; border: 0; padding: 0; color: var(--accent-text); font-weight: 600; font-size: 15px; }
+.link-btn:hover { text-decoration: underline; }
+
+/* ---------- Header ---------- */
+.topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 32px; background: #FFFFFFF2; backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.topbar-left, .topbar-right { display: flex; align-items: center; gap: 20px; }
+.topbar-right { gap: 14px; font-size: 14px; color: var(--muted); }
+.brand { background: none; border: 0; padding: 4px 0; font-family: var(--serif); font-weight: 700; font-size: 24px; letter-spacing: .02em; color: var(--text); }
+.topnav { display: flex; gap: 2px; }
+.nav-link { background: none; border: 0; padding: 8px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--muted); }
+.nav-link:hover { background: var(--surface-2); color: var(--text); }
+.nav-link.active { color: var(--text); background: var(--surface-2); }
+.progress-track { width: 140px; height: 6px; background: #EEEEEA; border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width .4s; }
+.xp { color: var(--text); font-weight: 600; white-space: nowrap; }
+.menu-btn { display: none; background: none; border: 1px solid var(--line); border-radius: 8px; width: 38px; height: 38px; font-size: 18px; }
+
+/* ---------- Page layout ---------- */
+.main { max-width: 1240px; margin: 0 auto; padding: 44px 32px 72px; }
+.page { display: flex; flex-direction: column; gap: 14px; }
+.page-title { font-family: var(--serif); font-size: 42px; line-height: 1.1; font-weight: 700; }
+.lead { margin: 0 0 14px; font-size: 17px; line-height: 1.65; color: var(--muted); max-width: 680px; }
+.section-title { font-size: 20px; font-weight: 600; margin: 24px 0 4px; }
+
+/* ---------- Lesson ---------- */
+.lesson-grid { display: flex; flex-wrap: wrap; gap: 48px; align-items: flex-start; }
+.lesson-main { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 36px; }
+.lesson-side { flex: 1 1 400px; min-width: 0; position: sticky; top: 84px; scroll-margin-top: 84px; }
+.lesson-head { display: flex; flex-direction: column; gap: 12px; }
+.lesson-title { font-family: var(--serif); font-size: 44px; line-height: 1.1; font-weight: 700; }
+.steps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+.step { padding: 6px 12px; border-radius: 999px; border: 0; background: var(--surface-2); color: #3F3F3B; font-size: 13px; font-weight: 500; }
+.step:hover { background: #E8E8E4; }
+.step.first { background: var(--text); color: #FFFFFF; font-weight: 600; }
+.lesson-section { display: flex; flex-direction: column; gap: 14px; scroll-margin-top: 84px; }
+.lesson-section h2 { font-size: 20px; font-weight: 600; }
+.prose p { margin: 0 0 14px; font-size: 17px; line-height: 1.7; color: var(--text-2); }
+.prose p:last-child { margin-bottom: 0; }
+.prose strong { color: var(--text); }
+
+.see { display: flex; align-items: stretch; gap: 16px; flex-wrap: wrap; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.see-box { flex: 1 1 240px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.see-label { font-size: 12px; color: var(--muted); }
+.see-arrow { align-self: center; font-size: 22px; color: #8A8A84; }
+.see .console { margin: 0; flex: 1; }
+
+.code-block { margin: 0; padding: 16px 18px; background: var(--bg); border: 1px solid var(--line-strong); border-radius: 10px; font-family: var(--mono); font-size: 14px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--text); }
+.console { padding: 14px 16px; border-radius: 10px; background: var(--console); color: var(--console-text); font-family: var(--mono); font-size: 13.5px; line-height: 1.7; overflow-wrap: anywhere; max-height: 240px; overflow-y: auto; }
+.console-line.muted { color: var(--console-muted); }
+.console-line.error { color: var(--console-error); }
+
+.editor { border: 1px solid var(--line-strong); border-radius: 10px; overflow: hidden; background: var(--bg); }
+.editor-head { display: flex; justify-content: space-between; gap: 10px; padding: 8px 14px; background: var(--surface); border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+.editor-text { display: block; width: 100%; border: 0; outline: none; resize: vertical; padding: 16px 18px; background: var(--bg); color: var(--text); font-family: var(--mono); font-size: 14.5px; line-height: 1.75; tab-size: 2; white-space: pre-wrap; overflow-wrap: anywhere; overflow: auto; caret-color: var(--accent); }
+.editor:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px #2563EB1F; }
+
+.callout { padding: 16px 20px; background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 10px; color: var(--warn-text); }
+.callout p { margin: 0; font-size: 15px; line-height: 1.6; }
+.callout.neutral { background: var(--surface); border-color: var(--line); color: var(--text-2); }
+.callout code { background: #00000010; }
+.deeper { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; border-top: 1px solid var(--line); padding-top: 22px; }
+
+/* Your turn card */
+.turn-card { display: flex; flex-direction: column; gap: 16px; padding: 26px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); box-shadow: 0 1px 2px #0000000A, 0 8px 24px #0000000A; }
+.task p { margin: 0 0 8px; font-size: 16px; line-height: 1.6; color: var(--text); }
+.task p:last-child { margin-bottom: 0; }
+.badge-done { font-size: 12px; font-weight: 600; color: var(--good-text); background: var(--good-bg); border: 1px solid var(--good-line); padding: 4px 10px; border-radius: 999px; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+.option { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 14px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--bg); font-size: 15px; transition: border-color .15s, background .15s; }
+.option:hover { border-color: #9DB7F5; background: var(--surface); }
+.option.selected { border-color: var(--accent); background: var(--accent-soft); }
+.option-key { flex: 0 0 26px; height: 26px; display: grid; place-items: center; border-radius: 6px; background: var(--surface-2); font-size: 12px; font-weight: 600; color: var(--muted); }
+.option.selected .option-key { background: var(--accent); color: #FFFFFF; }
+.feedback { padding: 14px 16px; border-radius: 10px; border: 1px solid; font-size: 15px; line-height: 1.55; animation: rise .2s ease-out; }
+.feedback p { margin: 6px 0 0; }
+.feedback.good { background: var(--good-bg); border-color: var(--good-line); color: var(--good-text); }
+.feedback.bad { background: var(--bad-bg); border-color: var(--bad-line); color: var(--bad-text); }
+.feedback code { background: #00000010; }
+.hints { display: flex; flex-direction: column; gap: 8px; }
+.hint { padding: 12px 14px; border-radius: 10px; background: var(--accent-soft); color: #1E2A4A; font-size: 14.5px; line-height: 1.55; }
+.hint b { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-text); margin-bottom: 2px; }
+.hint p { margin: 0; }
+.turn-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding-top: 4px; }
+.turn-actions.done { display: block; }
+
+.lesson-footer { display: flex; justify-content: space-between; gap: 12px; margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--line); }
+.mastery-card { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-top: 20px; padding: 22px 24px; border: 1px solid #BFD3FE; background: var(--accent-soft); border-radius: var(--radius); }
+.mastery-card h3 { font-size: 18px; margin-bottom: 4px; }
+.mastery-card p { margin: 0; color: var(--text-2); font-size: 15px; line-height: 1.55; }
+
+/* ---------- Dashboard, lists ---------- */
+.continue-card { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 28px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.continue-card h2 { font-family: var(--serif); font-size: 28px; margin: 6px 0 10px; }
+.continue-card .prose p { font-size: 15.5px; color: var(--muted); }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 10px; }
+.stat { padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius); display: flex; flex-direction: column; gap: 6px; }
+.stat span { font-size: 13px; color: var(--muted); }
+.stat b { font-size: 28px; font-weight: 600; letter-spacing: -.02em; }
+.stat small { font-size: 15px; color: var(--muted); font-weight: 500; }
+
+.module-list, .course-list { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.module-row, .course-head { display: flex; align-items: center; gap: 16px; width: 100%; text-align: left; padding: 16px 20px; background: var(--bg); border: 0; border-bottom: 1px solid var(--line); }
+.module-row:last-child, .course-module:last-child .course-head { border-bottom: 0; }
+.module-row:hover, .course-head:hover { background: var(--surface); }
+.module-num { font-family: var(--mono); font-size: 13px; color: var(--muted); flex: 0 0 auto; }
+.module-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.module-info b { font-size: 16px; font-weight: 600; }
+.module-info span { font-size: 14px; color: var(--muted); }
+.module-meta { font-size: 13px; color: var(--muted); white-space: nowrap; }
+.chev { width: 20px; text-align: center; color: var(--muted); font-size: 18px; }
+.course-module { border-bottom: 1px solid var(--line); }
+.course-module:last-child { border-bottom: 0; }
+.course-module .course-head { border-bottom: 0; }
+.course-body { padding: 4px 20px 18px 54px; background: var(--bg); }
+.lesson-row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 10px 8px; background: none; border: 0; border-radius: 8px; font-size: 15px; }
+.lesson-row:hover { background: var(--surface); }
+.lesson-dot { flex: 0 0 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--surface-2); font-size: 12px; color: var(--muted); }
+.lesson-dot.done { background: var(--good-bg); color: var(--good-text); border: 1px solid var(--good-line); }
+
+.skill-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.skill { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; text-align: left; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); }
+.skill:hover { border-color: #9DB7F5; }
+.skill b { font-size: 16px; font-weight: 600; }
+.skill-req { font-size: 13px; color: var(--accent-text); }
+.skill .progress-track { width: 100%; margin-top: 4px; }
+
+/* ---------- Playground ---------- */
+.play-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.play-main, .play-side { display: flex; flex-direction: column; gap: 12px; }
+.play-side .section-title { margin: 0; }
+.file-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.file-tab { padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.file-tab.active { border-color: var(--text); color: var(--text); }
+.file-tab.add { border-style: dashed; font-family: var(--sans); }
+
+/* ---------- Reference, progress ---------- */
+.search { width: 100%; max-width: 640px; padding: 12px 14px; border: 1px solid var(--line-strong); border-radius: 10px; font-size: 15px; outline: none; }
+.search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px #2563EB1F; }
+.ref-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 8px; }
+.ref-item { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; text-align: left; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.ref-item:hover { border-color: #9DB7F5; }
+.ref-item span { font-size: 14px; color: var(--muted); }
+.empty { padding: 30px; color: var(--muted); }
+.achievements { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.achievement { display: flex; flex-direction: column; gap: 6px; padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); }
+.achievement.locked { opacity: .45; }
+.ach-icon { font-size: 22px; color: var(--accent-text); }
+.achievement b { font-size: 15px; }
+.achievement span { font-size: 13px; color: var(--muted); }
+.danger { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-top: 24px; padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--radius); }
+.danger p { margin: 4px 0 0; }
+
+/* ---------- Modal and toast ---------- */
+.modal-cover { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 18px; background: #1A1A1A66; animation: fade .15s; }
+.modal { width: 100%; max-width: 600px; max-height: 90vh; overflow: auto; display: flex; flex-direction: column; gap: 14px; padding: 26px; background: var(--bg); border-radius: 16px; box-shadow: 0 24px 60px #00000033; }
+.modal h2 { font-family: var(--serif); font-size: 26px; }
+.modal p { margin: 0; line-height: 1.6; color: var(--text-2); }
+.toast-wrap { position: fixed; right: 24px; bottom: 24px; z-index: 90; display: grid; gap: 8px; }
+.toast { padding: 12px 16px; background: var(--text); color: #FFFFFF; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 10px 30px #00000026; animation: rise .2s; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- Smaller screens ---------- */
+@media (max-width: 1000px) {
+  .lesson-side { position: static; }
+  .skill-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .achievements { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .play-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 820px) {
+  .topbar { padding: 10px 16px; }
+  .menu-btn { display: inline-grid; place-items: center; }
+  .topnav { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; padding: 8px 12px 14px; background: var(--bg); border-bottom: 1px solid var(--line); box-shadow: 0 12px 24px #0000000F; }
+  .topnav.open { display: flex; }
+  .nav-link { text-align: left; padding: 12px; font-size: 16px; }
+  .hide-sm { display: none; }
+  .main { padding: 28px 18px 56px; }
+  .lesson-title, .page-title { font-size: 34px; }
+  .lesson-grid { gap: 36px; }
+  .see { padding: 16px; }
+  .see-arrow { display: none; }
+  .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .stat { padding: 14px; }
+  .stat b { font-size: 22px; }
+  .ref-list { grid-template-columns: 1fr; }
+  .course-body { padding: 4px 12px 14px; }
+  .turn-card { padding: 20px; }
+  .toast-wrap { left: 16px; right: 16px; bottom: 16px; }
+}
+@media (max-width: 480px) {
+  .skill-grid { grid-template-columns: 1fr; }
+  .lesson-title, .page-title { font-size: 30px; }
+  .prose p { font-size: 16px; }
+}
+
+/* =====================================================================
+   Futuristic layer: precise, technical details on top of the light theme.
+   ===================================================================== */
+:root { --cyan: #06B6D4; --glow: 0 0 0 1px #2563EB22, 0 6px 24px -6px #2563EB55; }
+
+/* Glowing progress line along the bottom of the header */
+.topbar { position: sticky; }
+.header-line { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: transparent; }
+.header-line div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--cyan)); box-shadow: 0 0 12px #06B6D499; transition: width .6s cubic-bezier(.2,.8,.2,1); }
+.brand::after { content: ''; display: inline-block; width: 6px; height: 6px; margin-left: 4px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); vertical-align: super; }
+
+/* Monospace labels give a technical feel */
+.eyebrow.mono, .sec-num, .step-n, .q-num, .see-label, .rules-label, .check-meta, .step-status, .editor-head, .tok-num { font-family: var(--mono); }
+.eyebrow.mono { letter-spacing: .06em; font-size: 12px; }
+.see-label { text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
+
+/* Lesson header: a faint dot grid behind the title */
+.lesson-head { position: relative; padding: 8px 0 4px; }
+.lesson-head::before { content: ''; position: absolute; inset: -28px -32px -10px -32px; z-index: -1; background-image: radial-gradient(#2563EB1A 1px, transparent 1.2px); background-size: 18px 18px; -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 90%); mask-image: linear-gradient(180deg, #000 0%, transparent 90%); }
+
+/* Section navigation pills and numbered section headings */
+.step { display: inline-flex; align-items: center; gap: 8px; background: var(--bg); border: 1px solid var(--line); }
+.step:hover { border-color: #9DB7F5; background: var(--accent-soft); }
+.step-n { font-size: 11px; color: var(--accent-text); }
+.sec-h { display: flex; align-items: baseline; gap: 12px; font-size: 22px; font-weight: 600; }
+.sec-num { font-size: 12px; font-weight: 500; color: var(--accent-text); padding: 2px 7px; border: 1px solid #BFD3FE; border-radius: 6px; background: var(--accent-soft); transform: translateY(-2px); }
+.prose.how { padding-left: 16px; border-left: 2px solid; border-image: linear-gradient(180deg, var(--accent), var(--cyan)) 1; }
+.prose ol, .prose ul { margin: 0 0 14px; padding-left: 22px; }
+
+/* Code colors */
+.t-com { color: #6B6B65; font-style: italic; }
+.t-str { color: #B45309; }
+.t-num { color: #0E7490; }
+.t-key { color: #6D28D9; }
+
+/* How to write it: numbered code pieces */
+.anatomy { display: flex; flex-direction: column; gap: 18px; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.anatomy-code { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; padding: 18px; background: var(--bg); border: 1px solid var(--line-strong); border-radius: 10px; }
+.tok { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; }
+.tok-text { font-size: 18px; padding: 6px 10px; background: var(--bg); border: 1px solid var(--line-strong); border-radius: 6px; white-space: pre; transition: border-color .15s, box-shadow .15s; }
+.tok:hover .tok-text { border-color: var(--accent); box-shadow: var(--glow); }
+.tok-num { font-size: 11px; width: 20px; height: 20px; display: grid; place-items: center; border-radius: 50%; background: var(--text); color: #FFFFFF; }
+.anatomy-list { margin: 0; padding: 0; list-style: none; counter-reset: part; display: flex; flex-direction: column; gap: 10px; }
+.anatomy-list li { counter-increment: part; display: grid; grid-template-columns: 28px minmax(80px, auto) 1fr; gap: 12px; align-items: baseline; font-size: 15.5px; line-height: 1.55; color: var(--text-2); }
+.anatomy-list li::before { content: counter(part); font-family: var(--mono); font-size: 12px; color: var(--accent-text); }
+.anatomy-list li code { justify-self: start; white-space: pre; }
+.rules { border-top: 1px dashed var(--line-strong); padding-top: 14px; }
+.rules-label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.rules ul { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.55; color: var(--text-2); }
+
+/* Step-through: line numbers, the line that just ran, and the next line */
+.stepper { align-items: stretch; }
+.stepper .see-box:first-child { flex: 1.2 1 300px; }
+.code-block.lines { padding: 10px 0; white-space: normal; }
+.ln { display: flex; gap: 14px; padding: 1px 18px 1px 0; border-left: 3px solid transparent; transition: background .2s, border-color .2s; }
+.ln-n { flex: 0 0 34px; text-align: right; color: #A3A39C; font-size: 12px; user-select: none; }
+.ln-t { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 1.75em; }
+.ln.ran { opacity: .55; }
+.ln.current { background: var(--accent-soft); border-left-color: var(--accent); box-shadow: inset 0 0 0 1px #2563EB14; }
+.ln.current .ln-n { color: var(--accent-text); font-weight: 600; }
+.ln.current.error { background: var(--bad-bg); border-left-color: #DC2626; }
+.ln.next .ln-n::before { content: '▸ '; color: var(--cyan); }
+.step-status { margin: 0; font-size: 12.5px; color: var(--muted); min-height: 1.4em; }
+.console { position: relative; }
+.console::after { content: '▍'; display: block; color: var(--cyan); animation: blink 1.1s steps(1) infinite; line-height: 1; margin-top: 2px; }
+
+/* Quick check */
+.quiz-q { display: flex; flex-direction: column; gap: 12px; padding: 22px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); transition: border-color .2s; }
+.quiz-q.solved { border-color: var(--good-line); }
+.q-head { display: flex; justify-content: space-between; align-items: center; }
+.q-num { font-size: 12px; color: var(--muted); letter-spacing: .04em; }
+.option:disabled { opacity: 1; cursor: default; }
+.option.correct { border-color: #16A34A; background: var(--good-bg); }
+.option.correct .option-key { background: #16A34A; color: #FFFFFF; }
+.option.wrong { border-color: #DC2626; background: var(--bad-bg); animation: shake .3s; }
+.option.wrong .option-key { background: #DC2626; color: #FFFFFF; }
+.option code { font-size: .95em; }
+.quiz-q.solved .option:not(.correct) { opacity: .55; }
+
+/* Side card checklist */
+.side-title { font-family: var(--serif); font-size: 24px; }
+.checklist { display: flex; flex-direction: column; gap: 6px; padding: 12px; border: 1px dashed var(--line-strong); border-radius: 10px; }
+.check-item { display: flex; align-items: center; gap: 10px; padding: 6px 4px; background: none; border: 0; text-align: left; font-size: 14.5px; font-weight: 500; }
+button.check-item:hover { color: var(--accent-text); }
+.check-dot { width: 20px; height: 20px; flex: 0 0 20px; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid var(--line-strong); font-size: 11px; color: #FFFFFF; }
+.check-item.done .check-dot { background: #16A34A; border-color: #16A34A; box-shadow: 0 0 0 3px #16A34A22; }
+.check-meta { margin-left: auto; font-size: 12px; color: var(--muted); }
+.center { text-align: center; margin: 0; }
+
+/* Buttons: a soft glow on the main action */
+.btn.primary { box-shadow: 0 1px 0 #FFFFFF33 inset, 0 4px 14px -4px #2563EB80; }
+.btn.primary:hover:not(:disabled) { box-shadow: var(--glow); }
+.btn.wide { letter-spacing: .01em; }
+
+/* Entrance animation, only when a new lesson opens */
+.lesson-grid.enter .lesson-head, .lesson-grid.enter .lesson-section, .lesson-grid.enter .callout, .lesson-grid.enter .lesson-side { animation: rise .45s cubic-bezier(.2,.8,.2,1) both; }
+.lesson-grid.enter .lesson-section:nth-of-type(1) { animation-delay: .05s; }
+.lesson-grid.enter .lesson-section:nth-of-type(2) { animation-delay: .1s; }
+.lesson-grid.enter .lesson-section:nth-of-type(3) { animation-delay: .15s; }
+.lesson-grid.enter .lesson-side { animation-delay: .12s; }
+
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes shake { 0%,100% { transform: none; } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+@media (max-width: 820px) {
+  .anatomy { padding: 16px; }
+  .anatomy-list li { grid-template-columns: 22px 1fr; }
+  .anatomy-list li code { grid-column: 2; }
+  .anatomy-list li div { grid-column: 2; }
+  .tok-text { font-size: 15px; padding: 5px 8px; }
+  .lesson-head::before { inset: -20px -18px -10px -18px; }
+  .quiz-q { padding: 16px; }
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/*
+  ARC curriculum: all lesson content lives here. No code changes needed to edit a lesson.
+
+  LESSON FORMAT (Subject 1 uses this; older modules use the older format below and still work)
+    id        Permanent name. Saved progress is linked to it, so don't rename it once published.
+    title     Lesson name.
+    concept   Short tag shown above the title.
+    explain   "The idea": the plain-language explanation.
+    how       "How it works": what happens under the hood.
+    syntax    "How to write it": { parts: [[code piece, explanation], ...], rules: [ ... ] }
+    example   Example code for "See it happen" and "Try it".
+    stepper   true = show a step-through (Step ▸ runs one line at a time). Only for examples where
+              every line is a complete statement.
+    exampleShowsError  true if the example is *meant* to show an error.
+    mistake   "Common mistake" note.
+    quiz      Quick check: [{ question, code?, options, answer, explain, feedback }]
+              answer = position of the right option, counting from 0.
+              explain = shown when they pick the right answer: say *why* it's right.
+              feedback = one message per option for wrong picks (null for the right one).
+    exercise  null, or { task, starter, tests, hints, success }
+              tests: "expr" is evaluated after the student's code and must equal "expect".
+              Inside expr you can use __logs (the printed lines) and __source (the student's code).
+    A lesson is complete when every quiz question is answered correctly and the exercise passes.
+
+  OLDER FORMAT (modules 2-12, until they're rewritten)
+    type "code": task, starter, tests, hints, success      type "choice": task, code, options, answer, feedback
+    deep: shown as "How it works".
+
+  Each module can have a "mastery" list: new problems (task, starter, tests), solved without hints.
+
+  Text formatting: a blank line starts a new paragraph, `code`, **bold**, *italic*.
+  Hint rule: the last hint points at the mechanism. It never just hands over the answer.
+*/
+const MODULES = [
+  {
+    id: "how-programming-works",
+    title: "How programming works",
+    subtitle: "From zero: what code is, how a computer runs it, and how to write and read it",
+    icon: "◎",
+    color: "#2563EB",
+    lessons: [
+      // ───────────────────────── 1 ─────────────────────────
+      {
+        id: "what-is-programming",
+        title: "What is programming?",
+        concept: "Programs",
+        explain: `A computer is incredibly fast, but it has no judgment. It can't figure out what you *meant*. It can only follow instructions.
+
+A **program** is a list of those instructions. **Programming** is the skill of writing them: taking a goal and breaking it into small, exact steps.
+
+Think of a recipe. It lists precise steps, in order. If a recipe says "add sugar" when it should say "add salt", a human cook might notice. A computer never would. It does exactly what's written, every time.`,
+        how: `The computer's processor (the **CPU**) only understands very simple operations: add two numbers, compare two numbers, move a value from here to there. It runs billions of them every second.
+
+Nobody writes those tiny operations by hand anymore. Instead, we write in a **programming language** like JavaScript, which people can read. Another program then translates it into the processor's tiny operations.
+
+So every piece of code has two readers: the computer, which needs it *exact*, and people (including future you), who need it *clear*.`,
+        example: `console.log("Step 1: Boil water");
+console.log("Step 2: Add pasta");
+console.log("Step 3: Wait 10 minutes");`,
+        stepper: true,
+        mistake: "Expecting the computer to understand what you *meant*. It only does what you *wrote*. Most bugs are the gap between the two.",
+        quiz: [
+          {
+            question: "What is a program?",
+            options: ["A list of exact instructions for a computer", "A computer that thinks for itself", "A website"],
+            answer: 0,
+            explain: "A program is a list of instructions. The computer follows them exactly, in order.",
+            feedback: [null, "Computers don't think or guess. They follow instructions, nothing more.", "A website can be *built from* programs, but a program is any list of instructions for a computer."]
+          },
+          {
+            question: "Your instructions say \"add sugar\", but you meant salt. What does the computer do?",
+            options: ["Adds salt, because that's obviously right", "Adds sugar, exactly as written", "Stops and asks what you meant"],
+            answer: 1,
+            explain: "A computer follows what's written, not what you meant. That's why precise code matters so much.",
+            feedback: ["The computer can't know what you meant. It only sees the instruction.", null, "Computers don't ask questions. They run the instruction, or stop with an error if they can't."]
+          },
+          {
+            question: "Why do people write code in languages like JavaScript instead of the processor's own instructions?",
+            options: ["The processor understands JavaScript directly", "JavaScript is readable for people, and it gets translated for the processor", "Processors can't run programs any other way"],
+            answer: 1,
+            explain: "Programming languages exist for *people*. They're translated into the tiny operations the processor actually runs.",
+            feedback: ["The processor only understands very simple operations. JavaScript has to be translated first.", null, "Processors could run their own instructions directly. It's just far too slow and painful for people to write them."]
+          }
+        ],
+        exercise: null
+      },
+
+      // ───────────────────────── 2 ─────────────────────────
+      {
+        id: "what-is-javascript",
+        title: "What is JavaScript?",
+        concept: "The language",
+        explain: `**JavaScript** is the programming language of the web. Every major browser (Chrome, Safari, Firefox, Edge) can run it. When a website reacts to a click, updates without reloading, or shows live data, that's usually JavaScript.
+
+It also runs outside the browser: on servers, in desktop apps, and in tools, using a program called **Node.js**. One language takes you from the page someone sees to the server behind it.
+
+One heads-up: **JavaScript is not Java.** The similar name was a marketing decision in 1995. They're completely different languages.`,
+        how: `Every browser contains a **JavaScript engine**, the program that runs JavaScript. Chrome's engine is called V8.
+
+When you run code, the engine:
+
+1. **Reads** your text and checks its grammar. This is called *parsing*.
+2. **Translates** it into instructions the computer can execute.
+3. **Runs** those instructions, one step at a time.
+
+On this site, your code runs in a sealed-off part of your browser. Nothing you write here can break the website or your computer, so experiment freely.`,
+        example: `console.log("This line was run by the JavaScript engine in your browser.");`,
+        mistake: "Thinking you need to install something before you can start. Every browser already has a JavaScript engine built in.",
+        quiz: [
+          {
+            question: "Where can JavaScript run?",
+            options: ["Only inside web browsers", "In browsers, and also on servers and in apps using Node.js", "Only on Apple devices"],
+            answer: 1,
+            explain: "JavaScript started in the browser, but with Node.js it runs almost anywhere.",
+            feedback: ["It started in browsers, but Node.js lets it run on servers and in apps too.", null, "JavaScript runs on every major operating system and browser."]
+          },
+          {
+            question: "Are Java and JavaScript the same language?",
+            options: ["Yes, JavaScript is the short name for Java", "No, they are different languages with similar names", "JavaScript is an older version of Java"],
+            answer: 1,
+            explain: "Different languages, different rules. The similar name was a 1990s marketing choice.",
+            feedback: ["They only share part of a name. They're separate languages.", null, "They're unrelated languages, not versions of each other."]
+          },
+          {
+            question: "What does the JavaScript engine do *first* with your code?",
+            options: ["Runs the last line", "Reads it and checks the grammar", "Sends it to the internet"],
+            answer: 1,
+            explain: "The engine parses (reads and grammar-checks) the whole program before running anything. That's why one grammar mistake stops *everything*. You'll see this in lesson 9.",
+            feedback: ["Programs run from the top, and only after they've been read and checked.", null, "Your code runs right here in your browser. Nothing is sent anywhere."]
+          }
+        ],
+        exercise: null
+      },
+
+      // ───────────────────────── 3 ─────────────────────────
+      {
+        id: "your-first-instruction",
+        title: "Your first instruction",
+        concept: "console.log",
+        explain: `Time to write code. The most useful first instruction is \`console.log\`. It prints a message to the **console**, a panel where programs report what they're doing.
+
+Users never see the console. It's for you, the developer. You'll use it constantly to check what your code is really doing.`,
+        how: `\`console\` is a built-in **object**: a bundle of related tools that JavaScript gives you for free. \`log\` is one of its **methods**, an action it can perform.
+
+Putting parentheses after a method's name **calls** it, which means "do this now, using what's inside". The text in quotes is the input.
+
+You'll learn objects and methods properly later. For now, read \`console.log(...)\` as "print this".`,
+        syntax: {
+          parts: [
+            ["console", "The built-in **console** object, where messages go."],
+            [".", "The dot means *look inside*: get something that belongs to `console`."],
+            ["log", "The action: print one line."],
+            ["(", "Opens the input."],
+            ["\"Hello!\"", "The value to print. The quotes mark it as text."],
+            [")", "Closes the input."],
+            [";", "Ends the statement, like a period ends a sentence."]
+          ],
+          rules: [
+            "Spelling and capital letters matter. `Console.log` and `console.Log` won't work.",
+            "Every `(` needs a matching `)`, and every opening quote needs a closing quote.",
+            "One complete instruction is called a **statement**. End each one with `;`."
+          ]
+        },
+        example: `console.log("Hello!");
+console.log("I'm learning JavaScript.");`,
+        stepper: true,
+        mistake: "Changing capital letters. JavaScript is **case-sensitive**: `console` and `Console` are two different names.",
+        quiz: [
+          {
+            question: "In `console.log(\"Hi\");`, what does `log` do?",
+            options: ["Prints a line to the console", "Saves a file", "Builds a web page"],
+            answer: 0,
+            explain: "`log` is the action. `console.log(...)` prints whatever is inside the parentheses.",
+            feedback: [null, "Nothing is saved. `log` just prints a line to the console.", "`log` only prints to the console, which users don't see."]
+          },
+          {
+            question: "Which line is written correctly?",
+            options: ["`Console.log(\"Hi\");`", "`console.log(\"Hi\");`", "`console.log(\"Hi\";`"],
+            answer: 1,
+            explain: "Lowercase `console`, a dot, `log`, then the value inside matching parentheses and quotes, and a semicolon at the end.",
+            feedback: ["`Console` with a capital C is a different name. JavaScript is case-sensitive.", null, "The closing parenthesis is missing. Every `(` needs a `)`."]
+          },
+          {
+            question: "What does the semicolon `;` at the end do?",
+            options: ["Ends the statement", "Starts a comment", "Prints a blank line"],
+            answer: 0,
+            explain: "A semicolon marks the end of one complete instruction, a statement.",
+            feedback: [null, "Comments start with `//`. You'll meet them in lesson 5.", "It doesn't print anything. It just marks where the statement ends."]
+          }
+        ],
+        exercise: {
+          task: "Write a program from scratch. It should print `Hello, world!` on the first line and `I am learning JavaScript` on the second.",
+          starter: `// Write your two lines below this comment
+`,
+          tests: [
+            { expr: "__logs.join(\"|\")", expect: "Hello, world!|I am learning JavaScript" }
+          ],
+          hints: [
+            "You need two `console.log` statements, one for each line of output.",
+            "Copy the shape exactly: `console.log(\"...\");`. Only the text inside the quotes changes."
+          ],
+          success: "You wrote two complete statements from scratch, and each one printed its own line."
+        }
+      },
+
+      // ───────────────────────── 4 ─────────────────────────
+      {
+        id: "top-to-bottom",
+        title: "Top to bottom",
+        concept: "Execution order",
+        explain: `JavaScript runs your statements **in order, from top to bottom, one at a time**. It finishes each one before starting the next.
+
+That means you can predict what a program does *without running it*: start at the first line and walk down. Reading code and predicting what it does is the most important skill in this course. It's how you'll check code written by other people, or by AI.`,
+        how: `The engine keeps track of **where it is**, like a finger on a recipe. It runs the statement under the finger, moves the finger down one statement, and repeats until there's nothing left.
+
+Later you'll learn tools that move the finger in other ways: conditions skip lines, loops jump back up, and functions jump somewhere else and come back. But it's always one step at a time.
+
+Use **Step** below to move the finger yourself.`,
+        example: `console.log("3");
+console.log("2");
+console.log("1");
+console.log("Liftoff!");`,
+        stepper: true,
+        mistake: "Reading code the way it *should* work instead of the way it's *written*. Trace what's actually there, line by line.",
+        quiz: [
+          {
+            question: "What does this program print first?",
+            code: `console.log("A");
+console.log("B");
+console.log("C");`,
+            options: ["A", "C", "All three at the same moment"],
+            answer: 0,
+            explain: "The first statement runs first. Then B, then C.",
+            feedback: [null, "JavaScript doesn't read bottom-up. The top line runs first.", "Statements run one at a time, in order, even though it happens very fast."]
+          },
+          {
+            question: "What's the output of this program?",
+            code: `console.log("Go!");
+console.log("Ready");`,
+            options: ["Ready, then Go!", "Go!, then Ready", "Only Go!"],
+            answer: 1,
+            explain: "The computer doesn't know that \"Ready\" *should* come first. It prints in the order the lines are written.",
+            feedback: ["That's the order that *makes sense*, but the computer follows the order that's *written*.", null, "Both lines run. Each `console.log` prints its own line."]
+          }
+        ],
+        exercise: {
+          task: "This program should print the steps for making tea in order: `Boil water`, `Add tea bag`, `Pour water`, `Wait 3 minutes`. Rearrange the lines.",
+          starter: `console.log("Pour water");
+console.log("Wait 3 minutes");
+console.log("Boil water");
+console.log("Add tea bag");`,
+          tests: [
+            { expr: "__logs.join(\"|\")", expect: "Boil water|Add tea bag|Pour water|Wait 3 minutes" }
+          ],
+          hints: [
+            "Don't change any of the text. Only the order of the lines matters.",
+            "Which step has to happen first in real life? Move that line to the top. You can cut a line with Ctrl/⌘ + X and paste it with Ctrl/⌘ + V."
+          ],
+          success: "Same four instructions, different order, different program. You fixed it by reordering, not rewriting."
+        }
+      },
+
+      // ───────────────────────── 5 ─────────────────────────
+      {
+        id: "comments",
+        title: "Comments: notes for humans",
+        concept: "Comments",
+        explain: `A **comment** is text that JavaScript ignores completely. It's there for people: to explain *why* the code does something, or to leave notes for later.
+
+Programmers also use comments to switch a line off without deleting it. That's called **commenting out** a line, and it's a handy way to test what happens without it.`,
+        how: `When the engine reads your program, it throws the comments away before running anything. They never reach the running program, so they can't cause errors and don't slow anything down.
+
+In the step-through below, notice that the comment lines are skipped. The engine never stops on them.`,
+        syntax: {
+          parts: [
+            ["console.log(\"Hi\");", "A normal statement. This runs."],
+            ["//", "Starts a comment. Everything after it, to the end of the line, is ignored."],
+            [" says hi", "The note itself. JavaScript skips it."]
+          ],
+          rules: [
+            "`//` turns the rest of one line into a comment.",
+            "`/*` and `*/` turn everything between them into a comment, even across several lines.",
+            "Good comments explain *why*, not *what*. The code already says what it does."
+          ]
+        },
+        example: `// This program greets a visitor
+console.log("Welcome!");
+// console.log("This line is switched off");
+console.log("Enjoy your stay."); // a note at the end of a line`,
+        stepper: true,
+        mistake: "Writing comments that just repeat the code, like `// print hello` above `console.log(\"hello\")`. Explain *why* instead.",
+        quiz: [
+          {
+            question: "What does this program print?",
+            code: `// console.log("A");
+console.log("B");`,
+            options: ["A and B", "Only B", "Only A"],
+            answer: 1,
+            explain: "The first line is commented out, so the engine ignores it. Only the second statement runs.",
+            feedback: ["The `//` at the start turns the whole first line into a comment, so it never runs.", null, "It's the other way around: the first line is the comment."]
+          },
+          {
+            question: "Which comment is most useful?",
+            options: ["`// print the total`", "`// prices are in cents because the payment service expects cents`", "`// code`"],
+            answer: 1,
+            explain: "It explains *why* something is the way it is, which the code alone can't tell you.",
+            feedback: ["The code already shows that it prints a total. A good comment adds what the code can't say.", null, "This tells the reader nothing."]
+          }
+        ],
+        exercise: {
+          task: "A leftover debug line prints `testing 123`. **Comment it out** (don't delete it) so only `Order placed` and `Thank you!` print.",
+          starter: `console.log("Order placed");
+console.log("testing 123");
+console.log("Thank you!");`,
+          tests: [
+            { expr: "__logs.join(\"|\")", expect: "Order placed|Thank you!" },
+            { expr: "__source.includes(\"testing 123\")", expect: true }
+          ],
+          hints: [
+            "Don't remove the line. Turn it into a comment instead.",
+            "Put `//` at the very start of the debug line."
+          ],
+          success: "The line is still there for later, but JavaScript skips it. That's how programmers switch code off while testing."
+        }
+      },
+
+      // ───────────────────────── 6 ─────────────────────────
+      {
+        id: "text-vs-numbers",
+        title: "Text vs numbers",
+        concept: "Strings and numbers",
+        explain: `Every value in JavaScript has a **type**, meaning what kind of value it is. The first two types you'll use:
+
+**Strings** are text. You write them inside quotes: \`"hello"\`, \`"42"\`, \`"3 + 4"\`.
+
+**Numbers** are numbers, written *without* quotes: \`42\`, \`3.5\`, \`-7\`. JavaScript can do math with them.
+
+The quotes make all the difference. \`"42"\` looks like a number, but to JavaScript it's just two characters of text.`,
+        how: `When the engine reads your code, a quote mark is a signal: "everything until the matching quote is text. Don't try to understand it."
+
+Without quotes, the engine reads the characters as code. \`42\` becomes a number value, and \`3 + 4\` becomes a calculation it works out.
+
+JavaScript has one type for all numbers. Whole numbers and decimals (\`7\` and \`7.5\`) are both just **number**. There's no separate integer type, which surprises people coming from other languages. There are more types too (true/false values, empty values, lists and more). The next subject covers them all.`,
+        syntax: {
+          parts: [
+            ["\"Hello\"", "A string in double quotes."],
+            ["'Hello'", "Also a string. Single quotes work too, as long as they match."],
+            ["42", "A number. No quotes."],
+            ["3.5", "Also a number. Decimals are the same type as whole numbers."]
+          ],
+          rules: [
+            "Quotes must match: `\"Hi'` is an error.",
+            "Anything in quotes is text, even if it looks like math: `\"2 + 2\"` stays as the characters 2 + 2."
+          ]
+        },
+        example: `console.log(3 + 4);
+console.log("3 + 4");`,
+        stepper: true,
+        mistake: "Putting quotes around something you want calculated. `\"3 + 4\"` prints the text `3 + 4`, not `7`.",
+        quiz: [
+          {
+            question: "What does this print?",
+            code: `console.log("10 * 2");`,
+            options: ["20", "10 * 2", "An error"],
+            answer: 1,
+            explain: "The quotes make it a string, so JavaScript prints the characters exactly as written.",
+            feedback: ["The quotes make `10 * 2` text. JavaScript doesn't calculate what's inside a string.", null, "A string can contain any characters, including numbers and `*`. This is valid code."]
+          },
+          {
+            question: "Which of these is a **number**?",
+            options: ["`\"7\"`", "`7`", "`'7'`"],
+            answer: 1,
+            explain: "No quotes means it's a number value.",
+            feedback: ["The double quotes make this a string, the text character 7.", null, "Single quotes make strings too."]
+          },
+          {
+            question: "Are `5` and `5.5` different types?",
+            options: ["Yes, `5.5` is a decimal type", "No, both are numbers", "`5.5` is a string"],
+            answer: 1,
+            explain: "JavaScript has one number type for whole numbers and decimals.",
+            feedback: ["Some languages split these, but JavaScript doesn't. Both are type number.", null, "There are no quotes, so it isn't a string."]
+          }
+        ],
+        exercise: {
+          task: "Line 1 should print the **text** `2 + 2`. Line 2 should print the **result** of 2 + 2, calculated by JavaScript. Fix the program.",
+          starter: `console.log(2 + 2);
+console.log("4");`,
+          tests: [
+            { expr: "__logs[0]", expect: "2 + 2" },
+            { expr: "__logs[1]", expect: "4" },
+            { expr: "(__source.match(/2\\s*\\+\\s*2/g) || []).length", expect: 2 },
+            { expr: "/[\"']4[\"']/.test(__source)", expect: false }
+          ],
+          hints: [
+            "Line 1 should show characters exactly as written. What turns code into text?",
+            "Line 2 must be calculated, so it needs a calculation *without* quotes. Typing `\"4\"` yourself isn't calculating."
+          ],
+          success: "Same characters, different meaning: with quotes it's text, without quotes it's math."
+        }
+      },
+
+      // ───────────────────────── 7 ─────────────────────────
+      {
+        id: "doing-math",
+        title: "Doing math",
+        concept: "Expressions",
+        explain: `An **expression** is any piece of code that produces a value. \`4 * 3\` is an expression that produces \`12\`. Even a plain \`7\` is an expression: it produces 7.
+
+JavaScript's math **operators**: \`+\` adds, \`-\` subtracts, \`*\` multiplies, \`/\` divides.
+
+Why calculate in code instead of typing the answer? Because then the program does the work. When the numbers change, the result updates itself.`,
+        how: `When the engine meets an expression, it **evaluates** it: it works out the value *before* using it. In \`console.log(3 * 4)\`, the engine first turns \`3 * 4\` into \`12\`, and only then hands \`12\` to \`console.log\`. \`console.log\` never sees the \`*\`. It only receives the result.
+
+Like school math, \`*\` and \`/\` happen before \`+\` and \`-\`. Parentheses go first of all: \`(2 + 3) * 4\` is \`20\`, but \`2 + 3 * 4\` is \`14\`.`,
+        syntax: {
+          parts: [
+            ["console.log(", "Print whatever is inside."],
+            ["(2 + 3)", "Parentheses are worked out first: 2 + 3 gives 5."],
+            [" * ", "Multiply."],
+            ["4", "A number."],
+            [");", "Close the input and end the statement."]
+          ],
+          rules: [
+            "Spaces around operators are optional, but `2 + 3` is easier to read than `2+3`.",
+            "Multiply with `*`. The letter `x` doesn't work.",
+            "Don't put a calculation in quotes, or it becomes text."
+          ]
+        },
+        example: `console.log(60 * 24);
+console.log(2 + 3 * 4);
+console.log((2 + 3) * 4);`,
+        stepper: true,
+        mistake: "Typing the answer yourself, like `console.log(12)`. It prints the right number today, but it stops being right as soon as the numbers change.",
+        quiz: [
+          {
+            question: "What does this print?",
+            code: `console.log(2 + 3 * 4);`,
+            options: ["20", "14", "2 + 3 * 4"],
+            answer: 1,
+            explain: "Multiplication happens first: 3 × 4 = 12, then 2 + 12 = 14.",
+            feedback: ["That's what `(2 + 3) * 4` gives. Without parentheses, `*` happens before `+`.", null, "There are no quotes, so JavaScript calculates it."]
+          },
+          {
+            question: "Which symbol multiplies in JavaScript?",
+            options: ["`x`", "`*`", "`×`"],
+            answer: 1,
+            explain: "`*` is the multiplication operator.",
+            feedback: ["`x` is just a letter. JavaScript would read it as a name, not multiplication.", null, "That symbol isn't on most keyboards, and JavaScript doesn't understand it."]
+          },
+          {
+            question: "What does this print?",
+            code: `console.log(10 / 4);`,
+            options: ["2", "2.5", "2 remainder 2"],
+            answer: 1,
+            explain: "Division gives an exact decimal result, because JavaScript has one number type for decimals and whole numbers.",
+            feedback: ["Some languages round down when dividing whole numbers. JavaScript doesn't.", null, "JavaScript gives a single number. (There *is* a separate remainder operator, `%`, which you'll meet later.)"]
+          }
+        ],
+        exercise: {
+          task: "At a café, coffee costs $4 and a muffin costs $3. Print the total for **3 coffees and 2 muffins**. Let JavaScript calculate it.",
+          starter: `// 3 coffees at $4 each, plus 2 muffins at $3 each
+console.log();`,
+          tests: [
+            { expr: "__logs[0]", expect: "18" },
+            { expr: "/\\d\\s*\\*\\s*\\d/.test(__source)", expect: true },
+            { expr: "__source.includes(\"+\")", expect: true }
+          ],
+          hints: [
+            "Work out each part separately: the coffees cost 3 times 4, and the muffins cost 2 times 3. Then add them.",
+            "You don't need parentheses here: `*` already happens before `+`."
+          ],
+          success: "JavaScript evaluated both multiplications first, then added them. `console.log` only received the final value, `18`."
+        }
+      },
+
+      // ───────────────────────── 8 ─────────────────────────
+      {
+        id: "read-the-error",
+        title: "Reading error messages",
+        concept: "Runtime errors",
+        explain: `When JavaScript hits a problem it can't get past, it stops and shows an **error message**. Beginners panic at errors. Professionals *read* them, because the message usually says exactly what went wrong.
+
+The most common one for beginners is \`ReferenceError\`. It means you used a name JavaScript doesn't recognize, usually because of a typo.`,
+        how: `When the engine reaches a name like \`consol\`, it looks it up in its list of known names. If the name isn't there, it **throws** an error: it stops running and reports what happened.
+
+This is called a **runtime error**, because it happens *while the program is running*. Lines before the error have already run. Lines after it never run.
+
+Step through the example below and watch where it stops.`,
+        syntax: {
+          parts: [
+            ["ReferenceError", "The error **type**: what kind of problem it is."],
+            [": ", "Separates the type from the description."],
+            ["consol is not defined", "The **description**: the exact name it couldn't find."]
+          ],
+          rules: [
+            "`ReferenceError` means you used a name JavaScript doesn't know. Look for a typo.",
+            "Lines before the error already ran. Lines after it never ran.",
+            "Read the description literally. It tells you exactly what the engine saw."
+          ]
+        },
+        example: `console.log("Step 1");
+consol.log("Step 2");
+console.log("Step 3");`,
+        stepper: true,
+        exampleShowsError: true,
+        mistake: "Ignoring the error and guessing. The description usually names the exact problem, like `consol is not defined`.",
+        quiz: [
+          {
+            question: "What gets printed before the program stops?",
+            code: `console.log("A");
+consol.log("B");
+console.log("C");`,
+            options: ["Nothing", "A", "A and C"],
+            answer: 1,
+            explain: "Line 1 runs and prints A. Line 2 throws a ReferenceError, so the program stops and line 3 never runs.",
+            feedback: ["This is a runtime error, not a grammar error, so lines before the problem do run.", null, "Once the error happens on line 2, the program stops. Line 3 never runs."]
+          },
+          {
+            question: "You see `ReferenceError: totl is not defined`. What's the most likely cause?",
+            options: ["The program is too long", "A typo in a name, probably `total`", "A math mistake"],
+            answer: 1,
+            explain: "`totl` looks like `total` with a missing letter. ReferenceErrors are very often typos.",
+            feedback: ["Length has nothing to do with it. The description names the exact problem.", null, "Math mistakes don't cause errors. They just give wrong answers. This error is about a *name*."]
+          }
+        ],
+        exercise: {
+          task: "Press **Run** first and read the error. Then fix the program so it prints `Step 1` and then `Error fixed`.",
+          starter: `console.log("Step 1");
+consle.log("Error fixed");`,
+          tests: [
+            { expr: "__logs.join(\"|\")", expect: "Step 1|Error fixed" }
+          ],
+          hints: [
+            "Run it and read the description. Which name is *not defined*?",
+            "Compare that name letter by letter with the working instruction on line 1."
+          ],
+          success: "You used the error message as a map: the type told you *what kind* of problem it was, and the description pointed to the exact name."
+        }
+      },
+
+      // ───────────────────────── 9 ─────────────────────────
+      {
+        id: "syntax-errors",
+        title: "Syntax errors",
+        concept: "Grammar",
+        explain: `**Syntax** is the grammar of a programming language. A \`SyntaxError\` means JavaScript can't even understand your code, so **nothing runs at all**, not even the lines before the mistake.
+
+That's the key difference from the last lesson. A ReferenceError stops partway through. A SyntaxError stops before anything starts.`,
+        how: `Remember the engine's first job from lesson 2: it **reads the whole program and checks the grammar** before running anything.
+
+If the grammar is broken anywhere, say a missing \`)\` or a quote that never closes, the engine can't make sense of the program. It reports a SyntaxError and never starts running.
+
+The error points to where the engine got confused. The actual mistake is often there or slightly *before* it.`,
+        syntax: {
+          parts: [
+            ["console.log(", "Opens the input..."],
+            ["\"Hi\"", "The value, written correctly."],
+            [";", "...but the statement ends before a `)` closes it. The grammar is broken."]
+          ],
+          rules: [
+            "Check pairs: every `(` needs `)`, and every opening quote needs a closing one.",
+            "With a syntax error, *nothing* runs. If nothing at all printed, suspect syntax.",
+            "A program can have several syntax errors. Fix one, run again, and repeat."
+          ]
+        },
+        example: `console.log("Line one");
+console.log("Line two";`,
+        exampleShowsError: true,
+        mistake: "Fixing one mistake, seeing it still fail, and assuming you made it worse. There may be more than one. Fix them one at a time.",
+        quiz: [
+          {
+            question: "What happens when this runs?",
+            code: `console.log("A");
+console.log("B";`,
+            options: ["It prints A, then shows an error", "Nothing prints, just a SyntaxError", "It prints A and B"],
+            answer: 1,
+            explain: "The grammar check fails before anything runs, so not even line 1 prints.",
+            feedback: ["That's what happens with a *runtime* error. A syntax error stops everything before the first line runs.", null, "Line 2 is missing its `)`, so the program can't run at all."]
+          },
+          {
+            question: "A program printed two lines, then stopped with an error. Which kind of error is it more likely to be?",
+            options: ["A SyntaxError", "A runtime error, like a ReferenceError"],
+            answer: 1,
+            explain: "Some lines ran, so the grammar check must have passed. The problem happened while running.",
+            feedback: ["If it were a syntax error, nothing would have printed at all.", null]
+          }
+        ],
+        exercise: {
+          task: "This program has **two** syntax mistakes. Fix them so it prints `Line one` and then `Line two`.",
+          starter: `console.log("Line one";
+console.log("Line two);`,
+          tests: [
+            { expr: "__logs.join(\"|\")", expect: "Line one|Line two" }
+          ],
+          hints: [
+            "Run it and notice that not even the first line printed. That tells you it's a syntax error.",
+            "Check each line for pairs. Does every `(` have a `)`? Does every opening quote have a closing quote?"
+          ],
+          success: "When nothing at all prints, suspect syntax. When some lines print and then it fails, suspect a runtime error where it stopped."
+        }
+      },
+
+      // ───────────────────────── 10 ─────────────────────────
+      {
+        id: "review-ai-code",
+        title: "Review code an AI wrote",
+        concept: "Code review",
+        explain: `AI tools write code fast, and they're often right. But they can be **confidently wrong**: the code looks professional, runs without errors, and still doesn't do what you asked.
+
+So review it like a careful editor:
+
+1. Read what was asked.
+2. Predict what the code *actually* does.
+3. Compare the two.
+
+Code that runs without errors is not the same as code that's correct.`,
+        how: `There are three kinds of problems:
+
+**Syntax errors**: broken grammar. Nothing runs. Easy to spot.
+
+**Runtime errors**: something fails while running. The program stops with a message.
+
+**Logic errors**: the code runs perfectly and gives the *wrong answer*. Nothing crashes, and nothing warns you.
+
+Logic errors are the dangerous ones, and they're the kind AI makes most often. The only defense is knowing what the right answer should be and checking for it. Later you'll learn to write **tests** that do that checking automatically.`,
+        example: `// Request: "Print the number of seconds in an hour."
+console.log(60 * 60); // 3600, correct`,
+        mistake: "Trusting code because it runs without errors. Running is not the same as being *right*.",
+        quiz: [
+          {
+            question: "You asked for the number of seconds **in a day**. Is this code correct?",
+            code: `console.log(60 * 60);`,
+            options: ["Yes, it runs without errors", "No: 60 × 60 is the seconds in an *hour*, not a day", "No, it has a syntax error"],
+            answer: 1,
+            explain: "It needs another `* 24` for the hours in a day. The code runs fine, so this is a logic error.",
+            feedback: ["Running without errors doesn't mean it's right. What does 60 × 60 actually count?", null, "The grammar is fine. The problem is the *logic*."]
+          },
+          {
+            question: "An AI's code runs with no errors. What does that prove?",
+            options: ["That it's correct", "Only that the grammar and names are valid. It can still give a wrong answer", "Nothing at all"],
+            answer: 1,
+            explain: "No errors rules out syntax and runtime errors, but not logic errors. You still have to check the result.",
+            feedback: ["Logic errors run perfectly and still give wrong answers.", null, "It does prove *something*: there are no syntax or runtime errors. It just doesn't prove the logic is right."]
+          }
+        ],
+        exercise: {
+          task: "You asked an AI: *\"Write a program that prints how many minutes are in a week.\"* It gave you the code in the editor. Run it, decide whether it's right, and fix it if it isn't.",
+          starter: `// Prints how many minutes are in a week
+console.log(7 * 24);`,
+          tests: [
+            { expr: "__logs[0]", expect: "10080" },
+            { expr: "/\\d\\s*\\*\\s*\\d/.test(__source)", expect: true }
+          ],
+          hints: [
+            "The code runs without errors, so if there's a bug, it's in the logic. What does `7 * 24` actually count?",
+            "7 days × 24 hours gives the number of *hours* in a week. How many minutes are in each hour?"
+          ],
+          success: "The AI's code had no errors and printed a believable number, `168`. The only way to catch it was to check what the calculation *means*. That habit is what this course is built around."
+        }
+      }
+    ],
+    mastery: [
+      {
+        task: "Fix this program so it prints `Ready`, then `Set`, then `Go!`",
+        starter: `console.log("Go!");
+console.log("Ready";
+console.log("Set");`,
+        tests: [
+          { expr: "__logs.join(\"|\")", expect: "Ready|Set|Go!" }
+        ]
+      },
+      {
+        task: "Print the number of hours in a year of 365 days. Let JavaScript calculate it.",
+        starter: `console.log();`,
+        tests: [
+          { expr: "__logs[0]", expect: "8760" },
+          { expr: "/\\d\\s*\\*\\s*\\d/.test(__source)", expect: true }
+        ]
+      },
+      {
+        task: "Comment out the debug line (don't delete it), and fix the math so the second line prints the total for 4 items at $5 each.",
+        starter: `console.log("Total:");
+console.log("DEBUG");
+console.log(4 + 5);`,
+        tests: [
+          { expr: "__logs.join(\"|\")", expect: "Total:|20" },
+          { expr: "__source.includes(\"DEBUG\")", expect: true },
+          { expr: "/\\d\\s*\\*\\s*\\d/.test(__source)", expect: true }
+        ]
+      },
+      {
+        task: "An AI wrote this to print the total price of 5 tickets at $12 each. Make it correct.",
+        starter: `// Total price of 5 tickets at $12 each
+cosole.log("5 * 12");`,
+        tests: [
+          { expr: "__logs[0]", expect: "60" },
+          { expr: "/\\d\\s*\\*\\s*\\d/.test(__source)", expect: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: "variables-data",
+    title: "Variables & data",
+    subtitle: "Give values names and understand their types",
+    icon: "◇",
+    color: "#7dd3fc",
+    lessons: [
+      {
+        id: "name-a-value",
+        type: "code",
+        title: "Name a value",
+        concept: "Variables",
+        explain: "A variable lets you refer to a value using a name. Declare a changeable variable with let.",
+        example: `let score = 10;
+console.log(score);`,
+        deep: "A let declaration creates a mutable lexical binding. Names are identifiers; values are what they refer to.",
+        task: "Create a variable named points with the value 25.",
+        starter: "let points = 0;",
+        tests: [
+          { expr: "points", expect: 25 }
+        ],
+        hints: ["Find the number after =.", "Replace 0 with 25."]
+      },
+      {
+        id: "change-a-value",
+        type: "code",
+        title: "Change a value",
+        concept: "Reassignment",
+        explain: "A let variable can hold a different value later. The latest assignment wins.",
+        example: `let count = 2;
+count = 3;`,
+        deep: "Assignment uses =. It stores a value; it is not a mathematical assertion of equality.",
+        task: "Start count at 4, then change it to 9.",
+        starter: `let count = 4;
+count = 4;`,
+        tests: [
+          { expr: "count", expect: 9 }
+        ],
+        hints: ["The second line replaces the first value.", "Set count = 9 on the second line."]
+      },
+      {
+        id: "keep-a-value-constant",
+        type: "code",
+        title: "Keep a value constant",
+        concept: "Constants",
+        explain: "Use const when the binding should not be reassigned. This expresses your intention and prevents accidental reassignment.",
+        example: "const pi = 3.14;",
+        deep: "const prevents reassignment of the binding, not mutation of an object held by that binding.",
+        task: "Declare a constant named city with the string Brooklyn.",
+        starter: "const city = \"\";",
+        tests: [
+          { expr: "city", expect: "Brooklyn" },
+          { expr: "/const\\s+city/.test(__source)", expect: true }
+        ],
+        hints: ["Text needs quotation marks.", "Put Brooklyn inside the quotes."]
+      },
+      {
+        id: "know-your-types",
+        type: "code",
+        title: "Know your types",
+        concept: "Data types",
+        explain: "JavaScript distinguishes numbers, strings, booleans, undefined, null, objects and more. typeof tells you the type of most values.",
+        example: "console.log(typeof 42); // number",
+        deep: "typeof null is historically \"object\"; this is a well-known legacy quirk. Arrays are also objects.",
+        task: "Create a variable active holding the boolean true (not the text \"true\").",
+        starter: "let active = \"true\";",
+        tests: [
+          { expr: "active", expect: true },
+          { expr: "typeof active", expect: "boolean" }
+        ],
+        hints: ["Booleans do not need quotes.", "Remove the quotation marks around true."]
+      },
+      {
+        id: "strings-and-numbers",
+        type: "choice",
+        title: "Strings and numbers",
+        concept: "Type awareness",
+        explain: "The + operator can add numbers or join strings. Knowing the data types lets you predict the result.",
+        example: `console.log(5 + 5); // 10
+console.log("5" + 5); // "55"`,
+        deep: "Implicit coercion converts 2 to \"2\" here. Avoid relying on confusing coercions in production code.",
+        task: "What does \"10\" + 2 produce?",
+        hints: ["One operand is a string.", "With +, JavaScript joins the values as text."],
+        options: ["12", "102", "An error"],
+        answer: 1
+      }
+    ]
+  },
+  {
+    id: "operators-logic",
+    title: "Operators & logic",
+    subtitle: "Calculate, compare, combine",
+    icon: "≠",
+    color: "#f9a8d4",
+    lessons: [
+      {
+        id: "do-the-math",
+        type: "code",
+        title: "Do the math",
+        concept: "Arithmetic",
+        explain: "Use +, -, *, / and % to calculate. % returns the remainder after division.",
+        example: "console.log(10 % 3); // 1",
+        deep: "The remainder operator is not the same as mathematical modulo for negative values.",
+        task: "Create a variable remainder equal to the remainder of 17 divided by 5.",
+        starter: "let remainder = 17 / 5;",
+        tests: [
+          { expr: "remainder", expect: 2 }
+        ],
+        hints: ["Which operator gives the leftover amount?", "Use % instead of /."]
+      },
+      {
+        id: "compare-values",
+        type: "code",
+        title: "Compare values",
+        concept: "Comparisons",
+        explain: "Comparison operators produce true or false. >= means greater than or equal to.",
+        example: "console.log(18 >= 18); // true",
+        deep: "Boundary values often reveal logic bugs. Tests should include the exact threshold.",
+        task: "Create canEnter to be true when age is 18 or older.",
+        starter: `let age = 18;
+let canEnter = age > 18;`,
+        tests: [
+          { expr: "canEnter", expect: true },
+          { expr: "__source.includes(\">=\")", expect: true }
+        ],
+        hints: ["Test the boundary at exactly 18.", "Use >= instead of >."]
+      },
+      {
+        id: "strict-equality",
+        type: "code",
+        title: "Strict equality",
+        concept: "Equality",
+        explain: "Use === to compare values without converting types. Prefer it over == in most code.",
+        example: "console.log(5 === \"5\"); // false",
+        deep: "Loose equality applies coercion rules, which can cause surprising comparisons.",
+        task: "Make isMatch true only if code and expectedCode are the same value and type.",
+        starter: `const code = "123";
+const expectedCode = 123;
+let isMatch = code == expectedCode;`,
+        tests: [
+          { expr: "isMatch", expect: false },
+          { expr: "__source.includes(\"===\")", expect: true }
+        ],
+        hints: ["The two values have different types.", "Use === instead of ==."]
+      },
+      {
+        id: "combine-rules",
+        type: "code",
+        title: "Combine rules",
+        concept: "Boolean logic",
+        explain: "&& means both conditions must be true. || means at least one. ! reverses a boolean.",
+        example: "console.log(true && false); // false",
+        deep: "&& and || short-circuit: JavaScript may not evaluate the right-hand operand.",
+        task: "Set admitted to true only if hasTicket and isAdult are both true.",
+        starter: `let hasTicket = true;
+let isAdult = false;
+let admitted = hasTicket || isAdult;`,
+        tests: [
+          { expr: "admitted", expect: false },
+          { expr: "__source.includes(\"&&\")", expect: true }
+        ],
+        hints: ["Both conditions are required.", "Change || (OR) to && (AND)."]
+      },
+      {
+        id: "order-of-operations",
+        type: "choice",
+        title: "Order of operations",
+        concept: "Operator precedence",
+        explain: "Different operators bind at different strengths. Parentheses clarify your intention.",
+        example: "console.log(2 + 3 * 4); // 14",
+        deep: "Parentheses can explicitly override precedence: (2 + 3) * 4 is 20.",
+        task: "What does 2 + 3 * 4 evaluate to?",
+        hints: ["Multiplication happens before addition.", "First calculate 3 × 4."],
+        options: ["20", "14", "24"],
+        answer: 1
+      }
+    ]
+  },
+  {
+    id: "decisions-branching",
+    title: "Decisions & branching",
+    subtitle: "Make programs respond to conditions",
+    icon: "⑂",
+    color: "#fbbf24",
+    lessons: [
+      {
+        id: "the-if-statement",
+        type: "code",
+        title: "The if statement",
+        concept: "Conditions",
+        explain: "An if block runs only when its condition is truthy.",
+        example: `if (true) {
+  console.log("Runs");
+}`,
+        deep: "An if checks truthiness, not necessarily a boolean literal.",
+        task: "Make the code print Welcome when loggedIn is true.",
+        starter: `let loggedIn = true;
+if (false) {
+  console.log("Welcome");
+}`,
+        tests: [
+          { expr: "__logs[0]", expect: "Welcome" }
+        ],
+        hints: ["Which value should the if condition check?", "Replace false with loggedIn."]
+      },
+      {
+        id: "two-possible-paths",
+        type: "code",
+        title: "Two possible paths",
+        concept: "Else",
+        explain: "An else block runs when the if condition is falsy.",
+        example: `if (score >= 50) {
+  console.log("Pass");
+} else {
+  console.log("Retry");
+}`,
+        deep: "Both branches are mutually exclusive. Exactly one executes when the condition is evaluated normally.",
+        task: "Make the code print Retry when score is below 50.",
+        starter: `let score = 42;
+if (score >= 50) {
+  console.log("Pass");
+} else {
+  console.log("Pass");
+}`,
+        tests: [
+          { expr: "__logs[0]", expect: "Retry" }
+        ],
+        hints: ["The else branch handles the lower score.", "Change only the message inside else."]
+      },
+      {
+        id: "handle-three-cases",
+        type: "code",
+        title: "Handle three cases",
+        concept: "Else if",
+        explain: "else if checks another condition if earlier conditions were false. Order matters.",
+        example: "if (n > 0) {} else if (n < 0) {} else {}",
+        deep: "Each subsequent branch is considered only if all previous conditions were false.",
+        task: "Print Zero when n is zero. Keep the positive and negative branches.",
+        starter: `let n = 0;
+if (n > 0) console.log("Positive");
+else if (n < 0) console.log("Negative");
+else console.log("Negative");`,
+        tests: [
+          { expr: "__logs[0]", expect: "Zero" }
+        ],
+        hints: ["When n is zero, which branch runs?", "Change the final else message to Zero."]
+      },
+      {
+        id: "truthy-and-falsy",
+        type: "code",
+        title: "Truthy and falsy",
+        concept: "Truthiness",
+        explain: "Values like 0, \"\", null, undefined, NaN and false are falsy. Most other values are truthy.",
+        example: "console.log(Boolean(\"hello\")); // true",
+        deep: "An empty array [] and empty object {} are both truthy, despite being empty containers.",
+        task: "Set hasName to true only when name is nonempty.",
+        starter: `let name = "Ada";
+let hasName = false;`,
+        tests: [
+          { expr: "hasName", expect: true },
+          { expr: "__source.includes(\"Boolean\") || __source.includes(\"!!\") || __source.includes(\"name.length\")", expect: true }
+        ],
+        hints: ["JavaScript can convert a value to a boolean.", "Use Boolean(name) to get its truthiness."]
+      },
+      {
+        id: "follow-the-branches",
+        type: "choice",
+        title: "Follow the branches",
+        concept: "Branch prediction",
+        explain: "Read each condition in order. The first matching branch determines the output.",
+        example: `let temp = 20;
+if (temp > 30) console.log("Hot");
+else if (temp >= 15) console.log("Mild");
+else console.log("Cold");`,
+        deep: "In an else-if chain, later conditions are skipped after the first matching branch.",
+        task: "What does this code print?",
+        hints: ["20 is not greater than 30.", "20 is at least 15."],
+        options: ["Hot", "Mild", "Cold"],
+        answer: 1
+      }
+    ]
+  },
+  {
+    id: "loops-repetition",
+    title: "Loops & repetition",
+    subtitle: "Make instructions repeat intentionally",
+    icon: "↻",
+    color: "#86efac",
+    lessons: [
+      {
+        id: "count-with-for",
+        type: "code",
+        title: "Count with for",
+        concept: "For loops",
+        explain: "A for loop repeats code with an initializer, condition, and update.",
+        example: `for (let i = 1; i <= 3; i++) {
+  console.log(i);
+}`,
+        deep: "An off-by-one error happens when a loop runs one too many or one too few times.",
+        task: "Print 1, 2, 3, and 4 using the loop.",
+        starter: `for (let i = 1; i <= 3; i++) {
+  console.log(i);
+}`,
+        tests: [
+          { expr: "__logs.join(\",\")", expect: "1,2,3,4" }
+        ],
+        hints: ["The loop stops when its condition becomes false.", "Change i <= 3 to i <= 4."]
+      },
+      {
+        id: "count-down",
+        type: "code",
+        title: "Count down",
+        concept: "Loop updates",
+        explain: "You can update a counter using ++ or --. Decrementing decreases it by one.",
+        example: "for (let i = 3; i > 0; i--) console.log(i);",
+        deep: "Loops need a termination condition. An infinite loop keeps executing until interrupted.",
+        task: "Print 3, 2, 1 using a loop.",
+        starter: `for (let i = 3; i > 0; i++) {
+  console.log(i);
+}`,
+        tests: [
+          { expr: "__logs.join(\",\")", expect: "3,2,1" }
+        ],
+        hints: ["The starting number must get smaller.", "Change i++ to i--."]
+      },
+      {
+        id: "use-while",
+        type: "code",
+        title: "Use while",
+        concept: "While loops",
+        explain: "A while loop repeats as long as a condition remains truthy.",
+        example: `let n = 0;
+while (n < 3) { n++; }`,
+        deep: "while checks the condition before each iteration; do...while runs at least once.",
+        task: "Increase n from 0 until it equals 5.",
+        starter: `let n = 0;
+while (n < 3) {
+  n++;
+}`,
+        tests: [
+          { expr: "n", expect: 5 },
+          { expr: "__source.includes(\"while\")", expect: true }
+        ],
+        hints: ["Look at the condition n < 3.", "Change the limit to 5."]
+      },
+      {
+        id: "sum-a-sequence",
+        type: "code",
+        title: "Sum a sequence",
+        concept: "Accumulators",
+        explain: "An accumulator gathers a result over multiple iterations.",
+        example: `let total = 0;
+for (let i = 1; i <= 3; i++) total += i;`,
+        deep: "Accumulation is the basis of totals, aggregations and many algorithms.",
+        task: "Calculate the sum 1 + 2 + 3 + 4 + 5 using a loop, and store it in total.",
+        starter: `let total = 0;
+for (let i = 1; i <= 3; i++) {
+  total += i;
+}`,
+        tests: [
+          { expr: "total", expect: 15 },
+          { expr: "__source.includes(\"for\") || __source.includes(\"while\")", expect: true }
+        ],
+        hints: ["Each loop iteration adds another number.", "Extend the loop through i <= 5."]
+      },
+      {
+        id: "trace-a-loop",
+        type: "choice",
+        title: "Trace a loop",
+        concept: "Iteration reasoning",
+        explain: "To predict a loop, track the counter and the stopping condition for each iteration.",
+        example: "for (let i = 0; i < 3; i++) console.log(i);",
+        deep: "The condition is tested before each iteration, including the final failed check.",
+        task: "How many times does this loop print?",
+        hints: ["The values of i are 0, 1, and 2.", "The loop stops before i reaches 3."],
+        options: ["2 times", "3 times", "4 times"],
+        answer: 1
+      }
+    ]
+  },
+  {
+    id: "functions-scope",
+    title: "Functions & scope",
+    subtitle: "Package reusable logic",
+    icon: "ƒ",
+    color: "#c4b5fd",
+    lessons: [
+      {
+        id: "call-a-function",
+        type: "code",
+        title: "Call a function",
+        concept: "Functions",
+        explain: "Functions package reusable instructions. Calling a function runs its body.",
+        example: `function greet() { console.log("Hi!"); }
+greet();`,
+        deep: "Function declarations are hoisted, meaning they can often be called before their declaration.",
+        task: "Make the code call greet so it prints Hello!.",
+        starter: `function greet() {
+  console.log("Hello!");
+}`,
+        tests: [
+          { expr: "__logs[0]", expect: "Hello!" }
+        ],
+        hints: ["Defining a function does not run it.", "Add greet(); after the closing brace."]
+      },
+      {
+        id: "pass-information",
+        type: "code",
+        title: "Pass information",
+        concept: "Parameters",
+        explain: "Parameters are placeholders for information passed into a function.",
+        example: "function double(n) { return n * 2; }",
+        deep: "Arguments are actual values provided at a call site; parameters are names declared in the function definition.",
+        task: "Finish the function so it returns the input multiplied by 3.",
+        starter: `function triple(n) {
+  return n + 3;
+}`,
+        tests: [
+          { expr: "triple(4)", expect: 12 },
+          { expr: "triple(-2)", expect: -6 },
+          { expr: "triple(0)", expect: 0 }
+        ],
+        hints: ["The function must work for any number.", "Use n * 3, not n + 3."]
+      },
+      {
+        id: "return-a-result",
+        type: "code",
+        title: "Return a result",
+        concept: "Return values",
+        explain: "return sends a value back to the caller and ends the function. Printing is different from returning.",
+        example: "function add(a,b) { return a + b; }",
+        deep: "A function without an explicit return value returns undefined.",
+        task: "Make add return the sum of any two numbers, rather than only printing it.",
+        starter: `function add(a, b) {
+  console.log(a + b);
+}`,
+        tests: [
+          { expr: "add(2,3)", expect: 5 },
+          { expr: "add(-4,9)", expect: 5 }
+        ],
+        hints: ["console.log does not send the result to the caller.", "Replace console.log with return."]
+      },
+      {
+        id: "understand-local-scope",
+        type: "code",
+        title: "Understand local scope",
+        concept: "Scope",
+        explain: "Variables declared inside a function belong to its local scope. They are separate from outer variables.",
+        example: `let x=1;
+function f(){ let x=2; return x; }`,
+        deep: "Lexical scope is determined by where code is written, not where a function is called.",
+        task: "Make getSecret return 42 using a local variable named secret.",
+        starter: `function getSecret() {
+  let secret = 10;
+  return secret;
+}`,
+        tests: [
+          { expr: "getSecret()", expect: 42 }
+        ],
+        hints: ["The local secret is currently 10.", "Change that local value to 42."]
+      },
+      {
+        id: "function-behavior",
+        type: "choice",
+        title: "Function behavior",
+        concept: "Function reasoning",
+        explain: "The value returned by a function can be used in another expression.",
+        example: `function square(x) { return x*x; }
+console.log(square(3) + 1);`,
+        deep: "Calling a function evaluates its body and produces its returned value.",
+        task: "What is printed?",
+        hints: ["square(3) returns 9.", "The console prints 9 + 1."],
+        options: ["9", "10", "31"],
+        answer: 1
+      }
+    ]
+  },
+  {
+    id: "arrays-collections",
+    title: "Arrays & collections",
+    subtitle: "Work with ordered groups of values",
+    icon: "▦",
+    color: "#5eead4",
+    lessons: [
+      {
+        id: "make-an-array",
+        type: "code",
+        title: "Make an array",
+        concept: "Arrays",
+        explain: "Arrays hold ordered collections of values. Items are separated by commas.",
+        example: "const colors = [\"red\", \"blue\"];",
+        deep: "Arrays are objects with indexed elements and a length property.",
+        task: "Create an array named fruits with Apple and Banana in that order.",
+        starter: "const fruits = [\"Apple\"];",
+        tests: [
+          { expr: "fruits", expect: ["Apple", "Banana"] }
+        ],
+        hints: ["Put another string after a comma.", "Add \"Banana\" after \"Apple\"."]
+      },
+      {
+        id: "index-from-zero",
+        type: "code",
+        title: "Index from zero",
+        concept: "Indexing",
+        explain: "Array indexes begin at 0. The first item is at index 0 and the second at index 1.",
+        example: "const names=[\"A\",\"B\"]; console.log(names[0]);",
+        deep: "Accessing an index beyond the end of an array returns undefined.",
+        task: "Set second to the second item from numbers.",
+        starter: `const numbers = [10, 20, 30];
+let second = numbers[0];`,
+        tests: [
+          { expr: "second", expect: 20 }
+        ],
+        hints: ["Which index represents the second position?", "Use numbers[1]."]
+      },
+      {
+        id: "add-an-item",
+        type: "code",
+        title: "Add an item",
+        concept: "Array methods",
+        explain: "push appends one or more items to the end of an array.",
+        example: "const items=[1]; items.push(2);",
+        deep: "push mutates the array and returns its new length.",
+        task: "Add 4 to the end of values using push.",
+        starter: "const values = [1, 2, 3];",
+        tests: [
+          { expr: "values", expect: [
+            1,
+            2,
+            3,
+            4
+          ] },
+          { expr: "__source.includes(\".push(\")", expect: true }
+        ],
+        hints: ["You need to call a method on values.", "Add values.push(4); after the declaration."]
+      },
+      {
+        id: "transform-with-map",
+        type: "code",
+        title: "Transform with map",
+        concept: "Array transformations",
+        explain: "map creates a new array by applying a function to every element.",
+        example: "const doubled=[1,2].map(n => n*2);",
+        deep: "map returns a new array; it does not modify the source array by itself.",
+        task: "Create doubled so it contains every value of numbers multiplied by 2.",
+        starter: `const numbers = [2, 4, 6];
+const doubled = numbers.map(n => n + 2);`,
+        tests: [
+          { expr: "doubled", expect: [
+            4,
+            8,
+            12
+          ] }
+        ],
+        hints: ["The callback receives each array item.", "Change n + 2 to n * 2."]
+      },
+      {
+        id: "filter-a-list",
+        type: "code",
+        title: "Filter a list",
+        concept: "Array filtering",
+        explain: "filter keeps elements for which a callback returns a truthy result.",
+        example: "const evens=[1,2,3].filter(n => n%2===0);",
+        deep: "filter preserves the original order of retained items.",
+        task: "Keep only values above 10 in big.",
+        starter: `const values = [4, 12, 7, 20];
+const big = values.filter(n => n < 10);`,
+        tests: [
+          { expr: "big", expect: [
+            12,
+            20
+          ] }
+        ],
+        hints: ["You need a greater-than comparison.", "Use n > 10 in the filter."]
+      }
+    ]
+  },
+  {
+    id: "objects-structured-data",
+    title: "Objects & structured data",
+    subtitle: "Model information using properties",
+    icon: "⬡",
+    color: "#fdba74",
+    lessons: [
+      {
+        id: "create-an-object",
+        type: "code",
+        title: "Create an object",
+        concept: "Objects",
+        explain: "An object groups named properties and their values.",
+        example: "const user={name:\"Ada\",age:30};",
+        deep: "Object properties can contain values of many types, including functions and nested objects.",
+        task: "Create a person object whose name is Sam and age is 25.",
+        starter: "const person = { name: \"Sam\", age: 0 };",
+        tests: [
+          { expr: "person.name", expect: "Sam" },
+          { expr: "person.age", expect: 25 }
+        ],
+        hints: ["Objects store key-value pairs.", "Change the age value to 25."]
+      },
+      {
+        id: "read-a-property",
+        type: "code",
+        title: "Read a property",
+        concept: "Property access",
+        explain: "Use dot notation to access a property by name.",
+        example: "const car={brand:\"Nissan\"}; console.log(car.brand);",
+        deep: "Bracket notation book[\"title\"] also works and supports dynamic property names.",
+        task: "Make selected equal the book title.",
+        starter: `const book = { title: "JavaScript Guide", pages: 200 };
+let selected = book.pages;`,
+        tests: [
+          { expr: "selected", expect: "JavaScript Guide" }
+        ],
+        hints: ["Look for the title property.", "Use book.title instead of book.pages."]
+      },
+      {
+        id: "change-a-property",
+        type: "code",
+        title: "Change a property",
+        concept: "Mutation",
+        explain: "Object properties can be changed even when the object was declared with const.",
+        example: "const user={score:0}; user.score=10;",
+        deep: "const prevents assigning a different object to player; it does not freeze the object.",
+        task: "Update player.score to 100.",
+        starter: `const player = { name: "Alex", score: 0 };
+player.score = 10;`,
+        tests: [
+          { expr: "player.score", expect: 100 }
+        ],
+        hints: ["Change the value on the assignment line.", "Set player.score = 100."]
+      },
+      {
+        id: "nested-objects",
+        type: "code",
+        title: "Nested objects",
+        concept: "Nested data",
+        explain: "Objects can contain other objects. Access properties one level at a time.",
+        example: "const x={address:{city:\"NY\"}}; console.log(x.address.city);",
+        deep: "Optional chaining (?.) can safely access nested properties when intermediate values may be null or undefined.",
+        task: "Set location to the city in account.profile.",
+        starter: `const account = { profile: { city: "Boston" } };
+let location = account.city;`,
+        tests: [
+          { expr: "location", expect: "Boston" }
+        ],
+        hints: ["The city lives inside profile.", "Use account.profile.city."]
+      },
+      {
+        id: "choose-a-data-shape",
+        type: "choice",
+        title: "Choose a data shape",
+        concept: "Data modeling",
+        explain: "Arrays are best for ordered lists; objects are best for named properties. They often work together.",
+        example: "const people=[{name:\"Ada\"},{name:\"Lin\"}];",
+        deep: "Data modeling is deciding how to represent real-world information as values and collections.",
+        task: "What is the best structure for a list of 20 users, each with a name and email?",
+        hints: ["You need multiple entries with named fields.", "Use an array containing user objects."],
+        options: ["One very long string", "An array of objects", "A single number"],
+        answer: 1
+      }
+    ]
+  },
+  {
+    id: "working-with-modern-data",
+    title: "Working with modern data",
+    subtitle: "JSON, copying, destructuring and defaults",
+    icon: "{}",
+    color: "#93c5fd",
+    lessons: [
+      {
+        id: "read-json",
+        type: "code",
+        title: "Read JSON",
+        concept: "JSON",
+        explain: "JSON is a text format used to exchange structured data. JSON.parse converts valid JSON text into JavaScript values.",
+        example: "const obj=JSON.parse(\"{\\\"ok\\\":true}\");",
+        deep: "JSON has strict syntax: double-quoted keys, no comments, and no trailing commas.",
+        task: "Parse the provided JSON and store the resulting object in parsed.",
+        starter: `const json = '{"name":"Ava","level":3}';
+const parsed = json;`,
+        tests: [
+          { expr: "parsed.name", expect: "Ava" },
+          { expr: "parsed.level", expect: 3 }
+        ],
+        hints: ["json is a string, not yet an object.", "Use JSON.parse(json)."]
+      },
+      {
+        id: "create-json",
+        type: "code",
+        title: "Create JSON",
+        concept: "Serialization",
+        explain: "JSON.stringify converts many JavaScript values to JSON text.",
+        example: "JSON.stringify({ok:true});",
+        deep: "JSON.stringify omits undefined properties in objects and cannot serialize functions.",
+        task: "Convert data into JSON and store it in output.",
+        starter: `const data = { task: "Learn", done: true };
+const output = data;`,
+        tests: [
+          { expr: "JSON.parse(output)", expect: { task: "Learn", done: true } },
+          { expr: "typeof output", expect: "string" }
+        ],
+        hints: ["You need a string, not an object.", "Use JSON.stringify(data)."]
+      },
+      {
+        id: "destructure-an-object",
+        type: "code",
+        title: "Destructure an object",
+        concept: "Destructuring",
+        explain: "Destructuring extracts named properties into variables.",
+        example: "const {name}= {name:\"Ada\"};",
+        deep: "Destructuring supports aliases and default values.",
+        task: "Extract title from article using destructuring.",
+        starter: `const article = { title: "Hello JS", views: 100 };
+const { views } = article;`,
+        tests: [
+          { expr: "title", expect: "Hello JS" }
+        ],
+        hints: ["Match the variable name to the object property.", "Use const { title } = article."]
+      },
+      {
+        id: "copy-with-spread",
+        type: "code",
+        title: "Copy with spread",
+        concept: "Spread syntax",
+        explain: "Spread can copy elements or properties into new collections.",
+        example: "const next=[...oldItems,4];",
+        deep: "Spread creates a shallow copy; nested objects are still shared references.",
+        task: "Create updated as a new array containing 1, 2, 3, 4, without changing original.",
+        starter: `const original = [1, 2, 3];
+const updated = [...original];`,
+        tests: [
+          { expr: "updated", expect: [
+            1,
+            2,
+            3,
+            4
+          ] },
+          { expr: "original", expect: [
+            1,
+            2,
+            3
+          ] }
+        ],
+        hints: ["Spread the original elements into a new array.", "Add , 4 after ...original."]
+      },
+      {
+        id: "default-to-something-useful",
+        type: "code",
+        title: "Default to something useful",
+        concept: "Nullish coalescing",
+        explain: "The ?? operator uses a fallback only when the left value is null or undefined.",
+        example: "const label = input ?? \"Unknown\";",
+        deep: "Use ?? for missing values; use || when any falsy value should trigger a fallback.",
+        task: "Set displayName to the username or Guest when username is null.",
+        starter: `const username = null;
+const displayName = username || "Guest";`,
+        tests: [
+          { expr: "displayName", expect: "Guest" },
+          { expr: "__source.includes(\"??\")", expect: true }
+        ],
+        hints: ["|| also replaces empty strings and zero.", "Use ?? instead of ||."]
+      }
+    ]
+  },
+  {
+    id: "deeper-javascript-mechanics",
+    title: "Deeper JavaScript mechanics",
+    subtitle: "Callbacks, closures, context and references",
+    icon: "⚙",
+    color: "#f0abfc",
+    lessons: [
+      {
+        id: "functions-as-values",
+        type: "code",
+        title: "Functions as values",
+        concept: "Callbacks",
+        explain: "Functions can be passed to other functions as arguments. The receiving function can call them.",
+        example: `function run(action){action();}
+run(()=>console.log("Hi"));`,
+        deep: "Callbacks are common in event handlers, array methods and asynchronous operations.",
+        task: "Make execute call the callback it receives.",
+        starter: `function execute(callback) {
+  // call the callback here
+}
+execute(() => console.log("Done"));`,
+        tests: [
+          { expr: "__logs[0]", expect: "Done" }
+        ],
+        hints: ["callback is a function value.", "Call callback() inside execute."]
+      },
+      {
+        id: "arrow-functions",
+        type: "code",
+        title: "Arrow functions",
+        concept: "Arrow syntax",
+        explain: "Arrow functions provide a compact function expression syntax.",
+        example: "const double = x => x * 2;",
+        deep: "Concise arrow functions implicitly return their expression. Block-bodied arrows need an explicit return.",
+        task: "Make square return its input squared.",
+        starter: "const square = x => x + x;",
+        tests: [
+          { expr: "square(4)", expect: 16 },
+          { expr: "square(7)", expect: 49 }
+        ],
+        hints: ["Squaring is multiplication by itself.", "Use x * x."]
+      },
+      {
+        id: "closures-remember",
+        type: "code",
+        title: "Closures remember",
+        concept: "Closures",
+        explain: "A function can remember variables from the outer scope where it was created.",
+        example: "function make(){let n=0;return ()=>++n;}",
+        deep: "Closures are useful for encapsulation, stateful functions and event handlers.",
+        task: "Make makeCounter return a function that increases and returns a private count starting from 0.",
+        starter: `function makeCounter() {
+  let count = 0;
+  return function() {
+    return count;
+  };
+}`,
+        tests: [
+          { expr: "(() => { const c=makeCounter(); return [c(),c(),c()]; })()", expect: [
+            1,
+            2,
+            3
+          ] }
+        ],
+        hints: ["The inner function remembers count.", "Increase count before returning it."]
+      },
+      {
+        id: "reference-vs-copy",
+        type: "code",
+        title: "Reference vs copy",
+        concept: "References",
+        explain: "Objects and arrays are reference values. Two variables can point to the same object.",
+        example: "const a={n:1}; const b=a; b.n=2;",
+        deep: "For nested data, shallow copies still share references to nested objects.",
+        task: "Make copy an independent shallow copy of original so changing copy does not change original.",
+        starter: `const original = { score: 10 };
+const copy = original;
+copy.score = 20;`,
+        tests: [
+          { expr: "original.score", expect: 10 },
+          { expr: "copy.score", expect: 20 }
+        ],
+        hints: ["Assigning an object does not copy it.", "Use { ...original } for a shallow copy."]
+      },
+      {
+        id: "understand-mutation",
+        type: "choice",
+        title: "Understand mutation",
+        concept: "Reference prediction",
+        explain: "Changing a shared object affects every variable that refers to that object.",
+        example: "const a=[1]; const b=a; b.push(2);",
+        deep: "Primitive values copy as values; objects are assigned and passed by sharing a reference to an object.",
+        task: "What is a.length after b.push(2)?",
+        hints: ["a and b point to the same array.", "push changes that shared array."],
+        options: ["1", "2", "undefined"],
+        answer: 1
+      }
+    ]
+  },
+  {
+    id: "async-javascript-apis",
+    title: "Async JavaScript & APIs",
+    subtitle: "Understand work that finishes later",
+    icon: "◷",
+    color: "#fda4af",
+    lessons: [
+      {
+        id: "the-event-loop-idea",
+        type: "choice",
+        title: "The event loop idea",
+        concept: "Asynchronous execution",
+        explain: "Some operations finish later. Synchronous code runs first; queued callbacks are handled afterward.",
+        example: `console.log("A");
+setTimeout(()=>console.log("B"),0);
+console.log("C");`,
+        deep: "The event loop schedules tasks; microtasks like promise reactions run at different checkpoints.",
+        task: "Which order is printed?",
+        hints: ["setTimeout schedules a callback for later.", "The two synchronous console calls run before B."],
+        options: ["A, B, C", "A, C, B", "B, A, C"],
+        answer: 1
+      },
+      {
+        id: "a-promise-represents-a-result",
+        type: "code",
+        title: "A promise represents a result",
+        concept: "Promises",
+        explain: "A promise represents eventual success or failure. .then receives its resolved value.",
+        example: "Promise.resolve(5).then(n=>console.log(n));",
+        deep: "Promises have pending, fulfilled and rejected states. Handlers execute asynchronously.",
+        task: "Make result a promise that resolves to 42.",
+        starter: "const result = Promise.resolve(0);",
+        tests: [
+          { expr: "await result", expect: 42 }
+        ],
+        hints: ["Promise.resolve creates an already fulfilled promise.", "Change 0 to 42."]
+      },
+      {
+        id: "await-the-result",
+        type: "code",
+        title: "Await the result",
+        concept: "Async/await",
+        explain: "await lets async functions pause until a promise settles, without blocking the entire browser.",
+        example: "async function get(){return await Promise.resolve(3);}",
+        deep: "An async function always returns a promise, even if it returns a plain value.",
+        task: "Make fetchScore return 100 asynchronously.",
+        starter: `async function fetchScore() {
+  return await Promise.resolve(10);
+}`,
+        tests: [
+          { expr: "await fetchScore()", expect: 100 }
+        ],
+        hints: ["The promised value is currently 10.", "Change it to 100."]
+      },
+      {
+        id: "handle-failure",
+        type: "code",
+        title: "Handle failure",
+        concept: "Error handling",
+        explain: "try/catch lets code handle an error without crashing the rest of the program.",
+        example: "try { JSON.parse(\"bad\"); } catch(e) { console.log(\"Invalid\"); }",
+        deep: "Catch only errors you can handle meaningfully; silent failure can hide important bugs.",
+        task: "Make parseData return null when given invalid JSON, instead of throwing an error.",
+        starter: `function parseData(text) {
+  return JSON.parse(text);
+}`,
+        tests: [
+          { expr: "parseData(\"{\\\"ok\\\":true}\")", expect: { ok: true } },
+          { expr: "parseData(\"broken\")", expect: null }
+        ],
+        hints: ["JSON.parse can throw an exception.", "Wrap it in try/catch, and return null in catch."]
+      },
+      {
+        id: "understand-an-api",
+        type: "choice",
+        title: "Understand an API",
+        concept: "APIs and HTTP",
+        explain: "An API is a defined way for systems to communicate. HTTP requests often return JSON data.",
+        example: "// Example: GET /users/7 => {\"id\":7,\"name\":\"Ada\"}",
+        deep: "GET is intended to be safe; POST typically submits data, PATCH modifies part of a resource.",
+        task: "Which HTTP method is usually used to retrieve a resource without changing it?",
+        hints: ["Think of reading, not writing.", "GET requests retrieve resources."],
+        options: ["GET", "POST", "DELETE"],
+        answer: 0
+      }
+    ]
+  },
+  {
+    id: "debugging-testing",
+    title: "Debugging & testing",
+    subtitle: "Investigate failures with evidence",
+    icon: "⌁",
+    color: "#fcd34d",
+    lessons: [
+      {
+        id: "fix-the-broken-formula",
+        type: "code",
+        title: "Fix the broken formula",
+        concept: "Logic bugs",
+        explain: "Logic bugs are valid code that produces the wrong result. Test examples help reveal them.",
+        example: "function area(w,h){return w*h;}",
+        deep: "Good tests include ordinary cases, boundary conditions and unusual valid inputs.",
+        task: "Fix area so it returns the area of a rectangle for any width and height.",
+        starter: `function area(width, height) {
+  return width + height;
+}`,
+        tests: [
+          { expr: "area(3,4)", expect: 12 },
+          { expr: "area(7,2)", expect: 14 },
+          { expr: "area(0,5)", expect: 0 }
+        ],
+        hints: ["Area is not width plus height.", "Multiply the two values."]
+      },
+      {
+        id: "fix-an-off-by-one-bug",
+        type: "code",
+        title: "Fix an off-by-one bug",
+        concept: "Boundary tests",
+        explain: "Off-by-one bugs happen near limits and indexes. Testing the boundary is often the fastest way to detect them.",
+        example: "for(let i=0;i<items.length;i++){}",
+        deep: "Array indexes run from 0 through length - 1. Accessing items[length] returns undefined.",
+        task: "Fix the loop so it prints every array element exactly once.",
+        starter: `const items = ["A", "B", "C"];
+for (let i = 0; i <= items.length; i++) {
+  console.log(items[i]);
+}`,
+        tests: [
+          { expr: "__logs.join(\",\")", expect: "A,B,C" }
+        ],
+        hints: ["The last valid index is length - 1.", "Change <= to < in the loop condition."]
+      },
+      {
+        id: "test-with-multiple-inputs",
+        type: "code",
+        title: "Test with multiple inputs",
+        concept: "Defensive reasoning",
+        explain: "A solution that works for one example may fail on another. General solutions handle the full requirements.",
+        example: "function isEven(n){return n%2===0;}",
+        deep: "Automated tests are repeatable checks of behavior. They help catch regressions after edits.",
+        task: "Fix isEven so it works for positive, zero and negative integers.",
+        starter: `function isEven(n) {
+  return n > 0;
+}`,
+        tests: [
+          { expr: "isEven(2)", expect: true },
+          { expr: "isEven(3)", expect: false },
+          { expr: "isEven(0)", expect: true },
+          { expr: "isEven(-4)", expect: true }
+        ],
+        hints: ["Evenness is about divisibility by two.", "Return n % 2 === 0."]
+      },
+      {
+        id: "validate-input",
+        type: "code",
+        title: "Validate input",
+        concept: "Input validation",
+        explain: "Software should check assumptions before using incoming data.",
+        example: "function greet(n){if(typeof n!==\"string\")return \"Invalid\";}",
+        deep: "Input validation guards boundaries; it is especially important for untrusted data.",
+        task: "Make formatName return \"Invalid\" for non-string values, otherwise return the name in uppercase.",
+        starter: `function formatName(name) {
+  return name.toUpperCase();
+}`,
+        tests: [
+          { expr: "formatName(\"ada\")", expect: "ADA" },
+          { expr: "formatName(42)", expect: "Invalid" },
+          { expr: "formatName(null)", expect: "Invalid" }
+        ],
+        hints: ["The code crashes when name is not a string.", "Check typeof name !== \"string\" first."]
+      },
+      {
+        id: "error-types",
+        type: "choice",
+        title: "Read the error",
+        concept: "Error literacy",
+        explain: "Errors often tell you what happened and where. TypeError, ReferenceError and SyntaxError point to different failure categories.",
+        example: "console.log(missingName); // ReferenceError",
+        deep: "SyntaxError means source cannot be parsed; TypeError often means an operation is incompatible with a value.",
+        task: "Which error usually occurs when you refer to an undeclared variable?",
+        hints: ["The identifier cannot be found.", "The engine cannot resolve the variable name."],
+        options: ["ReferenceError", "RangeError", "URIError"],
+        answer: 0
+      }
+    ]
+  }
+];
+
+</script>
+<script>
+(() => {
+'use strict';
+const app=document.getElementById('app');
+// Lessons can be written in the new format (quiz + exercise) or the older one (type: "code" or "choice").
+// This turns older lessons into the new shape so the rest of the app only deals with one format.
+function normalizeLesson(l){
+ if(l.quiz||'exercise' in l)return {...l,quiz:l.quiz||[],exercise:l.exercise||null};
+ if(l.type==='choice')return {...l,quiz:[{question:l.task,code:l.code,options:l.options,answer:l.answer,explain:l.success||l.deep,feedback:l.feedback}],exercise:null};
+ return {...l,quiz:[],exercise:{task:l.task,starter:l.starter,tests:l.tests,hints:l.hints||[],success:l.success}};
+}
+const flat=MODULES.flatMap((m,mi)=>m.lessons.map((l,li)=>({...normalizeLesson(l),mi,li})));
+const state={view:'lesson',selected:0,completed:new Set(),mastered:new Set(),xp:0,code:{},choice:{},hints:{},outputs:{},feedback:{},deep:new Set(),expanded:0,mobile:false,modal:null,search:'',referenceDetail:null,playFiles:{'main.js':'// Welcome to the Playground!\n// Edit this code and press Run.\n\nconst greeting = "Hello, developer!";\nconsole.log(greeting);','helpers.js':'// Helper functions go here.\nfunction square(number) {\n  return number * number;\n}'},playActive:'main.js',pgOutput:null,pgFeedback:null,attempts:{},exampleOut:{},tryCode:{},tryOut:{},confirmReset:false,quizPick:{},quizRight:{},quizMiss:{},exDone:new Set(),step:{},stepOut:{},lastLesson:null};
+const $=s=>document.querySelector(s);
+const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const attrs=s=>escapeHtml(s);
+// Lesson text formatting: blank line = new paragraph, `code`, **bold**, *italic*.
+const rich=t=>String(t??'').split(/\n{2,}/).map(par=>'<p>'+par.split(/(`[^`]+`)/).map(seg=>seg.length>1&&seg.startsWith('`')&&seg.endsWith('`')?`<code>${escapeHtml(seg.slice(1,-1))}</code>`:escapeHtml(seg).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/\n/g,'<br>')).join('')+'</p>').join('');
+const firstPara=t=>String(t??'').split(/\n{2,}/)[0];
+// The error from a run, whether the whole run failed or the code itself threw.
+const runError=out=>out?.error||out?.results?.[0]?.error||null;
+// Mastery uses the module's own fresh challenges when it has them.
+const masteryTasks=mi=>MODULES[mi].mastery?.length?MODULES[mi].mastery:flat.filter(x=>x.mi===mi&&x.exercise).map(x=>x.exercise);
+const current=()=>flat[state.selected];
+const getCode=l=>state.code[l.id]??l.exercise.starter;
+const pct=(a,b)=>b?Math.round(a/b*100):0;
+const nDone=mi=>MODULES[mi].lessons.filter(l=>state.completed.has(l.id)).length;
+const nextNotDone=()=>Math.max(0,flat.findIndex(l=>!state.completed.has(l.id)));
+const moduleNames=MODULES.map(m=>m.title);
+const safeStr=v=>{try{if(typeof v==='string')return v;if(v===undefined)return 'undefined';return JSON.stringify(v);}catch{return String(v)}};
+// ---- Saving ----
+// Progress is stored in this browser only (localStorage). Nothing is sent anywhere.
+const SAVE_KEY='arc-progress-v1';
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,selected:current().id,completed:[...state.completed],mastered:[...state.mastered],xp:state.xp,code:state.code,choice:state.choice,hints:state.hints,attempts:state.attempts,quizPick:state.quizPick,quizRight:state.quizRight,quizMiss:state.quizMiss,exDone:[...state.exDone],playFiles:state.playFiles,playActive:state.playActive}))}catch{}}
+function load(){try{
+ const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(!d||d.v!==1)return;
+ const ids=new Set(flat.map(l=>l.id));const keep=o=>Object.fromEntries(Object.entries(o||{}).filter(([k])=>ids.has(k)));
+ state.completed=new Set((d.completed||[]).filter(id=>ids.has(id)));
+ state.mastered=new Set((d.mastered||[]).filter(n=>Number.isInteger(n)&&n>=0&&n<MODULES.length));
+ state.xp=Math.max(0,+d.xp||0);state.code=keep(d.code);state.choice=keep(d.choice);state.hints=keep(d.hints);state.attempts=keep(d.attempts);state.quizPick=keep(d.quizPick);state.quizRight=keep(d.quizRight);state.quizMiss=keep(d.quizMiss);
+ state.exDone=new Set([...(d.exDone||[]).filter(id=>ids.has(id)),...[...state.completed].filter(id=>flat.find(l=>l.id===id)?.exercise)]);
+ if(d.playFiles&&typeof d.playFiles==='object'&&Object.keys(d.playFiles).length){state.playFiles=d.playFiles;state.playActive=d.playActive in d.playFiles?d.playActive:Object.keys(d.playFiles)[0]}
+ const i=flat.findIndex(l=>l.id===d.selected);if(i>=0){state.selected=i;state.expanded=flat[i].mi}
+}catch{}}
+let saveTimer;const saveSoon=()=>{clearTimeout(saveTimer);saveTimer=setTimeout(save,400)};
+function resetProgress(){
+ if(!state.confirmReset){state.confirmReset=true;render();setTimeout(()=>{if(state.confirmReset){state.confirmReset=false;render()}},4000);return}
+ try{localStorage.removeItem(SAVE_KEY)}catch{}
+ Object.assign(state,{confirmReset:false,selected:0,expanded:0,completed:new Set(),mastered:new Set(),xp:0,code:{},choice:{},hints:{},outputs:{},feedback:{},attempts:{},deep:new Set(),modal:null,tryCode:{},tryOut:{},quizPick:{},quizRight:{},quizMiss:{},exDone:new Set(),step:{},stepOut:{},playFiles:{'main.js':'console.log("Hello, world!");','helpers.js':'function square(n) {\n  return n * n;\n}'},playActive:'main.js',pgOutput:null,pgFeedback:null});
+ toast('Progress erased');showView('dashboard')}
+load();
+// ---- Code runner ----
+// Student code runs in a Web Worker: a separate background thread with no access to this page.
+// If it runs too long (for example an infinite loop), the worker is shut down, so the page never freezes.
+const WORKER_SOURCE=`
+for(const k of ['fetch','XMLHttpRequest','WebSocket','EventSource','importScripts','Worker','SharedWorker','indexedDB','caches'])try{self[k]=undefined}catch{}
+const realSetTimeout=setTimeout,realClearTimeout=clearTimeout;let pending=new Set();
+self.setTimeout=(fn,ms,...a)=>{const t=realSetTimeout(()=>{pending.delete(t);if(typeof fn==='function')fn(...a)},ms);pending.add(t);return t};
+self.clearTimeout=t=>{pending.delete(t);realClearTimeout(t)};
+function fmt(x){if(typeof x==='string')return x;if(x===undefined)return 'undefined';if(typeof x==='function')return String(x);if(typeof x==='bigint')return x+'n';if(typeof x==='number'&&!Number.isFinite(x))return String(x);try{const j=JSON.stringify(x);return j===undefined?String(x):j}catch{return String(x)}}
+function normalize(v){if(v===undefined)return {__undefined__:true};if(typeof v==='number'&&!Number.isFinite(v))return String(v);try{return JSON.parse(JSON.stringify(v))}catch{return String(v)}}
+onmessage=async e=>{
+ const p=e.data;const results=[];let firstLogs=[];
+ const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
+ const tests=p.tests.length?p.tests:[{expr:'undefined'}];
+ for(let i=0;i<tests.length;i++){
+  const logs=[];const line=(pre,a)=>logs.push(pre+a.map(fmt).join(' '));
+  const fake={log:(...a)=>line('',a),info:(...a)=>line('',a),warn:(...a)=>line('WARN ',a),error:(...a)=>line('ERROR ',a)};
+  pending=new Set();
+  try{const fn=new AsyncFunction('__logs','__source','__console','const console=__console;\\n'+p.source+'\\nreturn ('+tests[i].expr+');');
+   const actual=await fn(logs,p.source,fake);results.push({actual:normalize(actual)});}
+  catch(err){results.push({error:(err&&err.name?err.name+': ':'')+String(err&&err.message||err)})}
+  if(i===0){const t0=Date.now();while(pending.size&&Date.now()-t0<2500)await new Promise(r=>realSetTimeout(r,20));firstLogs=logs}
+ }
+ postMessage({results,logs:firstLogs,error:null});
+};`;
+let workerURL=null;
+function runIsolated(source,tests=[]){return new Promise(resolve=>{
+ let worker;
+ try{if(!workerURL)workerURL=URL.createObjectURL(new Blob([WORKER_SOURCE],{type:'text/javascript'}));worker=new Worker(workerURL)}
+ catch(e){resolve({results:[],logs:[],error:'This browser blocked the code runner ('+e.message+').'});return}
+ let done=false;
+ const finish=r=>{if(done)return;done=true;clearTimeout(timer);worker.terminate();resolve(r)};
+ const timer=setTimeout(()=>finish({timeout:true,results:[],logs:[],error:'Stopped after 5 seconds. Check for an infinite loop or code that never finishes.'}),5000);
+ worker.onmessage=e=>finish(e.data);
+ worker.onerror=e=>{e.preventDefault();finish({results:[],logs:[],error:e.message||'The code runner failed.'})};
+ worker.postMessage({source,tests});
+});}
+function equal(a,b){return JSON.stringify(a)===JSON.stringify(b)}
+function testResults(raw,tests){return tests.map((t,i)=>{const r=raw.results?.[i];return {ok:!!r&&!r.error&&equal(r.actual,t.expect),actual:r?.actual,error:r?.error,expect:t.expect}})}
+function toast(msg){let wrap=$('.toast-wrap');if(!wrap){wrap=document.createElement('div');wrap.className='toast-wrap';document.body.appendChild(wrap)}const el=document.createElement('div');el.className='toast';el.textContent=msg;wrap.appendChild(el);setTimeout(()=>el.remove(),2500)}
+function resetForReview(l){state.code[l.id]=l.exercise.starter;delete state.feedback[l.id];delete state.outputs[l.id];state.hints[l.id]=0}
+function showView(view){state.view=view;state.modal=null;state.mobile=false;render();window.scrollTo({top:0,behavior:'instant'});}
+function goLesson(index){if(index<0||index>=flat.length)return;state.selected=index;state.expanded=flat[index].mi;showView('lesson')}
+const referenceItems=[['console.log','Print values for debugging','console.log("Hello");'],['let','Declare a changeable binding','let count = 1;'],['const','Declare a binding that cannot be reassigned','const name = "Ada";'],['typeof','Check the type of a value','typeof 42; // "number"'],['===','Compare values without type coercion','5 === "5"; // false'],['&& and ||','Combine conditions with AND or OR','true && false; // false'],['if / else','Run code based on conditions','if (age >= 18) { /* ... */ }'],['for','Repeat code using a counter','for (let i=0;i<3;i++) {}'],['while','Repeat while a condition is truthy','while (count < 5) count++;'],['function','Package reusable logic','function add(a,b){ return a+b; }'],['return','Send a value back to the caller','return number * 2;'],['scope','Control where bindings are accessible','function f(){ let local = 1; }'],['array','Store a list of values','const colors = ["red","blue"];'],['push','Append an item to an array','colors.push("green");'],['map','Transform every element into a new array','[1,2].map(n => n*2);'],['filter','Keep values that match a condition','[1,2,3].filter(n=>n>1);'],['object','Group named properties','const user = {name:"Ada"};'],['JSON.parse','Convert JSON text into values','JSON.parse("{\\"ok\\":true}");'],['JSON.stringify','Convert a value to JSON text','JSON.stringify({ok:true});'],['... spread','Copy or expand arrays and objects','const b = [...a,4];'],['??','Use a fallback for null or undefined','const name = input ?? "Guest";'],['Promise','Represent a future result','Promise.resolve(42);'],['async/await','Wait for promises inside an async function','const x = await Promise.resolve(5);'],['try/catch','Catch and handle thrown errors','try { risky(); } catch(e) {}'],['callback','Pass a function to another function','[1,2].map(n => n*2);'],['closure','Remember variables from an outer scope','function outer(){let n=0;return ()=>++n;}'],['debugging','Find and correct program behavior','console.log(value); // inspect'],['testing','Check outcomes for many inputs','add(2,3) === 5;']];
+const awardDefs=[['⚡','First spark','Complete your first lesson',()=>state.completed.size>=1],['◎','Getting started','Complete 5 lessons',()=>state.completed.size>=5],['✦','Momentum','Complete 15 lessons',()=>state.completed.size>=15],['◇','Dedicated','Complete 30 lessons',()=>state.completed.size>=30],['◈','JavaScript explorer',`Complete all ${flat.length} lessons`,()=>state.completed.size===flat.length],['◆','Master of fundamentals','Earn 3 module mastery markers',()=>state.mastered.size>=3],['♛','Full mastery','Master all 12 modules',()=>state.mastered.size===MODULES.length]];
+
+// =====================================================================
+// Screens. Each function returns the HTML for one part of the page.
+// render() at the bottom puts them together.
+// =====================================================================
+
+const NAV = [['lesson', 'Learn'], ['course', 'Lessons'], ['tree', 'Skill map'], ['playground', 'Playground'], ['reference', 'Reference'], ['awards', 'Progress']];
+
+function header() {
+  const l = current();
+  const total = MODULES[l.mi].lessons.length;
+  const lessonInfo = state.view === 'lesson'
+    ? `<span class="hide-sm">Lesson ${l.li + 1} of ${total}</span>
+       <div class="progress-track hide-sm" aria-hidden="true"><div class="progress-fill" style="width:${pct(nDone(l.mi), total)}%"></div></div>`
+    : '';
+  const pctDone = state.view === 'lesson' ? pct(nDone(l.mi), total) : pct(state.completed.size, flat.length);
+  return `<header class="topbar">
+    <div class="header-line" aria-hidden="true"><div style="width:${pctDone}%"></div></div>
+    <div class="topbar-left">
+      <button class="brand" data-action="dashboard" aria-label="ARC home">ARC</button>
+      <nav class="topnav ${state.mobile ? 'open' : ''}" aria-label="Main">
+        ${NAV.map(([id, label]) => `<button class="nav-link ${state.view === id ? 'active' : ''}" data-action="view" data-view="${id}">${label}</button>`).join('')}
+      </nav>
+    </div>
+    <div class="topbar-right">
+      ${lessonInfo}
+      <span class="xp">${state.xp.toLocaleString()} XP</span>
+      <button class="menu-btn" data-action="menu" aria-label="Menu" aria-expanded="${state.mobile}">☰</button>
+    </div>
+  </header>`;
+}
+
+// A code editor box. id decides which piece of state it edits (see the input handler).
+function editor(id, value, filename, rows = 8) {
+  return `<div class="editor">
+    <div class="editor-head"><span>${escapeHtml(filename)}</span><span>Ctrl/⌘ + Enter to run</span></div>
+    <textarea id="${id}" class="editor-text" rows="${rows}" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-label="Code editor">${escapeHtml(value)}</textarea>
+  </div>`;
+}
+
+// Printed lines first, then the error (if the program stopped with one).
+function consoleLines(out) {
+  const err = runError(out);
+  const lines = (out.logs || []).map(t => `<div class="console-line">› ${escapeHtml(t)}</div>`).join('');
+  return lines + (err ? `<div class="console-line error">✕ ${escapeHtml(err)}</div>` : '') || '<div class="console-line muted">(no output)</div>';
+}
+function consoleView(out) {
+  return `<div class="console" aria-live="polite">${consoleLines(out)}</div>`;
+}
+
+// "See it happen": the lesson's example is actually run, and its real output shown.
+function exampleOutput(l) {
+  const out = state.exampleOut[l.id];
+  if (!out) return '<div class="console-line muted">Running…</div>';
+  if (runError(out) && !l.exampleShowsError) return '<div class="console-line muted">This snippet is a fragment, not a complete program.</div>';
+  return consoleLines(out);
+}
+function ensureExample(l) {
+  if (l.id in state.exampleOut) return;
+  state.exampleOut[l.id] = null;
+  runIsolated(l.example).then(result => {
+    state.exampleOut[l.id] = result;
+    const box = document.querySelector('#step-see .console');
+    if (box && current().id === l.id) box.innerHTML = exampleOutput(l);
+  });
+}
+
+// ---------- Code coloring for read-only code (strings, numbers, keywords, comments) ----------
+const KEYWORDS = new Set(['const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while', 'do', 'break', 'continue', 'true', 'false', 'null', 'undefined', 'new', 'typeof', 'async', 'await', 'try', 'catch', 'throw', 'switch', 'case', 'default', 'class', 'of', 'in']);
+function hl(code) {
+  const re = /(\/\/.*$|\/\*[\s\S]*?\*\/)|("(?:[^"\\\n]|\\.)*"?|'(?:[^'\\\n]|\\.)*'?|`(?:[^`\\]|\\.)*`?)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)/gm;
+  let out = '', last = 0, m;
+  while ((m = re.exec(code))) {
+    out += escapeHtml(code.slice(last, m.index));
+    const t = escapeHtml(m[0]);
+    if (m[1]) out += `<span class="t-com">${t}</span>`;
+    else if (m[2]) out += `<span class="t-str">${t}</span>`;
+    else if (m[3]) out += `<span class="t-num">${t}</span>`;
+    else out += KEYWORDS.has(m[0]) ? `<span class="t-key">${t}</span>` : t;
+    last = re.lastIndex;
+  }
+  return out + escapeHtml(code.slice(last));
+}
+// Formatted text without the surrounding paragraph (for short labels like quiz options).
+const inline = t => rich(t).replace(/^<p>|<\/p>$/g, '');
+
+// ---------- "How to write it": each piece of the code, numbered and explained ----------
+function syntaxView(s) {
+  return `<div class="anatomy">
+    ${s.parts ? `<div class="anatomy-code" aria-hidden="true">${s.parts.map((p, i) => `<span class="tok"><code class="tok-text">${hl(p[0])}</code><span class="tok-num">${i + 1}</span></span>`).join('')}</div>
+    <ol class="anatomy-list">${s.parts.map(p => `<li><code>${escapeHtml(p[0])}</code><div>${inline(p[1])}</div></li>`).join('')}</ol>` : ''}
+    ${s.rules?.length ? `<div class="rules"><span class="rules-label">Rules</span><ul>${s.rules.map(r => `<li>${inline(r)}</li>`).join('')}</ul></div>` : ''}
+  </div>`;
+}
+
+// ---------- "See it happen" step-through: run the example one line at a time ----------
+function runnableLines(code) {
+  return code.split('\n').map((t, i) => ({ t: t.trim(), i })).filter(x => x.t && !x.t.startsWith('//')).map(x => x.i);
+}
+function stepperView(l) {
+  const lines = l.example.split('\n'), exec = runnableLines(l.example);
+  const k = state.step[l.id] || 0, out = state.stepOut[l.id];
+  const stopped = !!(out && runError(out));
+  const current = k ? exec[k - 1] : -1;
+  const next = !stopped && k < exec.length ? exec[k] : -1;
+  const status = stopped ? `Stopped with an error on line ${current + 1}.`
+    : k === 0 ? 'Press Step to run the first line.'
+    : k >= exec.length ? 'Finished: every line has run.'
+    : `Line ${current + 1} just ran. Line ${next + 1} is next.`;
+  return `<div class="see stepper">
+    <div class="see-box">
+      <span class="see-label">The code</span>
+      <pre class="code-block lines">${lines.map((t, i) => `<span class="ln ${i === current ? (stopped ? 'current error' : 'current') : i < current ? 'ran' : ''} ${i === next ? 'next' : ''}"><span class="ln-n">${i + 1}</span><span class="ln-t">${hl(t) || ' '}</span></span>`).join('')}</pre>
+    </div>
+    <div class="see-box">
+      <span class="see-label">What it prints</span>
+      <div class="console">${k ? consoleLines(out || { logs: [] }) : '<div class="console-line muted">Nothing yet.</div>'}</div>
+      <p class="step-status">${status}</p>
+      <div class="row">
+        <button class="btn primary sm" data-action="step" ${stopped || k >= exec.length ? 'disabled' : ''}>Step ▸</button>
+        <button class="btn sm" data-action="step-all" ${stopped || k >= exec.length ? 'disabled' : ''}>Run all</button>
+        <button class="btn ghost sm" data-action="step-reset" ${k ? '' : 'disabled'}>Reset</button>
+      </div>
+    </div>
+  </div>`;
+}
+async function doStep(l, toEnd) {
+  const exec = runnableLines(l.example), lines = l.example.split('\n');
+  let k = state.step[l.id] || 0, out = state.stepOut[l.id];
+  do {
+    k++;
+    out = await runIsolated(lines.slice(0, exec[k - 1] + 1).join('\n'));
+  } while (toEnd && k < exec.length && !runError(out));
+  state.step[l.id] = k; state.stepOut[l.id] = out;
+  render();
+}
+
+// ---------- Quick check: multiple choice with an explanation for every answer ----------
+function quizView(l) {
+  const picks = state.quizPick[l.id] || {}, right = state.quizRight[l.id] || {};
+  return l.quiz.map((q, qi) => {
+    const pick = picks[qi], solved = !!right[qi];
+    const fb = pick === undefined ? ''
+      : pick === q.answer ? `<div class="feedback good"><strong>Correct.</strong>${rich(q.explain || '')}</div>`
+      : `<div class="feedback bad"><strong>Not quite.</strong>${rich(q.feedback?.[pick] || 'Read the code again, one line at a time, then try another answer.')}</div>`;
+    return `<div class="quiz-q ${solved ? 'solved' : ''}">
+      <div class="q-head"><span class="q-num">Question ${qi + 1} of ${l.quiz.length}</span>${solved ? '<span class="badge-done">✓ Answered</span>' : ''}</div>
+      <div class="task">${rich(q.question)}</div>
+      ${q.code ? `<pre class="code-block">${hl(q.code)}</pre>` : ''}
+      <div class="options">${q.options.map((o, oi) => {
+        const cls = pick === oi ? (oi === q.answer ? 'correct' : 'wrong') : '';
+        return `<button class="option ${cls}" data-action="quiz" data-q="${qi}" data-o="${oi}" ${solved ? 'disabled' : ''}><span class="option-key">${String.fromCharCode(65 + oi)}</span><span>${inline(o)}</span></button>`;
+      }).join('')}</div>
+      ${fb}
+    </div>`;
+  }).join('');
+}
+function answerQuiz(l, qi, oi) {
+  if (state.quizRight[l.id]?.[qi]) return;
+  (state.quizPick[l.id] ??= {})[qi] = oi;
+  if (oi === l.quiz[qi].answer) {
+    (state.quizRight[l.id] ??= {})[qi] = true;
+    const firstTry = !state.quizMiss[l.id]?.[qi];
+    state.xp += firstTry ? 10 : 5;
+    toast(firstTry ? '✦ +10 XP · Correct first try' : '✦ +5 XP · Correct');
+    maybeComplete(l);
+  } else {
+    (state.quizMiss[l.id] ??= {})[qi] = true;
+  }
+  render();
+}
+
+// A lesson is complete when every quiz question is answered correctly and the exercise (if any) has passed.
+function maybeComplete(l) {
+  if (state.completed.has(l.id)) return;
+  const quizDone = l.quiz.every((_, i) => state.quizRight[l.id]?.[i]);
+  const exDone = !l.exercise || state.exDone.has(l.id);
+  if (quizDone && exDone) { state.completed.add(l.id); toast('✓ Lesson complete'); }
+}
+
+// ---------- The lesson page ----------
+const SECTIONS = [['step-idea', 'The idea'], ['step-how', 'How it works'], ['step-write', 'How to write it'], ['step-see', 'See it happen'], ['step-try', 'Try it'], ['step-quiz', 'Quick check'], ['step-turn', 'Your turn']];
+
+function lessonPage() {
+  const l = current(), mi = l.mi, m = MODULES[mi];
+  const how = l.how ?? l.deep;
+  const has = { 'step-idea': true, 'step-how': !!how, 'step-write': !!l.syntax, 'step-see': !!l.example, 'step-try': !!l.example, 'step-quiz': l.quiz.length > 0, 'step-turn': !!l.exercise };
+  const secs = SECTIONS.filter(([id]) => has[id]);
+  const num = id => String(secs.findIndex(s => s[0] === id) + 1).padStart(2, '0');
+  const heading = (id, label) => `<h2 class="sec-h"><span class="sec-num">${num(id)}</span>${label}</h2>`;
+  const hasPrev = state.selected > 0, hasNext = state.selected < flat.length - 1;
+  const entering = state.lastLesson !== l.id;
+
+  return `<div class="lesson-grid ${entering ? 'enter' : ''}">
+    <article class="lesson-main">
+      <header class="lesson-head">
+        <span class="eyebrow mono">Module ${String(mi + 1).padStart(2, '0')} / Lesson ${String(l.li + 1).padStart(2, '0')}${l.concept ? ' · ' + escapeHtml(l.concept) : ''}</span>
+        <h1 class="lesson-title">${escapeHtml(l.title)}</h1>
+        <nav class="steps" aria-label="Lesson sections">
+          ${secs.map(([id, label]) => `<button class="step" data-action="goto-step" data-target="${id}"><span class="step-n">${num(id)}</span>${label}</button>`).join('')}
+        </nav>
+      </header>
+
+      <section id="step-idea" class="lesson-section">${heading('step-idea', 'The idea')}<div class="prose">${rich(l.explain)}</div></section>
+
+      ${how ? `<section id="step-how" class="lesson-section">${heading('step-how', 'How it works')}<div class="prose how">${rich(how)}</div></section>` : ''}
+
+      ${l.syntax ? `<section id="step-write" class="lesson-section">${heading('step-write', 'How to write it')}${syntaxView(l.syntax)}</section>` : ''}
+
+      ${l.example ? `<section id="step-see" class="lesson-section">${heading('step-see', 'See it happen')}
+        ${l.stepper ? stepperView(l) : `<div class="see">
+          <div class="see-box"><span class="see-label">The code</span><pre class="code-block">${hl(l.example)}</pre></div>
+          <span class="see-arrow" aria-hidden="true">→</span>
+          <div class="see-box"><span class="see-label">What it prints</span><div class="console">${exampleOutput(l)}</div></div>
+        </div>`}
+      </section>
+
+      <section id="step-try" class="lesson-section">${heading('step-try', 'Try it')}
+        <p class="muted">Change the example and run it. This part isn't graded, so experiment freely.</p>
+        ${editor('try-input', state.tryCode[l.id] ?? l.example, 'try.js', 3)}
+        <div class="row">
+          <button class="btn" data-action="try-run">▷ Run</button>
+          ${l.id in state.tryCode ? '<button class="btn ghost" data-action="try-reset">Reset example</button>' : ''}
+        </div>
+        ${state.tryOut[l.id] ? consoleView(state.tryOut[l.id]) : ''}
+      </section>` : ''}
+
+      ${l.mistake ? `<aside class="callout">${rich('**Common mistake:** ' + l.mistake)}</aside>` : ''}
+
+      ${l.quiz.length ? `<section id="step-quiz" class="lesson-section">${heading('step-quiz', 'Quick check')}
+        <p class="muted">Pick an answer. You'll see right away why it's right or wrong.</p>
+        ${quizView(l)}
+      </section>` : ''}
+    </article>
+
+    <aside id="step-turn" class="lesson-side">${lessonSide(l)}</aside>
+  </div>
+
+  <div class="lesson-footer">
+    <button class="btn ghost" data-action="prev" ${hasPrev ? '' : 'disabled'}>← Previous lesson</button>
+    <button class="btn ghost" data-action="next" ${hasNext ? '' : 'disabled'}>Skip ahead →</button>
+  </div>
+  ${nDone(mi) === m.lessons.length ? masteryCard(mi) : ''}`;
+}
+
+// ---------- The side card: the exercise, a checklist, and the Next button ----------
+function exerciseView(l) {
+  const ex = l.exercise, passed = state.exDone.has(l.id);
+  const shown = state.hints[l.id] || 0, fb = state.feedback[l.id];
+  return `<div class="row between"><span class="eyebrow mono quiet">${l.quiz.length ? 'Exercise' : 'Your turn'}</span>${passed ? '<span class="badge-done">✓ Passed</span>' : ''}</div>
+    <div class="task">${rich(ex.task)}</div>
+    ${editor('code-input', getCode(l), 'exercise.js', 5)}
+    ${state.outputs[l.id] ? consoleView(state.outputs[l.id]) : ''}
+    ${fb ? `<div class="feedback ${fb.kind}"><strong>${escapeHtml(fb.title)}</strong>${rich(fb.text)}</div>` : ''}
+    ${shown && !passed ? `<div class="hints">${ex.hints.slice(0, shown).map((h, i) => `<div class="hint"><b>Hint ${i + 1}</b>${rich(h)}</div>`).join('')}</div>` : ''}
+    ${passed ? '' : `<div class="turn-actions">
+      <div class="row">
+        ${ex.hints?.length ? `<button class="btn ghost sm" data-action="hint" ${shown >= ex.hints.length ? 'disabled' : ''}>Hint${shown ? ` ${shown}/${ex.hints.length}` : ''}</button>` : ''}
+        <button class="btn ghost sm" data-action="reset">Start over</button>
+      </div>
+      <div class="row"><button class="btn" data-action="run">▷ Run</button><button class="btn primary" data-action="check">Check answer</button></div>
+    </div>`}`;
+}
+
+function lessonSide(l) {
+  const ex = l.exercise, exPassed = ex && state.exDone.has(l.id);
+  const qDone = l.quiz.filter((_, i) => state.quizRight[l.id]?.[i]).length, qAll = l.quiz.length;
+  const complete = state.completed.has(l.id);
+  const moduleDone = nDone(l.mi) === MODULES[l.mi].lessons.length;
+  const lastInModule = l.li === MODULES[l.mi].lessons.length - 1;
+  const nextButton = lastInModule && moduleDone && !state.mastered.has(l.mi)
+    ? `<button class="btn primary wide" data-action="mastery" data-mi="${l.mi}">Take the mastery test →</button>`
+    : `<button class="btn primary wide" data-action="next" ${state.selected < flat.length - 1 ? '' : 'disabled'}>Next lesson →</button>`;
+  const todo = [qAll && qDone < qAll ? 'the quick check' : '', ex && !exPassed ? 'the exercise' : ''].filter(Boolean).join(' and ');
+
+  return `<div class="turn-card">
+    ${ex ? exerciseView(l) : `<span class="eyebrow mono quiet">This lesson</span>
+      <h3 class="side-title">Read, then check yourself</h3>
+      <p class="muted small">This lesson is about ideas, so there's no code exercise yet. Answer the quick check to finish it.</p>`}
+    <div class="checklist">
+      ${qAll ? `<button class="check-item ${qDone === qAll ? 'done' : ''}" data-action="goto-step" data-target="step-quiz"><span class="check-dot">${qDone === qAll ? '✓' : ''}</span>Quick check<span class="check-meta">${qDone}/${qAll}</span></button>` : ''}
+      ${ex ? `<div class="check-item ${exPassed ? 'done' : ''}"><span class="check-dot">${exPassed ? '✓' : ''}</span>Exercise<span class="check-meta">${exPassed ? 'passed' : 'not yet'}</span></div>` : ''}
+    </div>
+    ${complete ? nextButton : `<p class="muted small center">Finish ${todo} to complete this lesson.</p>`}
+  </div>`;
+}
+
+function masteryCard(mi) {
+  const done = state.mastered.has(mi);
+  return `<section class="mastery-card">
+    <div><h3>${done ? '✓ Module mastered' : 'Mastery test'}</h3>
+    <p>${done ? 'You solved new problems without hints.' : 'You finished every lesson in this module. Now solve new problems you have not seen, without hints.'}</p></div>
+    <button class="btn ${done ? '' : 'primary'}" data-action="mastery" data-mi="${mi}">${done ? 'Retake' : 'Start the test →'}</button>
+  </section>`;
+}
+
+function stats() {
+  return `<div class="stats">
+    <div class="stat"><span>Lessons done</span><b>${state.completed.size} <small>/ ${flat.length}</small></b></div>
+    <div class="stat"><span>Modules mastered</span><b>${state.mastered.size} <small>/ ${MODULES.length}</small></b></div>
+    <div class="stat"><span>XP</span><b>${state.xp.toLocaleString()}</b></div>
+  </div>`;
+}
+
+function moduleInfo(m, mi) {
+  return `<span class="module-num">${String(mi + 1).padStart(2, '0')}</span>
+    <span class="module-info"><b>${escapeHtml(m.title)}</b><span>${escapeHtml(m.subtitle)}</span></span>
+    <span class="module-meta">${state.mastered.has(mi) ? '✓ Mastered' : `${nDone(mi)} / ${m.lessons.length}`}</span>`;
+}
+
+function dashboard() {
+  const next = flat[nextNotDone()] || flat[0];
+  return `<div class="page">
+    <span class="eyebrow">Your JavaScript path</span>
+    <h1 class="page-title">Understand code, not just type it.</h1>
+    <p class="lead">Learn how programs really work, read and predict code, and catch mistakes, including ones made by AI.</p>
+    <section class="continue-card">
+      <div class="flex1"><span class="eyebrow quiet">Up next · Module ${next.mi + 1}</span><h2>${escapeHtml(next.title)}</h2><div class="prose">${rich(firstPara(next.explain))}</div></div>
+      <button class="btn primary" data-action="lesson-index" data-index="${flat.indexOf(next)}">Continue →</button>
+    </section>
+    ${stats()}
+    <h2 class="section-title">Modules</h2>
+    <div class="module-list">${MODULES.map((m, mi) => `<button class="module-row" data-action="module" data-mi="${mi}">${moduleInfo(m, mi)}</button>`).join('')}</div>
+  </div>`;
+}
+
+function course() {
+  return `<div class="page">
+    <span class="eyebrow">All lessons</span>
+    <h1 class="page-title">The JavaScript path</h1>
+    <p class="lead">${flat.length} lessons in ${MODULES.length} modules. Open any lesson. The mastery test unlocks when you finish a module.</p>
+    <div class="course-list">${MODULES.map((m, mi) => `<div class="course-module">
+      <button class="course-head" data-action="toggle-module" data-mi="${mi}" aria-expanded="${state.expanded === mi}">${moduleInfo(m, mi)}<span class="chev" aria-hidden="true">${state.expanded === mi ? '−' : '+'}</span></button>
+      ${state.expanded === mi ? `<div class="course-body">
+        ${m.lessons.map((l, li) => `<button class="lesson-row" data-action="lesson-id" data-id="${l.id}"><span class="lesson-dot ${state.completed.has(l.id) ? 'done' : ''}">${state.completed.has(l.id) ? '✓' : li + 1}</span><span class="flex1">${escapeHtml(l.title)}</span><span class="muted small">${l.exercise ? 'Quiz + code' : 'Quiz'}</span></button>`).join('')}
+        ${nDone(mi) === m.lessons.length ? masteryCard(mi) : ''}
+      </div>` : ''}
+    </div>`).join('')}</div>
+  </div>`;
+}
+
+// Which modules each module builds on (by position, counting from 0).
+const PREREQS = { 1: [0], 2: [1], 3: [2], 4: [3], 5: [3, 4], 6: [4, 5], 7: [6], 8: [7], 9: [5, 8], 10: [9], 11: [5] };
+
+function skillTree() {
+  return `<div class="page">
+    <span class="eyebrow">Skill map</span>
+    <h1 class="page-title">How the ideas connect</h1>
+    <p class="lead">Each module builds on earlier ones. Everything is open to explore, but this is the order that makes the most sense.</p>
+    <div class="skill-grid">${MODULES.map((m, mi) => {
+      const d = nDone(mi), n = m.lessons.length, reqs = PREREQS[mi] || [];
+      return `<button class="skill" data-action="module" data-mi="${mi}">
+        <span class="module-num">${String(mi + 1).padStart(2, '0')}</span>
+        <b>${escapeHtml(m.title)}</b>
+        <span class="skill-req">${reqs.length ? 'Builds on ' + reqs.map(r => String(r + 1).padStart(2, '0')).join(' and ') : 'Start here'}</span>
+        <div class="progress-track"><div class="progress-fill" style="width:${pct(d, n)}%"></div></div>
+        <span class="muted small">${state.mastered.has(mi) ? '✓ Mastered' : `${d} of ${n} lessons`}</span>
+      </button>`;
+    }).join('')}</div>
+  </div>`;
+}
+
+function playground() {
+  const files = Object.keys(state.playFiles);
+  return `<div class="page">
+    <span class="eyebrow">Playground</span>
+    <h1 class="page-title">Experiment freely</h1>
+    <p class="lead">Write any JavaScript and run it. Files run together, in tab order. Your files are saved in this browser.</p>
+    <div class="play-grid">
+      <div class="play-main">
+        <div class="file-tabs">
+          ${files.map(f => `<button class="file-tab ${f === state.playActive ? 'active' : ''}" data-action="pg-file" data-name="${attrs(f)}">${escapeHtml(f)}</button>`).join('')}
+          <button class="file-tab add" data-action="pg-add">+ New file</button>
+        </div>
+        ${editor('code-input', state.playFiles[state.playActive], state.playActive, 16)}
+        <div class="row between"><button class="btn ghost sm" data-action="pg-reset">Reset project</button><button class="btn primary" data-action="pg-run">▷ Run all files</button></div>
+      </div>
+      <div class="play-side">
+        <h2 class="section-title">Output</h2>
+        ${state.pgOutput ? consoleView(state.pgOutput) : '<div class="console"><div class="console-line muted">Run your code to see the output here.</div></div>'}
+        <aside class="callout neutral">${rich('**Try this:** write a function in `helpers.js`, then call it from `main.js` and print the result.')}</aside>
+      </div>
+    </div>
+  </div>`;
+}
+
+function refList() {
+  const q = state.search.toLowerCase();
+  const items = referenceItems.filter(i => i.join(' ').toLowerCase().includes(q));
+  return items.map(i => `<button class="ref-item" data-action="reference-detail" data-name="${attrs(i[0])}"><code>${escapeHtml(i[0])}</code><span>${escapeHtml(i[1])}</span></button>`).join('')
+    || '<div class="empty">No matches. Try a broader word.</div>';
+}
+function reference() {
+  return `<div class="page">
+    <span class="eyebrow">Reference</span>
+    <h1 class="page-title">Look it up</h1>
+    <p class="lead">Quick definitions and examples. Search, read, then get back to your code.</p>
+    <input class="search" id="ref-search" placeholder="Search keywords, methods, concepts…" value="${attrs(state.search)}" aria-label="Search the reference">
+    <div class="ref-list">${refList()}</div>
+  </div>`;
+}
+
+function awards() {
+  return `<div class="page">
+    <span class="eyebrow">Progress</span>
+    <h1 class="page-title">Your progress</h1>
+    <p class="lead">XP rewards effort. Mastery needs proof: new problems solved without hints.</p>
+    ${stats()}
+    <h2 class="section-title">Achievements</h2>
+    <div class="achievements">${awardDefs.map(a => `<div class="achievement ${a[3]() ? '' : 'locked'}"><span class="ach-icon" aria-hidden="true">${a[0]}</span><b>${a[1]}</b><span>${a[2]}</span></div>`).join('')}</div>
+    <section class="danger">
+      <div><b>Reset progress</b><p class="muted small">Progress is saved in this browser only. Resetting erases your XP, finished lessons and code.</p></div>
+      <button class="btn" data-action="reset-progress">${state.confirmReset ? 'Tap again to erase' : 'Reset progress'}</button>
+    </section>
+    <p class="muted small">Certificates are coming in a later version.</p>
+  </div>`;
+}
+
+function modalContent() {
+  if (!state.modal) return '';
+  if (state.modal.type === 'ref') {
+    const item = referenceItems.find(i => i[0] === state.modal.name);
+    if (!item) return '';
+    return `<div class="modal-cover" data-action="close-modal"><div class="modal" role="dialog" aria-modal="true" aria-label="${attrs(item[0])}">
+      <div class="row between"><span class="eyebrow">Reference</span><button class="btn ghost icon" data-action="close-modal" aria-label="Close">✕</button></div>
+      <h2><code>${escapeHtml(item[0])}</code></h2>
+      <p>${escapeHtml(item[1])}</p>
+      <pre class="code-block">${escapeHtml(item[2])}</pre>
+      <div class="row"><button class="btn" data-action="copy-ref" data-text="${attrs(item[2])}">Copy example</button><button class="btn primary" data-action="close-modal">Done</button></div>
+    </div></div>`;
+  }
+  if (state.modal.type === 'mastery') {
+    const mi = state.modal.mi, tasks = masteryTasks(mi), step = state.modal.step || 0, t = tasks[step], fb = state.modal.feedback;
+    return `<div class="modal-cover" data-action="close-modal"><div class="modal" role="dialog" aria-modal="true" aria-label="Mastery test">
+      <div class="row between"><span class="eyebrow">Mastery test · Module ${mi + 1}</span><button class="btn ghost icon" data-action="close-modal" aria-label="Close">✕</button></div>
+      <h2>Problem ${step + 1} of ${tasks.length}</h2>
+      <div class="task">${rich(t.task)}</div>
+      <p class="muted small">New problem · no hints · checked by tests</p>
+      ${editor('mastery-input', state.modal.code ?? t.starter, 'mastery.js', 6)}
+      ${fb ? `<div class="feedback ${fb.kind}"><strong>${escapeHtml(fb.title)}</strong>${rich(fb.text)}</div>` : ''}
+      <div class="row end"><button class="btn primary" data-action="${state.modal.finished ? 'close-modal' : 'mastery-check'}">${state.modal.finished ? 'Finish ✓' : 'Check →'}</button></div>
+    </div></div>`;
+  }
+  return '';
+}
+
+function content() {
+  switch (state.view) {
+    case 'dashboard': return dashboard();
+    case 'course': return course();
+    case 'tree': return skillTree();
+    case 'playground': return playground();
+    case 'reference': return reference();
+    case 'awards': return awards();
+    default: return lessonPage();
+  }
+}
+
+function render() {
+  app.innerHTML = `${header()}<main class="main">${content()}</main>${modalContent()}`;
+  if (state.view === 'lesson') { const l = current(); if (l.example && !l.stepper) ensureExample(l); state.lastLesson = l.id; }
+  save();
+}
+
+async function tryRun() {
+  const l = current();
+  state.tryOut[l.id] = await runIsolated(state.tryCode[l.id] ?? l.example);
+  render();
+}
+
+function updateFeedback(l,fb,out){state.feedback[l.id]=fb;if(out)state.outputs[l.id]=out}
+async function check(l,forRun=false){const source=getCode(l);const id=l.id;const el=$('[data-action="check"]');if(el)el.disabled=true;
+ const ex=l.exercise;const result=await runIsolated(source,forRun?[]:ex.tests);
+ if(forRun){state.outputs[id]=result;state.feedback[id]=null;render();return}
+ const checks=testResults(result,ex.tests);let fb;
+ if(result.timeout||result.error){fb={kind:'bad',title:'Program could not finish',text:result.error||'Check for an infinite loop.'}}
+ else if(checks.some(c=>c.error)){fb={kind:'bad',title:'Your code stopped with an error',text:checks.find(c=>c.error).error+'\n\nRead the error type and description — they tell you what went wrong.'}}
+ else if(checks.every(c=>c.ok)){if(!state.exDone.has(id)){state.exDone.add(id);state.xp+=40;toast('✦ +40 XP · Exercise passed')}maybeComplete(l);fb={kind:'good',title:'All checks passed',text:ex.success||`Your program passed ${checks.length} check${checks.length===1?'':'s'}. Can you explain why it works?`};}
+ else{const passed=checks.filter(c=>c.ok).length;const failed=checks.find(c=>!c.ok);state.attempts[id]=(state.attempts[id]||0)+1;fb={kind:'bad',title:`Not quite · ${passed}/${checks.length} checks passed`,text:`Expected ${safeStr(failed.expect)} but received ${safeStr(failed.actual)}. Review your logic and try again.`};}
+ updateFeedback(l,fb,result);render();}
+async function pgRun(){const b=$('[data-action="pg-run"]');if(b)b.disabled=true;const source=Object.values(state.playFiles).join('\n\n');const r=await runIsolated(source);state.pgOutput=r;state.pgFeedback=null;render()}
+async function masteryCheck(){const m=state.modal;if(!m||m.type!=='mastery')return;const questions=masteryTasks(m.mi);const l=questions[m.step||0];const b=$('[data-action="mastery-check"]');if(b)b.disabled=true;const result=await runIsolated(m.code??l.starter,l.tests);const checks=testResults(result,l.tests);if(!result.error&&!result.timeout&&checks.every(c=>c.ok)){if((m.step||0)+1<questions.length){m.step=(m.step||0)+1;m.code=questions[m.step].starter;m.feedback={kind:'good',title:'Challenge passed',text:'Good work. Next independent challenge. Continue without hints.'};toast(`✓ Mastery task ${m.step}/${questions.length}`);}else{if(!state.mastered.has(m.mi)){state.mastered.add(m.mi);state.xp+=150;toast('◆ Module mastered · +150 XP')}m.feedback={kind:'good',title:'Mastery demonstrated',text:'You passed every independent coding challenge in this module.'};m.finished=true;}}else{const problem=checks.find(c=>!c.ok);m.feedback={kind:'bad',title:'Not passed yet',text:runError(result)||problem?.error||`One or more tests failed. ${problem?'Expected '+safeStr(problem.expect)+', received '+safeStr(problem.actual)+'.':''}`}}render()}
+function handleEditorKey(e){const el=e.target;if(!['code-input','mastery-input','try-input'].includes(el.id))return;
+ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();if(el.id==='mastery-input')masteryCheck();else if(el.id==='try-input')tryRun();else if(state.view==='playground')pgRun();else check(current(),false);return}
+ const start=el.selectionStart,end=el.selectionEnd,val=el.value;
+ function insert(s,pos=start+ s.length){el.setRangeText(s,start,end,'end');el.selectionStart=el.selectionEnd=pos;el.dispatchEvent(new Event('input',{bubbles:true}))}
+ if(e.key==='Tab'){e.preventDefault();insert('  ');return}
+ if(e.key==='Enter'){e.preventDefault();const before=val.slice(0,start),indent=(before.split('\n').at(-1).match(/^\s*/)||[''])[0];const extra=/\{\s*$/.test(before)?'  ':'';insert('\n'+indent+extra);return}
+ const pairs={'(':')','[':']','{':'}','"':'"',"'":"'",'`':'`'};
+ if(pairs[e.key]&&!e.ctrlKey&&!e.metaKey&&!e.altKey){if(start!==end&&['(', '[', '{'].includes(e.key)){e.preventDefault();const selected=val.slice(start,end);insert(e.key+selected+pairs[e.key]);return}if(start===end&&['"',"'",'`'].includes(e.key)&&val[start]===e.key){e.preventDefault();el.selectionStart=el.selectionEnd=start+1;return}if(start===end){e.preventDefault();el.setRangeText(e.key+pairs[e.key],start,end,'end');el.selectionStart=el.selectionEnd=start+1;el.dispatchEvent(new Event('input',{bubbles:true}));return}}
+ if([')',']','}'].includes(e.key)&&start===end&&val[start]===e.key){e.preventDefault();el.selectionStart=el.selectionEnd=start+1}
+}
+app.addEventListener('keydown',handleEditorKey);
+app.addEventListener('input',e=>{saveSoon();if(e.target.id==='code-input'){if(state.view==='playground')state.playFiles[state.playActive]=e.target.value;else state.code[current().id]=e.target.value}else if(e.target.id==='try-input'){state.tryCode[current().id]=e.target.value}else if(e.target.id==='mastery-input'){if(state.modal)state.modal.code=e.target.value}else if(e.target.id==='ref-search'){const start=e.target.selectionStart;state.search=e.target.value;const list=$('.ref-list');if(list)list.innerHTML=refList();}});
+app.addEventListener('click',async e=>{const button=e.target.closest('[data-action]');if(!button)return;const action=button.dataset.action;
+ if(action==='close-modal'&&e.target.closest('.modal')&&e.target.closest('[data-action="close-modal"]')?.classList.contains('modal-cover'))return;
+ switch(action){case 'menu':state.mobile=!state.mobile;render();break;
+ case 'dashboard':showView('dashboard');break;
+ case 'view':showView(button.dataset.view);break;
+ case 'next':goLesson(state.selected+1);break;
+ case 'prev':goLesson(state.selected-1);break;
+ case 'lesson-index':goLesson(+button.dataset.index);break;
+ case 'lesson-id':goLesson(flat.findIndex(l=>l.id===button.dataset.id));break;
+ case 'module':state.expanded=+button.dataset.mi;showView('course');break;
+ case 'toggle-module':state.expanded=state.expanded===+button.dataset.mi?-1:+button.dataset.mi;render();break;
+ case 'deep':state.deep.has(button.dataset.id)?state.deep.delete(button.dataset.id):state.deep.add(button.dataset.id);render();break;
+ case 'quiz':answerQuiz(current(),+button.dataset.q,+button.dataset.o);break;
+ case 'step':await doStep(current(),false);break;
+ case 'step-all':await doStep(current(),true);break;
+ case 'step-reset':{const id=current().id;delete state.step[id];delete state.stepOut[id];render();break}
+ case 'check':await check(current());break;
+ case 'run':await check(current(),true);break;
+ case 'hint':{const l=current();state.hints[l.id]=Math.min(l.exercise.hints.length,(state.hints[l.id]||0)+1);render();break}
+ case 'reset':resetForReview(current());render();break;
+ case 'pg-run':await pgRun();break;
+ case 'pg-reset':state.playFiles={'main.js':'console.log("Hello, world!");','helpers.js':'function square(n) { return n * n; }'};state.playActive='main.js';state.pgOutput=null;state.pgFeedback=null;render();break;
+ case 'pg-add':{let n=1;while(state.playFiles['file'+n+'.js'])n++;const name='file'+n+'.js';state.playFiles[name]='// New file\n';state.playActive=name;render();break}
+ case 'pg-file':state.playActive=button.dataset.name;render();break;
+ case 'reference-detail':state.modal={type:'ref',name:button.dataset.name};render();break;
+ case 'copy-ref':navigator.clipboard?.writeText(button.dataset.text).then(()=>toast('Copied to clipboard')).catch(()=>toast('Copy unavailable in this browser'));break;
+ case 'close-modal':state.modal=null;render();break;
+ case 'mastery':{const mi=+button.dataset.mi;state.modal={type:'mastery',mi,step:0,code:masteryTasks(mi)[0].starter};render();break}
+ case 'mastery-check':await masteryCheck();break;
+ case 'goto-step':document.getElementById(button.dataset.target)?.scrollIntoView({behavior:'smooth',block:'start'});break;
+ case 'try-run':await tryRun();break;
+ case 'try-reset':{const id=current().id;delete state.tryCode[id];delete state.tryOut[id];render();break}
+  case 'reset-progress':resetProgress();break;
+ }});
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.modal){state.modal=null;render()}});
+render();
+})();
+
+</script>
+</body>
+</html>
