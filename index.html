@@ -609,6 +609,115 @@ button.check-item:hover { color: var(--accent-text); }
 }
 .v-console b, .v-slide .v-console b { color: var(--console-text); text-align: left; }
 
+/* ---------- Fresh visuals: route, rocket, burger, rail, switches, dominoes, brackets ---------- */
+.v-svg { width: 100%; height: auto; display: block; }
+
+/* small code chips that light up in order */
+.v-chips-col { display: flex; flex-direction: column; gap: 8px; }
+.v-cmd { padding: 8px 12px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg); font-size: 14px; transition: border-color .25s, background .25s, opacity .25s; opacity: .55; }
+.v-cmd.shown { opacity: 1; }
+.v-cmd.lit { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 3px #2563EB1F; }
+
+/* countdown + rocket */
+.v-launch { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: center; }
+.v-pad { position: relative; height: 210px; border-radius: 14px; background: linear-gradient(#EFF4FF, #FFFFFF); overflow: hidden; display: grid; place-items: center; }
+.v-big { position: absolute; top: 22px; font-family: var(--serif); font-size: 56px; font-weight: 700; color: var(--accent-text); opacity: 0; transform: scale(.6); transition: opacity .25s, transform .35s cubic-bezier(.2, 1.4, .4, 1); }
+.v-big.lit { opacity: 1; transform: none; }
+.v-big[data-s="3"] { font-size: 34px; }
+.v-rocket { position: absolute; bottom: 18px; width: 40px; height: 70px; transition: transform 1.2s cubic-bezier(.5, 0, .8, .3); }
+.v-rocket.shown { transform: translateY(-260px); }
+.v-flame { opacity: 0; transform-origin: 20px 48px; }
+.v-rocket.shown .v-flame { opacity: 1; animation: flame .15s infinite alternate; }
+.v-ground { position: absolute; bottom: 0; left: 0; right: 0; height: 18px; background: #E7E7E3; }
+@keyframes flame { from { transform: scaleY(.8); } to { transform: scaleY(1.15); } }
+
+/* burger: order of lines = order of layers */
+.v-burger-wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: end; }
+.v-plate { display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 200px; justify-content: flex-end; padding-bottom: 4px; }
+.v-layer { width: 170px; display: grid; place-items: center; font-size: 12px; font-weight: 600; color: #FFFFFF; opacity: 0; transform: translateY(-60px); transition: opacity .3s, transform .45s cubic-bezier(.2, 1.3, .4, 1); }
+.v-layer.shown { opacity: 1; transform: none; }
+.v-layer.bun { height: 34px; background: #D9A15B; color: #4A2F0D; }
+.v-layer.bun.top { border-radius: 85px 85px 10px 10px; }
+.v-layer.bun.bottom { border-radius: 8px 8px 22px 22px; height: 26px; }
+.v-layer.patty { height: 26px; border-radius: 10px; background: #6B3E26; }
+.v-dish { width: 210px; height: 8px; border-radius: 0 0 50% 50%; background: #D9D9D4; order: 10; }
+
+/* rail line: stops for code, signposts for comments */
+.v-rail { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 46px 4px 4px; }
+.v-rail-line { position: absolute; left: 4%; right: 4%; top: 86px; height: 4px; border-radius: 2px; background: #E7E7E3; }
+.v-stop { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.v-stop code { font-size: 11.5px; background: none; padding: 0; word-break: break-all; }
+.v-node { width: 22px; height: 22px; border-radius: 50%; background: #FFFFFF; border: 3px solid #D9D9D4; position: relative; z-index: 1; margin-top: 28px; transition: background .3s, border-color .3s, transform .3s; }
+.v-stop.lit .v-node, .v-stop.shown .v-node { background: var(--accent); border-color: var(--accent); }
+.v-stop.lit .v-node { transform: scale(1.25); box-shadow: 0 0 0 6px #2563EB22; }
+.v-bubble { position: absolute; top: -40px; padding: 4px 10px; border-radius: 10px; background: var(--console); color: var(--console-text); font-family: var(--mono); font-size: 12px; white-space: nowrap; opacity: 0; transform: translateY(6px) scale(.9); transition: opacity .3s, transform .3s; }
+.v-stop.shown .v-bubble { opacity: 1; transform: none; }
+.v-stop.note { color: var(--muted); }
+.v-sign { margin-top: 30px; padding: 4px 8px; border: 1px dashed var(--line-strong); border-radius: 6px; font-family: var(--mono); font-size: 11px; background: var(--bg); }
+.v-hop { position: absolute; top: 22px; width: 120%; height: 34px; border: 2px dashed var(--cyan); border-bottom: 0; border-radius: 60px 60px 0 0; opacity: .7; }
+
+/* light switches */
+.v-switches { display: flex; flex-direction: column; gap: 10px; }
+.v-switch { display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid var(--line-strong); border-radius: 14px; background: var(--bg); text-align: left; transition: background .3s; }
+.v-switch code { background: none; font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.v-switch.off code { opacity: .5; }
+.v-toggle { width: 46px; height: 26px; border-radius: 13px; background: #D9D9D4; position: relative; transition: background .25s; }
+.v-toggle span { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; transition: transform .25s; box-shadow: 0 1px 3px #0003; }
+.v-switch.on .v-toggle { background: var(--accent); }
+.v-switch.on .v-toggle span { transform: translateX(20px); }
+.v-bulb { display: flex; align-items: center; gap: 8px; min-width: 128px; font-size: 13px; }
+.v-glass { width: 22px; height: 22px; border-radius: 50%; background: #E7E7E3; transition: background .3s, box-shadow .3s; }
+.v-switch.on .v-glass { background: #FACC15; box-shadow: 0 0 14px 4px #FACC1599; }
+.v-switch.off .v-bulb-text { color: var(--muted); text-decoration: line-through; }
+
+/* dominoes */
+.v-dominoes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; padding-top: 10px; }
+.v-domino { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.v-face { width: 54px; height: 100px; border-radius: 10px; background: #1A1A1A; color: #FFFFFF; display: grid; place-items: center; font-family: var(--mono); font-size: 22px; transform-origin: bottom right; transition: transform .6s cubic-bezier(.5, 0, .7, 1), background .3s; }
+.v-domino.shown .v-face { transform: rotate(72deg); }
+.v-domino.broken .v-face { background: repeating-linear-gradient(135deg, #1A1A1A 0 10px, #DC2626 10px 12px); }
+.v-domino.broken.shown .v-face { transform: rotate(14deg); animation: wobble .4s 2; background: #DC2626; }
+.v-domino.still.shown .v-face { transform: none; opacity: .35; }
+.v-domino code { font-size: 11.5px; background: none; word-break: break-all; }
+.v-say { font-family: var(--mono); font-size: 12px; padding: 3px 8px; border-radius: 8px; background: var(--surface-2); opacity: 0; transition: opacity .3s; }
+.v-domino.shown .v-say { opacity: 1; }
+.v-say.err { background: var(--bad-bg); color: var(--bad-text); }
+.v-say.muted { color: var(--muted); }
+@keyframes wobble { 0%, 100% { transform: rotate(14deg); } 50% { transform: rotate(-6deg); } }
+
+/* bracket pairs */
+.v-pairs { display: flex; flex-direction: column; gap: 16px; font-family: var(--mono); }
+.v-pline { display: flex; align-items: center; flex-wrap: wrap; gap: 0; font-size: 20px; }
+.v-pline .v-ln { margin-right: 14px; }
+.v-p { display: inline-block; padding: 0 2px; border-radius: 4px; transition: background .25s, color .25s, transform .25s; }
+.v-p.shown.a, .v-p.shown.b, .v-p.shown.b2 { background: #DCFCE7; color: #166534; }
+.v-p.lit { transform: translateY(-4px); }
+.v-p.x.shown { background: #FEE2E2; color: #B91C1C; animation: blinkbg 1s infinite; }
+.v-ghost { display: inline-block; width: 14px; margin: 0 2px; border-bottom: 3px dashed #DC2626; color: transparent; opacity: 0; transition: opacity .3s; }
+.v-ghost.shown { opacity: 1; }
+.v-ok, .v-bad { margin-left: 12px; font-family: var(--sans); font-size: 13px; padding: 3px 9px; border-radius: 999px; opacity: 0; transition: opacity .3s; }
+.v-ok { background: var(--good-bg); color: var(--good-text); }
+.v-bad { background: var(--bad-bg); color: var(--bad-text); }
+.v-ok.shown, .v-bad.shown { opacity: 1; }
+.v-verdict-row { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: 10px; background: var(--console); color: var(--console-text); font-size: 13px; opacity: 0; transition: opacity .3s; }
+.v-verdict-row b { color: var(--console-error); }
+.v-verdict-row span { font-family: var(--sans); }
+.v-verdict-row.shown { opacity: 1; }
+@keyframes blinkbg { 50% { background: #FCA5A5; } }
+
+@media (max-width: 820px) {
+  .v-launch, .v-burger-wrap { grid-template-columns: 1fr; }
+  .v-pad { height: 170px; }
+  .v-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 70px; padding-top: 46px; }
+  .v-rail-line { display: none; }
+  .v-switch { grid-template-columns: 46px minmax(0, 1fr); }
+  .v-bulb { grid-column: 1 / -1; min-width: 0; }
+  .v-pline { font-size: 15px; }
+  .v-dominoes { gap: 8px; }
+  .v-face { width: 44px; height: 82px; }
+}
+.v-big[data-s="3"].shown { opacity: 1; transform: none; }
+
 </style>
 </head>
 <body>
@@ -2652,6 +2761,9 @@ function answerQuiz(l, qi, oi) {
     state.xp += firstTry ? 10 : 5;
     toast(firstTry ? '✦ +10 XP · Correct first try' : '✦ +5 XP · Correct');
     maybeComplete(l);
+    // Move on by itself after a moment, so the green "Correct" is still seen.
+    const at = lessonCars(l).findIndex(c => c.kind === 'quiz' && c.qi === qi);
+    setTimeout(() => { if (state.view === 'lesson' && current().id === l.id && carIndex(l) === at) goCar(l, at + 1); }, 1500);
   } else {
     (state.quizMiss[l.id] ??= {})[qi] = true;
   }
@@ -2677,13 +2789,87 @@ const vseq = (n, inner, hold = 2) => `<div class="v-seq" data-n="${n}" data-hold
 const cap = t => `<span class="v-cap">${t}</span>`;
 
 const VIZ = {
+  // A dot travels a route stop by stop, drawing the path behind it.
   steps: () => {
-    const S = [['boil water', 'Water boiled'], ['add pasta', 'Pasta added'], ['wait 10 minutes', 'Waited 10 minutes']];
-    return vseq(3, `<div class="v-two">
-      <div class="v-code lines">${cap('recipe-program')}${S.map(([t], i) => `<div class="v-line" data-s="${i}"><span class="v-ln">${i + 1}</span><span>${t}</span></div>`).join('')}</div>
-      <div class="v-console">${cap('Computer')}${S.map(([, d], i) => `<div class="v-out" data-s="${i}">✓ ${d}</div>`).join('')}</div>
-    </div>`);
+    const P = [[70, 150], [240, 60], [410, 150], [580, 60]], N = ['Start', 'Boil water', 'Add pasta', 'Wait 10 min'];
+    const kt = '0;0.12;0.27;0.39;0.54;0.66;1', kp = '0;0.3334;0.3334;0.6667;0.6667;1;1';
+    const at = [0, 0.12, 0.39, 0.66];
+    return `<svg class="v-svg" viewBox="0 0 650 210" role="img" aria-label="A dot travels from step to step in order">
+      <polyline points="${P.map(p => p.join(',')).join(' ')}" fill="none" stroke="#E7E7E3" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline points="${P.map(p => p.join(',')).join(' ')}" fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1">
+        <animate attributeName="stroke-dashoffset" dur="6s" repeatCount="indefinite" values="1;0.6666;0.6666;0.3333;0.3333;0;0" keyTimes="${kt}"/>
+      </polyline>
+      ${P.map(([x, y], i) => `<g>
+        <circle cx="${x}" cy="${y}" r="15" fill="#FFFFFF" stroke="#D9D9D4" stroke-width="2">
+          <animate attributeName="fill" dur="6s" repeatCount="indefinite" values="#FFFFFF;#FFFFFF;#2563EB;#2563EB" keyTimes="0;${at[i]};${Math.min(at[i] + 0.001, 0.999)};1"/>
+          <animate attributeName="stroke" dur="6s" repeatCount="indefinite" values="#D9D9D4;#D9D9D4;#2563EB;#2563EB" keyTimes="0;${at[i]};${Math.min(at[i] + 0.001, 0.999)};1"/>
+        </circle>
+        <text x="${x}" y="${y + 5}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="#5F5F5A">${i + 1}</text>
+        <text x="${x}" y="${y < 100 ? y - 28 : y + 42}" text-anchor="middle" font-family="Inter, sans-serif" font-size="15" font-weight="600" fill="#1A1A1A">${N[i]}</text>
+      </g>`).join('')}
+      <circle r="9" fill="#06B6D4" stroke="#FFFFFF" stroke-width="3">
+        <animateMotion dur="6s" repeatCount="indefinite" calcMode="linear" keyTimes="${kt}" keyPoints="${kp}" path="M${P.map(p => p.join(' ')).join(' L')}"/>
+      </circle>
+    </svg>`;
   },
+
+  // Countdown: each line fires in order, and the last one launches the rocket.
+  cursor: () => {
+    const L = ['3', '2', '1', 'Liftoff!'];
+    return vseq(4, `<div class="v-launch">
+      <div class="v-chips-col">${L.map((t, i) => `<code class="v-cmd" data-s="${i}">console.log("${t}")</code>`).join('')}</div>
+      <div class="v-pad">
+        ${L.map((t, i) => `<span class="v-big" data-s="${i}">${t}</span>`).join('')}
+        <svg class="v-rocket" data-s="3" viewBox="0 0 40 70" aria-hidden="true"><path d="M20 2 C30 14 32 30 30 46 L10 46 C8 30 10 14 20 2Z" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="2"/><circle cx="20" cy="24" r="5" fill="#2563EB"/><path d="M10 38 L2 52 L10 50Z M30 38 L38 52 L30 50Z" fill="#2563EB"/><path class="v-flame" d="M13 48 L20 66 L27 48Z" fill="#F59E0B"/></svg>
+        <span class="v-ground"></span>
+      </div>
+    </div>`, 2);
+  },
+
+  // Burger: each line adds a layer, so the order of the lines decides the stack.
+  swap: (key, st) => {
+    const order = st.swapped ? ['top bun', 'patty', 'bottom bun'] : ['bottom bun', 'patty', 'top bun'];
+    const look = { 'bottom bun': 'bun bottom', patty: 'patty', 'top bun': 'bun top' };
+    return vseq(3, `<div class="v-burger-wrap">
+      <div class="v-chips-col">${order.map((t, i) => `<code class="v-cmd" data-s="${i}">add("${t}")</code>`).join('')}</div>
+      <div class="v-plate">${order.map((t, i) => `<div class="v-layer ${look[t]}" data-s="${i}" style="order:${-i}">${t}</div>`).join('')}<div class="v-dish"></div></div>
+    </div>`, 3) + `<button class="btn" data-action="viz" data-key="${key}" data-op="swap">⇅ ${st.swapped ? 'Put the lines back' : 'Swap the first and last line'}</button>`;
+  },
+
+  // Rail line: the run stops at code stations and hops over comment signposts.
+  skip: () => {
+    const S = [['// greet the visitor', null], ['console.log("Welcome!")', 0, 'Welcome!'], ['// debug line', null], ['console.log("Bye!")', 1, 'Bye!']];
+    return vseq(2, `<div class="v-rail">
+      <div class="v-rail-line"></div>
+      ${S.map(([t, s, out]) => s === null
+        ? `<div class="v-stop note"><span class="v-hop" aria-hidden="true"></span><span class="v-sign">${escapeHtml(t)}</span><span class="v-cap">skipped</span></div>`
+        : `<div class="v-stop" data-s="${s}"><span class="v-bubble">› ${out}</span><span class="v-node"></span><code>${escapeHtml(t)}</code></div>`).join('')}
+    </div>`, 3);
+  },
+
+  // Light switches: turn a line off (comment it out) and its bulb goes dark.
+  togglecmt: (key, st) => {
+    const L = ['Order placed', 'testing 123', 'Thank you!'], off = st.off || [];
+    return `<div class="v-switches">${L.map((t, i) => { const o = off.includes(i); return `<button class="v-switch ${o ? 'off' : 'on'}" data-action="viz" data-key="${key}" data-op="cmt" data-val="${i}" aria-pressed="${!o}">
+      <span class="v-toggle"><span></span></span>
+      <code>${hl((o ? '// ' : '') + `console.log("${t}");`)}</code>
+      <span class="v-bulb"><span class="v-glass"></span><span class="v-bulb-text">${t}</span></span>
+    </button>`; }).join('')}</div>`;
+  },
+
+  // Dominoes: line 1 falls, line 2 is broken and stops the chain, line 3 never moves.
+  crash: () => vseq(3, `<div class="v-dominoes">
+    <div class="v-domino" data-s="0"><span class="v-face">1</span><code>console.log("Step 1")</code><span class="v-say">› Step 1</span></div>
+    <div class="v-domino broken" data-s="1"><span class="v-face">2</span><code>consol.log("Step 2")</code><span class="v-say err">✕ consol is not defined</span></div>
+    <div class="v-domino still" data-s="2"><span class="v-face">3</span><code>console.log("Step 3")</code><span class="v-say muted">never runs</span></div>
+  </div>`, 3),
+
+  // Bracket scanner: matching pairs light up together, the unmatched one turns red.
+  parse: () => vseq(3, `<div class="v-pairs">
+    <div class="v-pline"><span class="v-ln">1</span>console.log<span class="v-p a" data-s="0">(</span><span class="v-p b" data-s="0">"</span>Line one<span class="v-p b" data-s="0">"</span><span class="v-p a" data-s="0">)</span>;<span class="v-ok" data-s="0">✓ every pair closes</span></div>
+    <div class="v-pline"><span class="v-ln">2</span>console.log<span class="v-p x" data-s="1">(</span><span class="v-p b2" data-s="1">"</span>Line two<span class="v-p b2" data-s="1">"</span><span class="v-ghost" data-s="1">)</span>;<span class="v-bad" data-s="1">✕ this ( never closes</span></div>
+    <div class="v-verdict-row" data-s="2"><b>SyntaxError</b><span>The program can't be understood, so not a single line runs.</span></div>
+  </div>`, 3),
 
   literal: () => `<div class="v-row v-wrap">
     <div class="v-card dashed">${cap('You meant')}<b>add salt</b></div>
@@ -2714,39 +2900,6 @@ const VIZ = {
       <div class="v-fly" aria-hidden="true"><span class="v-msg" data-vizmsg="${key}">${m}</span></div>
       <div class="v-console">${cap('Console')}<div class="v-arrive">› <span data-vizmsg="${key}">${m}</span></div></div>
       <label class="v-input"><span>Type your own message</span><input type="text" maxlength="28" value="${m}" data-vizinput="${key}" autocomplete="off"></label>
-    </div>`;
-  },
-
-  cursor: () => {
-    const L = ['3', '2', '1', 'Liftoff!'];
-    return vseq(4, `<div class="v-two">
-      <div class="v-code lines">${L.map((t, i) => `<div class="v-line" data-s="${i}"><span class="v-ln">${i + 1}</span>console.log(<span class="t-str">"${t}"</span>);</div>`).join('')}</div>
-      <div class="v-console">${cap('Console')}${L.map((t, i) => `<div class="v-out" data-s="${i}">› ${t}</div>`).join('')}</div>
-    </div>`);
-  },
-
-  swap: (key, st) => {
-    const order = st.swapped ? ['Ready', 'Go!'] : ['Go!', 'Ready'];
-    return `<div class="v-two">
-      <div class="v-code lines">${order.map((t, i) => `<div class="v-line in"><span class="v-ln">${i + 1}</span>console.log(<span class="t-str">"${t}"</span>);</div>`).join('')}</div>
-      <div class="v-console">${cap('Console')}${order.map(t => `<div class="v-out shown in">› ${t}</div>`).join('')}</div>
-    </div>
-    <button class="btn" data-action="viz" data-key="${key}" data-op="swap">⇅ Swap the two lines</button>`;
-  },
-
-  skip: () => {
-    const L = [['// greet the visitor', null], ['console.log("Welcome!");', 0], ['// console.log("debug");', null], ['console.log("Bye!");', 1]];
-    return vseq(2, `<div class="v-two">
-      <div class="v-code lines">${L.map(([t, s], i) => `<div class="v-line ${s === null ? 'cmt' : ''}" ${s === null ? '' : `data-s="${s}"`}><span class="v-ln">${i + 1}</span><span>${hl(t)}</span>${s === null ? '<span class="v-tag">skipped</span>' : ''}</div>`).join('')}</div>
-      <div class="v-console">${cap('Console')}<div class="v-out" data-s="0">› Welcome!</div><div class="v-out" data-s="1">› Bye!</div></div>
-    </div>`);
-  },
-
-  togglecmt: (key, st) => {
-    const L = ['Order placed', 'testing 123', 'Thank you!'], off = st.off || [];
-    return `<div class="v-two">
-      <div class="v-code lines">${L.map((t, i) => { const o = off.includes(i); return `<button class="v-line tap ${o ? 'cmt' : ''}" data-action="viz" data-key="${key}" data-op="cmt" data-val="${i}"><span class="v-ln">${i + 1}</span><span>${hl((o ? '// ' : '') + `console.log("${t}");`)}</span></button>`; }).join('')}</div>
-      <div class="v-console">${cap('Console')}${L.filter((_, i) => !off.includes(i)).map(t => `<div class="v-out shown in">› ${t}</div>`).join('') || '<div class="v-out shown muted">(nothing prints)</div>'}</div>
     </div>`;
   },
 
@@ -2782,23 +2935,6 @@ const VIZ = {
       <div class="v-console big">${cap('Console')}<div>› <b data-vizval="${key}-r">${q * p}</b></div></div>
     </div>`;
   },
-
-  crash: () => vseq(3, `<div class="v-two">
-    <div class="v-code lines">
-      <div class="v-line" data-s="0"><span class="v-ln">1</span>console.log(<span class="t-str">"Step 1"</span>);</div>
-      <div class="v-line bad" data-s="1"><span class="v-ln">2</span>consol.log(<span class="t-str">"Step 2"</span>);</div>
-      <div class="v-line never" data-s="2"><span class="v-ln">3</span>console.log(<span class="t-str">"Step 3"</span>);<span class="v-tag">never runs</span></div>
-    </div>
-    <div class="v-console">${cap('Console')}<div class="v-out" data-s="0">› Step 1</div><div class="v-out err" data-s="1">✕ ReferenceError: consol is not defined</div></div>
-  </div>`),
-
-  parse: () => vseq(3, `<div class="v-two">
-    <div class="v-code lines">${cap('Grammar check')}
-      <div class="v-line" data-s="0"><span class="v-ln">1</span>console.log(<span class="t-str">"Line one"</span>);<span class="v-tag ok">✓ ok</span></div>
-      <div class="v-line bad" data-s="1"><span class="v-ln">2</span>console.log(<span class="t-str">"Line two"</span><span class="v-gap">?</span>;<span class="v-tag">✕ missing )</span></div>
-    </div>
-    <div class="v-console">${cap('Console')}<div class="v-out err" data-s="2">✕ SyntaxError</div><div class="v-out muted" data-s="2">0 lines ran</div></div>
-  </div>`),
 
   compare: (key, st) => {
     const f = !!st.fixed;
@@ -3024,7 +3160,7 @@ function lessonPage() {
         : open ? '<button class="btn primary wide" data-action="car-next">Continue →</button>'
         : `<button class="btn primary wide locked" data-action="car-next" aria-disabled="true">${lockedText}</button>`}
     </div>
-    <p class="train-hint">Swipe or tap Continue<span class="kb">, or use the ← → keys</span></p>
+    <p class="train-hint">Swipe or tap Continue<span class="kb">, or press Enter · ← → to move</span></p>
   </div>`;
 }
 
@@ -3284,6 +3420,7 @@ app.addEventListener('click',async e=>{const button=e.target.closest('[data-acti
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.modal){state.modal=null;render()}});
 // Arrow keys move the train (but not while typing in an editor).
 window.addEventListener('keydown',e=>{if(state.view!=='lesson'||state.modal||['TEXTAREA','INPUT'].includes(document.activeElement?.tagName))return;
+ if(e.key==='Enter'&&!['BUTTON','A','SELECT'].includes(document.activeElement?.tagName)){e.preventDefault();document.querySelector('.train-foot .btn.primary')?.click();return}
  if(e.key==='ArrowRight'){e.preventDefault();const l=current();goCar(l,carIndex(l)+1)}else if(e.key==='ArrowLeft'){e.preventDefault();const l=current();goCar(l,carIndex(l)-1)}});
 // Swipe left/right on the train (not on code, which can scroll sideways).
 let touchStart=null;
