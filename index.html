@@ -3157,7 +3157,7 @@ function lessonPage() {
         : open ? '<button class="btn primary wide" data-action="car-next">Continue →</button>'
         : `<button class="btn primary wide locked" data-action="car-next" aria-disabled="true">${lockedText}</button>`}
     </div>
-    <p class="train-hint">Swipe or tap Continue<span class="kb">, or press Enter · ← → to move</span></p>
+    <p class="train-hint">Swipe or tap Continue<span class="kb">, or press Enter · ← → to move · A B C to answer</span></p>
   </div>`;
 }
 
@@ -3418,6 +3418,7 @@ window.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.modal){state.mo
 // Arrow keys move the train (but not while typing in an editor).
 window.addEventListener('keydown',e=>{if(state.view!=='lesson'||state.modal||['TEXTAREA','INPUT'].includes(document.activeElement?.tagName))return;
  if(e.key==='Enter'&&!['BUTTON','A','SELECT'].includes(document.activeElement?.tagName)){e.preventDefault();document.querySelector('.train-foot .btn.primary')?.click();return}
+ if(/^[a-dA-D]$/.test(e.key)&&!e.ctrlKey&&!e.metaKey&&!e.altKey){const b=document.querySelectorAll('.car.active [data-action="quiz"]')[e.key.toUpperCase().charCodeAt(0)-65];if(b&&!b.disabled){e.preventDefault();b.click()}return}
  if(e.key==='ArrowRight'){e.preventDefault();const l=current();goCar(l,carIndex(l)+1)}else if(e.key==='ArrowLeft'){e.preventDefault();const l=current();goCar(l,carIndex(l)-1)}});
 // Swipe left/right on the train (not on code, which can scroll sideways).
 let touchStart=null;
