@@ -453,6 +453,162 @@ button.check-item:hover { color: var(--accent-text); }
   .toast-wrap { top: 66px; bottom: auto; left: 16px; right: 16px; }
 }
 
+/* =====================================================================
+   Visual cards: animated graphics, one short line of text.
+   ===================================================================== */
+.say { margin: 0; font-size: 21px; line-height: 1.45; color: var(--text); font-weight: 500; letter-spacing: -.01em; }
+.say code { font-size: .85em; }
+.viz { display: flex; flex-direction: column; gap: 14px; align-items: stretch; padding: 22px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+.more-btn { align-self: flex-start; font-size: 14px; }
+.more-text { padding: 14px 16px; border-left: 2px solid var(--accent); background: var(--surface); }
+.more-text p { font-size: 15.5px; }
+.v-cap { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.v-row { display: flex; align-items: center; gap: 12px; }
+.v-wrap { flex-wrap: wrap; justify-content: center; }
+.v-col { display: flex; flex-direction: column; gap: 10px; }
+.v-two { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 12px; align-items: stretch; }
+.v-center { justify-content: center; }
+.v-card { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--bg); min-width: 120px; }
+.v-card b { font-size: 18px; font-weight: 600; }
+.v-card code { font-size: 14px; }
+.v-card.dashed { border-style: dashed; background: transparent; }
+.v-card.accent { border-color: var(--accent); background: var(--accent-soft); }
+.v-card.good { border-color: #16A34A; background: var(--good-bg); }
+.v-card.bad { border-color: #DC2626; background: var(--bad-bg); }
+.v-card.cpu { align-items: center; border-width: 2px; border-color: var(--text); }
+.v-verdict { font-family: var(--mono); font-size: 12px; }
+.v-card.good .v-verdict { color: var(--good-text); }
+.v-card.bad .v-verdict { color: var(--bad-text); }
+.v-arrow { font-size: 20px; color: var(--muted); }
+
+/* steps that light up one by one */
+.v-step { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--bg); font-size: 16px; transition: border-color .3s, background .3s, transform .3s, box-shadow .3s; }
+.v-step .v-n { flex: 0 0 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--surface-2); font-family: var(--mono); font-size: 12px; color: var(--muted); transition: background .3s, color .3s; }
+.v-step .v-tick { margin-left: auto; color: #16A34A; opacity: 0; transition: opacity .3s; }
+.v-step.shown .v-tick { opacity: 1; }
+.v-step.lit { border-color: var(--accent); background: var(--accent-soft); transform: translateX(6px); box-shadow: 0 0 0 3px #2563EB1F; }
+.v-step.lit .v-n { background: var(--accent); color: #FFFFFF; }
+.v-stage { flex-direction: column; align-items: flex-start; gap: 4px; min-width: 120px; }
+.v-stage.lit { transform: translateY(-4px); }
+
+/* a dashed line that flows */
+.v-flow, .v-wire { position: relative; width: 60px; height: 2px; background: repeating-linear-gradient(90deg, var(--accent) 0 8px, transparent 8px 14px); background-size: 28px 2px; animation: flowx .6s linear infinite; }
+.v-wire { width: 90px; background: var(--line-strong); animation: none; }
+.v-packet { position: absolute; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: var(--cyan); animation: packet 1.8s ease-in-out infinite alternate; }
+.v-pulse { animation: pulse 1.6s ease-in-out infinite; }
+.v-pop { animation: popin .35s cubic-bezier(.2, 1.4, .4, 1); }
+.v-bits { width: 140px; overflow: hidden; white-space: nowrap; font-family: var(--mono); font-size: 12px; color: var(--accent-text); -webkit-mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent); mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent); }
+.v-bits span { display: inline-block; animation: marquee 4s linear infinite; }
+.v-window, .v-rack { display: flex; gap: 4px; padding: 6px; border: 1px solid var(--line-strong); border-radius: 6px; }
+.v-window i, .v-rack i { width: 8px; height: 8px; border-radius: 50%; background: var(--line-strong); }
+.v-rack { flex-direction: column; } .v-rack i { width: 46px; height: 6px; border-radius: 2px; }
+.v-js { align-self: flex-start; font-family: var(--mono); font-size: 12px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: #F7DF1E; color: #1A1A1A; }
+
+/* code panels and the console */
+.v-code { padding: 12px 14px; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--bg); font-family: var(--mono); font-size: 14px; line-height: 1.8; overflow-x: auto; white-space: nowrap; }
+.v-code.lines { padding: 8px 0; display: flex; flex-direction: column; }
+.v-code.lines > .v-cap { padding: 0 14px 4px; }
+.v-line { display: flex; align-items: center; gap: 10px; padding: 2px 12px 2px 0; border-left: 3px solid transparent; transition: background .25s, border-color .25s, opacity .25s; font: inherit; text-align: left; background: none; border-top: 0; border-right: 0; border-bottom: 0; color: inherit; width: 100%; }
+.v-ln { flex: 0 0 26px; text-align: right; color: #A3A39C; font-size: 12px; }
+.v-line.lit { background: var(--accent-soft); border-left-color: var(--accent); }
+.v-line.bad.lit, .v-line.bad.shown { background: var(--bad-bg); border-left-color: #DC2626; }
+.v-line.never.shown { opacity: .4; }
+.v-line.cmt { opacity: .5; }
+.v-line.tap { cursor: pointer; }
+.v-line.tap:hover { background: var(--surface); }
+.v-line.in, .v-out.in { animation: rise .35s; }
+.v-tag { margin-left: auto; font-family: var(--sans); font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); }
+.v-line.never .v-tag, .v-line.bad .v-tag { opacity: 0; transition: opacity .3s; }
+.v-line.never.shown .v-tag, .v-line.bad.shown .v-tag { opacity: 1; background: var(--bad-bg); color: var(--bad-text); }
+.v-tag.ok { opacity: 0; transition: opacity .3s; background: var(--good-bg); color: var(--good-text); }
+.v-line.shown .v-tag.ok { opacity: 1; }
+.v-gap { display: inline-block; width: 14px; margin: 0 1px; border-bottom: 2px solid #DC2626; color: transparent; }
+.v-console { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; border-radius: 10px; background: var(--console); color: var(--console-text); font-family: var(--mono); font-size: 14px; line-height: 1.7; min-height: 90px; }
+.v-console .v-cap { color: var(--console-muted); margin-bottom: 4px; }
+.v-console.big b { font-size: 26px; font-weight: 500; }
+.v-out { opacity: 0; transform: translateY(4px); transition: opacity .3s, transform .3s; }
+.v-out.shown { opacity: 1; transform: none; }
+.v-out.err { color: var(--console-error); }
+.v-out.muted { color: var(--console-muted); }
+
+/* message flying into the console */
+.v-log { display: flex; flex-direction: column; gap: 10px; }
+.v-fly { position: relative; height: 34px; }
+.v-msg { position: absolute; left: 0; top: 0; padding: 4px 10px; border-radius: 999px; background: var(--accent); color: #FFFFFF; font-family: var(--mono); font-size: 13px; white-space: nowrap; animation: fly 2.4s cubic-bezier(.4, 0, .2, 1) infinite; }
+.v-arrive { animation: arrive 2.4s infinite; }
+.v-input { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted); }
+.v-input input { padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 10px; font-family: var(--mono); font-size: 15px; outline: none; }
+.v-input input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px #2563EB1F; }
+
+/* text vs numbers */
+.v-lanes { display: flex; flex-direction: column; gap: 14px; }
+.v-lane { display: flex; flex-direction: column; gap: 8px; }
+.v-morph { display: flex; align-items: center; gap: 14px; font-size: 24px; }
+.v-morph code { font-size: 22px; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line-strong); background: var(--bg); transition: border-color .3s, background .3s; }
+.v-a.lit { border-color: var(--accent); background: var(--accent-soft); }
+.v-b { opacity: 0; transform: scale(.6); transition: opacity .35s, transform .35s cubic-bezier(.2, 1.4, .4, 1); }
+.v-b.shown { opacity: 1; transform: none; }
+.v-b.num { border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+.str { color: #B45309; }
+.v-chips { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.v-val { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 8px; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--bg); transition: border-color .25s, background .25s, transform .2s; }
+.v-val:hover { transform: translateY(-2px); }
+.v-val code { font-size: 18px; background: none; }
+.v-type { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.v-val.is-string { border-color: #D97706; background: #FFF7ED; } .v-val.is-string .v-type { color: #9A3412; }
+.v-val.is-number { border-color: var(--accent); background: var(--accent-soft); } .v-val.is-number .v-type { color: var(--accent-text); }
+.v-score { margin: 0; text-align: center; font-size: 13px; color: var(--muted); }
+
+/* expression shrinking step by step */
+.v-eval { display: flex; flex-direction: column; align-items: center; gap: 8px; font-family: var(--mono); }
+.v-expr { font-size: 28px; }
+.v-hl { padding: 0 6px; border-radius: 6px; transition: background .3s, box-shadow .3s; }
+.v-hl.lit, .v-hl.shown { background: var(--accent-soft); box-shadow: 0 0 0 2px var(--accent); }
+.v-next { opacity: 0; transform: translateY(-6px); transition: opacity .35s, transform .35s; }
+.v-next.shown { opacity: 1; transform: none; }
+.v-next b { color: var(--accent-text); }
+.v-final { font-size: 40px; font-weight: 600; color: var(--accent-text); }
+
+/* sliders */
+.v-slide { display: flex; flex-direction: column; gap: 12px; }
+.v-slide label { display: grid; grid-template-columns: 90px 1fr 34px; align-items: center; gap: 12px; font-size: 14px; color: var(--muted); }
+.v-slide b { font-family: var(--mono); font-size: 18px; color: var(--text); text-align: right; }
+.v-slide input[type=range] { accent-color: var(--accent); width: 100%; }
+
+/* error kinds */
+.v-kinds { display: flex; flex-direction: column; gap: 14px; }
+.v-kind { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; }
+.v-kind-name b { font-size: 16px; }
+.v-kind-name .v-cap { text-transform: none; letter-spacing: 0; font-family: var(--sans); font-size: 13px; margin-top: 2px; }
+.v-track { display: flex; align-items: center; gap: 8px; }
+.v-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line-strong); transition: background .3s, border-color .3s; }
+.v-dot.shown { background: var(--accent); border-color: var(--accent); }
+.v-end { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; font-size: 14px; font-weight: 700; opacity: 0; transform: scale(.5); transition: opacity .3s, transform .3s cubic-bezier(.2, 1.4, .4, 1); }
+.v-end.shown { opacity: 1; transform: none; }
+.v-end.stop { background: #DC2626; color: #FFFFFF; }
+.v-end.warn { background: #D97706; color: #FFFFFF; }
+
+@keyframes flowx { to { background-position: 28px 0; } }
+@keyframes packet { from { left: 0; } to { left: calc(100% - 10px); } }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 #2563EB33; } 50% { box-shadow: 0 0 0 8px #2563EB00; } }
+@keyframes popin { from { transform: scale(.85); opacity: .4; } to { transform: none; opacity: 1; } }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes fly { 0% { left: 0; top: -38px; opacity: 0; } 15% { opacity: 1; top: -30px; } 70% { opacity: 1; left: 40%; top: 30px; } 80%, 100% { opacity: 0; left: 40%; top: 40px; } }
+@keyframes arrive { 0%, 65% { opacity: 0; } 75%, 100% { opacity: 1; } }
+
+@media (max-width: 820px) {
+  .say { font-size: 18px; }
+  .viz { padding: 14px; }
+  .v-two { grid-template-columns: 1fr; }
+  .v-code { font-size: 13px; }
+  .v-morph code { font-size: 18px; }
+  .v-expr { font-size: 22px; } .v-final { font-size: 32px; }
+  .v-chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .v-flow { width: 40px; } .v-wire { width: 60px; } .v-bits { width: 100px; }
+  .v-card { min-width: 0; }
+}
+.v-console b, .v-slide .v-console b { color: var(--console-text); text-align: left; }
+
 </style>
 </head>
 <body>
@@ -474,6 +630,9 @@ button.check-item:hover { color: var(--accent-text); }
     exampleShowsError  true if the example is *meant* to show an error.
     mistake   "Common mistake" note (its own "Watch out" car).
     youCan    Short "You can now..." list shown on the lesson's last car.
+    cards     Visual cards that replace the long idea/how text: [{ viz, say, label?, more? }]
+              viz = the name of an animated visual in app.js (VIZ). say = ONE short sentence.
+              more = ["explain", "how"]: the long text, shown only when "Explain more" is tapped.
     quiz      Quick check: [{ question, code?, options, answer, explain, feedback }]
               answer = position of the right option, counting from 0.
               explain = shown when they pick the right answer: say *why* it's right.
@@ -503,6 +662,7 @@ const MODULES = [
       // ───────────────────────── 1 ─────────────────────────
       {
         id: "what-is-programming",
+        cards: [{"viz": "steps", "say": "A program is a list of steps. The computer runs them in order.", "more": ["explain"]}, {"viz": "literal", "label": "Exactly as written", "say": "It does what you **wrote**, not what you meant."}, {"viz": "translate", "label": "How it works", "say": "You write in a language people can read. It gets translated for the processor.", "more": ["how"]}],
         youCan: ["Explain what a program is", "Say why the computer does what you *wrote*, not what you *meant*", "Explain why we write in languages like JavaScript"],
         title: "What is programming?",
         concept: "Programs",
@@ -550,6 +710,7 @@ console.log("Step 3: Wait 10 minutes");`,
       // ───────────────────────── 2 ─────────────────────────
       {
         id: "what-is-javascript",
+        cards: [{"viz": "where", "say": "JavaScript runs in every browser, and on servers too.", "more": ["explain"]}, {"viz": "pipe", "label": "How it works", "say": "The engine reads your code, checks the grammar, then runs it.", "more": ["how"]}],
         youCan: ["Say where JavaScript runs: browsers and servers", "Tell JavaScript and Java apart", "Name the engine's first job: reading and checking the grammar"],
         title: "What is JavaScript?",
         concept: "The language",
@@ -598,6 +759,7 @@ On this site, your code runs in a sealed-off part of your browser. Nothing you w
       // ───────────────────────── 3 ─────────────────────────
       {
         id: "your-first-instruction",
+        cards: [{"viz": "logfly", "say": "`console.log` prints a message to the **console**, a panel just for developers.", "more": ["explain", "how"]}],
         youCan: ["Print a message with `console.log`", "Name the 7 pieces of a statement", "Spot a capital-letter mistake"],
         title: "Your first instruction",
         concept: "console.log",
@@ -670,6 +832,7 @@ console.log("I'm learning JavaScript.");`,
       // ───────────────────────── 4 ─────────────────────────
       {
         id: "top-to-bottom",
+        cards: [{"viz": "cursor", "say": "JavaScript runs top to bottom, one line at a time.", "more": ["explain"]}, {"viz": "swap", "label": "Order matters", "say": "Same lines, different order, different result.", "more": ["how"]}],
         youCan: ["Predict a program's output by reading it top to bottom", "Fix a program whose steps are in the wrong order"],
         title: "Top to bottom",
         concept: "Execution order",
@@ -728,6 +891,7 @@ console.log("Add tea bag");`,
       // ───────────────────────── 5 ─────────────────────────
       {
         id: "comments",
+        cards: [{"viz": "skip", "say": "Lines starting with `//` are comments: notes for people. JavaScript skips them.", "more": ["explain"]}, {"viz": "togglecmt", "label": "Comment it out", "say": "Tap a line to comment it out. Watch what prints.", "more": ["how"]}],
         youCan: ["Write a comment with `//`", "Switch a line off by commenting it out", "Tell a useful comment from a useless one"],
         title: "Comments: notes for humans",
         concept: "Comments",
@@ -793,6 +957,7 @@ console.log("Thank you!");`,
       // ───────────────────────── 6 ─────────────────────────
       {
         id: "text-vs-numbers",
+        cards: [{"viz": "collapse", "say": "No quotes: JavaScript calculates. Quotes: it's just text.", "more": ["explain"]}, {"viz": "typesort", "label": "String or number?", "say": "Tap each value to reveal its type.", "more": ["how"]}],
         youCan: ["Tell a string from a number at a glance", "Explain why `\"3 + 4\"` prints text, not 7", "Know that JavaScript has one number type for whole numbers and decimals"],
         title: "Text vs numbers",
         concept: "Strings and numbers",
@@ -869,6 +1034,7 @@ console.log("4");`,
       // ───────────────────────── 7 ─────────────────────────
       {
         id: "doing-math",
+        cards: [{"viz": "eval", "say": "`*` and `/` go before `+` and `-`. Parentheses go first.", "more": ["how"]}, {"viz": "slider", "label": "Let the code do the math", "say": "Change the numbers. The answer follows.", "more": ["explain"]}],
         youCan: ["Calculate with `+ - * /`", "Predict the order of operations, and change it with parentheses", "Let the program do the math instead of typing answers"],
         title: "Doing math",
         concept: "Expressions",
@@ -944,6 +1110,7 @@ console.log();`,
       // ───────────────────────── 8 ─────────────────────────
       {
         id: "read-the-error",
+        cards: [{"viz": "crash", "say": "When a line fails, the program stops right there. Nothing below it runs.", "more": ["explain", "how"]}],
         youCan: ["Read an error's type and description", "Fix a ReferenceError caused by a typo", "Know which lines ran before a runtime error"],
         title: "Reading error messages",
         concept: "Runtime errors",
@@ -1010,6 +1177,7 @@ consle.log("Error fixed");`,
       // ───────────────────────── 9 ─────────────────────────
       {
         id: "syntax-errors",
+        cards: [{"viz": "parse", "say": "JavaScript checks the grammar first. One broken line, and **nothing** runs.", "more": ["explain", "how"]}],
         youCan: ["Recognize a SyntaxError: nothing runs at all", "Find missing brackets and quotes", "Tell a syntax error from a runtime error"],
         title: "Syntax errors",
         concept: "Grammar",
@@ -1073,6 +1241,7 @@ console.log("Line two);`,
       // ───────────────────────── 10 ─────────────────────────
       {
         id: "review-ai-code",
+        cards: [{"viz": "compare", "say": "AI code can run perfectly and still be wrong.", "more": ["explain"]}, {"viz": "errorkinds", "label": "Three kinds of errors", "say": "Grammar errors, crashes, and wrong answers. The last kind never warns you.", "more": ["how"]}],
         youCan: ["Review code by comparing the request with what the code does", "Catch a logic error that runs without crashing", "Name the three kinds of errors"],
         title: "Review code an AI wrote",
         concept: "Code review",
@@ -2234,7 +2403,7 @@ function normalizeLesson(l){
  return {...l,quiz:[],exercise:{task:l.task,starter:l.starter,tests:l.tests,hints:l.hints||[],success:l.success}};
 }
 const flat=MODULES.flatMap((m,mi)=>m.lessons.map((l,li)=>({...normalizeLesson(l),mi,li})));
-const state={view:'lesson',selected:0,completed:new Set(),mastered:new Set(),xp:0,code:{},choice:{},hints:{},outputs:{},feedback:{},deep:new Set(),expanded:0,mobile:false,modal:null,search:'',referenceDetail:null,playFiles:{'main.js':'// Welcome to the Playground!\n// Edit this code and press Run.\n\nconst greeting = "Hello, developer!";\nconsole.log(greeting);','helpers.js':'// Helper functions go here.\nfunction square(number) {\n  return number * number;\n}'},playActive:'main.js',pgOutput:null,pgFeedback:null,attempts:{},exampleOut:{},tryCode:{},tryOut:{},confirmReset:false,quizPick:{},quizRight:{},quizMiss:{},exDone:new Set(),step:{},stepOut:{},lastLesson:null,car:{},carMax:{},carFrom:null,exSkip:{}};
+const state={view:'lesson',selected:0,completed:new Set(),mastered:new Set(),xp:0,code:{},choice:{},hints:{},outputs:{},feedback:{},deep:new Set(),expanded:0,mobile:false,modal:null,search:'',referenceDetail:null,playFiles:{'main.js':'// Welcome to the Playground!\n// Edit this code and press Run.\n\nconst greeting = "Hello, developer!";\nconsole.log(greeting);','helpers.js':'// Helper functions go here.\nfunction square(number) {\n  return number * number;\n}'},playActive:'main.js',pgOutput:null,pgFeedback:null,attempts:{},exampleOut:{},tryCode:{},tryOut:{},confirmReset:false,quizPick:{},quizRight:{},quizMiss:{},exDone:new Set(),step:{},stepOut:{},lastLesson:null,car:{},carMax:{},carFrom:null,exSkip:{},viz:{},more:{}};
 const $=s=>document.querySelector(s);
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const attrs=s=>escapeHtml(s);
@@ -2498,13 +2667,197 @@ function maybeComplete(l) {
 }
 
 // =====================================================================
+// Visual cards: small animated graphics that show an idea instead of describing it.
+// Each visual is a function that returns HTML. Animations are CSS, and step-by-step
+// sequences use the shared ticker below. Lessons pick a visual by name in their "cards".
+// =====================================================================
+
+// A sequence: children with data-s="0", "1", ... light up one after another, then it loops.
+const vseq = (n, inner, hold = 2) => `<div class="v-seq" data-n="${n}" data-hold="${hold}" data-t="0">${inner}</div>`;
+const cap = t => `<span class="v-cap">${t}</span>`;
+
+const VIZ = {
+  steps: () => vseq(3, `<div class="v-col">${['Boil water', 'Add pasta', 'Wait 10 minutes'].map((t, i) =>
+    `<div class="v-step" data-s="${i}"><span class="v-n">${i + 1}</span><span>${t}</span><span class="v-tick">✓</span></div>`).join('')}</div>`),
+
+  literal: () => `<div class="v-row v-wrap">
+    <div class="v-card dashed">${cap('You meant')}<b>add salt</b></div>
+    <div class="v-card">${cap('You wrote')}<code>add sugar</code></div>
+    <div class="v-flow" aria-hidden="true"></div>
+    <div class="v-card accent v-pulse">${cap('Computer does')}<b>adds sugar</b></div>
+  </div>`,
+
+  translate: () => `<div class="v-row v-wrap">
+    <div class="v-card">${cap('You write')}<code>console.log("Hi");</code></div>
+    <div class="v-bits" aria-hidden="true"><span>01101000 01101001 00100001 01101000 01101001 00100001 01101000 01101001 00100001</span></div>
+    <div class="v-card cpu">${cap('Processor')}<b>CPU</b></div>
+  </div>`,
+
+  where: () => `<div class="v-row v-wrap">
+    <div class="v-card">${cap('Browser')}<div class="v-window"><i></i><i></i><i></i></div><span class="v-js">JS</span></div>
+    <div class="v-wire" aria-hidden="true"><span class="v-packet"></span></div>
+    <div class="v-card">${cap('Server')}<div class="v-rack"><i></i><i></i><i></i></div><span class="v-js">JS</span></div>
+  </div>`,
+
+  pipe: () => vseq(3, `<div class="v-row v-wrap">${[['Read', 'your text'], ['Check', 'the grammar'], ['Run', 'step by step']].map(([a, b], i) =>
+    `<div class="v-step v-stage" data-s="${i}"><span class="v-n">${i + 1}</span><b>${a}</b>${cap(b)}</div>${i < 2 ? '<span class="v-arrow">→</span>' : ''}`).join('')}</div>`),
+
+  logfly: (key, st) => {
+    const m = escapeHtml(st.msg ?? 'Hello!');
+    return `<div class="v-log">
+      <div class="v-code">console.log(<span class="t-str">"<span data-vizmsg="${key}">${m}</span>"</span>);</div>
+      <div class="v-fly" aria-hidden="true"><span class="v-msg" data-vizmsg="${key}">${m}</span></div>
+      <div class="v-console">${cap('Console')}<div class="v-arrive">› <span data-vizmsg="${key}">${m}</span></div></div>
+      <label class="v-input"><span>Type your own message</span><input type="text" maxlength="28" value="${m}" data-vizinput="${key}" autocomplete="off"></label>
+    </div>`;
+  },
+
+  cursor: () => {
+    const L = ['3', '2', '1', 'Liftoff!'];
+    return vseq(4, `<div class="v-two">
+      <div class="v-code lines">${L.map((t, i) => `<div class="v-line" data-s="${i}"><span class="v-ln">${i + 1}</span>console.log(<span class="t-str">"${t}"</span>);</div>`).join('')}</div>
+      <div class="v-console">${cap('Console')}${L.map((t, i) => `<div class="v-out" data-s="${i}">› ${t}</div>`).join('')}</div>
+    </div>`);
+  },
+
+  swap: (key, st) => {
+    const order = st.swapped ? ['Ready', 'Go!'] : ['Go!', 'Ready'];
+    return `<div class="v-two">
+      <div class="v-code lines">${order.map((t, i) => `<div class="v-line in"><span class="v-ln">${i + 1}</span>console.log(<span class="t-str">"${t}"</span>);</div>`).join('')}</div>
+      <div class="v-console">${cap('Console')}${order.map(t => `<div class="v-out shown in">› ${t}</div>`).join('')}</div>
+    </div>
+    <button class="btn" data-action="viz" data-key="${key}" data-op="swap">⇅ Swap the two lines</button>`;
+  },
+
+  skip: () => {
+    const L = [['// greet the visitor', null], ['console.log("Welcome!");', 0], ['// console.log("debug");', null], ['console.log("Bye!");', 1]];
+    return vseq(2, `<div class="v-two">
+      <div class="v-code lines">${L.map(([t, s], i) => `<div class="v-line ${s === null ? 'cmt' : ''}" ${s === null ? '' : `data-s="${s}"`}><span class="v-ln">${i + 1}</span><span>${hl(t)}</span>${s === null ? '<span class="v-tag">skipped</span>' : ''}</div>`).join('')}</div>
+      <div class="v-console">${cap('Console')}<div class="v-out" data-s="0">› Welcome!</div><div class="v-out" data-s="1">› Bye!</div></div>
+    </div>`);
+  },
+
+  togglecmt: (key, st) => {
+    const L = ['Order placed', 'testing 123', 'Thank you!'], off = st.off || [];
+    return `<div class="v-two">
+      <div class="v-code lines">${L.map((t, i) => { const o = off.includes(i); return `<button class="v-line tap ${o ? 'cmt' : ''}" data-action="viz" data-key="${key}" data-op="cmt" data-val="${i}"><span class="v-ln">${i + 1}</span><span>${hl((o ? '// ' : '') + `console.log("${t}");`)}</span></button>`; }).join('')}</div>
+      <div class="v-console">${cap('Console')}${L.filter((_, i) => !off.includes(i)).map(t => `<div class="v-out shown in">› ${t}</div>`).join('') || '<div class="v-out shown muted">(nothing prints)</div>'}</div>
+    </div>`;
+  },
+
+  collapse: () => vseq(2, `<div class="v-lanes">
+    <div class="v-lane">${cap('No quotes → code')}<div class="v-morph"><code class="v-a" data-s="0">3 + 4</code><span class="v-arrow">→</span><code class="v-b num" data-s="1">7</code></div></div>
+    <div class="v-lane">${cap('Quotes → text')}<div class="v-morph"><code class="v-a str" data-s="0">"3 + 4"</code><span class="v-arrow">→</span><code class="v-b str" data-s="1">3 + 4</code></div></div>
+  </div>`, 3),
+
+  typesort: (key, st) => {
+    const V = [['"42"', 'string'], ['42', 'number'], ['3.5', 'number'], ["'hi'", 'string'], ['"3.5"', 'string'], ['-7', 'number']], seen = st.seen || [];
+    return `<div class="v-chips">${V.map(([v, t], i) => `<button class="v-val ${seen.includes(i) ? 'is-' + t : ''}" data-action="viz" data-key="${key}" data-op="seen" data-val="${i}"><code>${escapeHtml(v)}</code><span class="v-type">${seen.includes(i) ? t : 'tap'}</span></button>`).join('')}</div>
+      <p class="v-score">${seen.length === V.length ? 'All revealed. Quotes = string, no quotes = number.' : `${seen.length} of ${V.length} revealed`}</p>`;
+  },
+
+  eval: (key, st) => {
+    const P = !!st.paren;
+    return vseq(3, `<div class="v-eval">
+      <div class="v-expr">${P ? '<span class="v-hl" data-s="0">(2 + 3)</span> * 4' : '2 + <span class="v-hl" data-s="0">3 * 4</span>'}</div>
+      <div class="v-expr v-next" data-s="1">${P ? '<b>5</b> * 4' : '2 + <b>12</b>'}</div>
+      <div class="v-expr v-next v-final" data-s="2">${P ? '20' : '14'}</div>
+    </div>`, 3) + `<div class="row v-center">
+      <button class="btn sm ${P ? '' : 'primary'}" data-action="viz" data-key="${key}" data-op="paren" data-val="0">2 + 3 * 4</button>
+      <button class="btn sm ${P ? 'primary' : ''}" data-action="viz" data-key="${key}" data-op="paren" data-val="1">(2 + 3) * 4</button>
+    </div>`;
+  },
+
+  slider: (key, st) => {
+    const q = st.q ?? 3, p = st.p ?? 4;
+    return `<div class="v-slide">
+      <label><span>Coffees</span><input type="range" min="1" max="10" step="1" value="${q}" data-vizslider="${key}" data-f="q"><b data-vizval="${key}-q">${q}</b></label>
+      <label><span>Price ($)</span><input type="range" min="1" max="9" step="1" value="${p}" data-vizslider="${key}" data-f="p"><b data-vizval="${key}-p">${p}</b></label>
+      <div class="v-code">console.log(<span class="t-num" data-vizval="${key}-q">${q}</span> * <span class="t-num" data-vizval="${key}-p">${p}</span>);</div>
+      <div class="v-console big">${cap('Console')}<div>› <b data-vizval="${key}-r">${q * p}</b></div></div>
+    </div>`;
+  },
+
+  crash: () => vseq(3, `<div class="v-two">
+    <div class="v-code lines">
+      <div class="v-line" data-s="0"><span class="v-ln">1</span>console.log(<span class="t-str">"Step 1"</span>);</div>
+      <div class="v-line bad" data-s="1"><span class="v-ln">2</span>consol.log(<span class="t-str">"Step 2"</span>);</div>
+      <div class="v-line never" data-s="2"><span class="v-ln">3</span>console.log(<span class="t-str">"Step 3"</span>);<span class="v-tag">never runs</span></div>
+    </div>
+    <div class="v-console">${cap('Console')}<div class="v-out" data-s="0">› Step 1</div><div class="v-out err" data-s="1">✕ ReferenceError: consol is not defined</div></div>
+  </div>`),
+
+  parse: () => vseq(3, `<div class="v-two">
+    <div class="v-code lines">${cap('Grammar check')}
+      <div class="v-line" data-s="0"><span class="v-ln">1</span>console.log(<span class="t-str">"Line one"</span>);<span class="v-tag ok">✓ ok</span></div>
+      <div class="v-line bad" data-s="1"><span class="v-ln">2</span>console.log(<span class="t-str">"Line two"</span><span class="v-gap">?</span>;<span class="v-tag">✕ missing )</span></div>
+    </div>
+    <div class="v-console">${cap('Console')}<div class="v-out err" data-s="2">✕ SyntaxError</div><div class="v-out muted" data-s="2">0 lines ran</div></div>
+  </div>`),
+
+  compare: (key, st) => {
+    const f = !!st.fixed;
+    return `<div class="v-row v-wrap">
+      <div class="v-card">${cap('You asked')}<b>Minutes in a week?</b></div>
+      <div class="v-card">${cap('AI wrote')}<code>console.log(7 * 24${f ? ' * 60' : ''});</code></div>
+      <div class="v-card ${f ? 'good' : 'bad'} v-pop">${cap('It prints')}<b>${f ? '10080' : '168'}</b><span class="v-verdict">${f ? '✓ minutes' : '✕ that’s hours'}</span></div>
+    </div>
+    <button class="btn ${f ? '' : 'primary'}" data-action="viz" data-key="${key}" data-op="fix">${f ? '↺ Show the bug again' : 'Fix it: add × 60'}</button>`;
+  },
+
+  errorkinds: () => vseq(4, `<div class="v-kinds">${[['Syntax error', 'Stops before anything runs', [], 0, 'stop'], ['Runtime error', 'Stops partway', [0], 1, 'stop'], ['Logic error', 'Runs fine, wrong answer', [0, 1, 2], 3, 'warn']].map(([n, d, dots, end, kind]) =>
+    `<div class="v-kind"><div class="v-kind-name"><b>${n}</b>${cap(d)}</div><div class="v-track">${[0, 1, 2].map(i => `<span class="v-dot" ${dots.includes(i) ? `data-s="${i}"` : ''}></span>`).join('')}<span class="v-end ${kind}" data-s="${end}">${kind === 'warn' ? '≠' : '✕'}</span></div></div>`).join('')}</div>`, 2),
+};
+
+// What happens when a visual's buttons are tapped.
+const VIZOPS = {
+  swap: st => { st.swapped = !st.swapped; },
+  cmt: (st, v) => { const i = +v; st.off = st.off || []; st.off = st.off.includes(i) ? st.off.filter(x => x !== i) : [...st.off, i]; },
+  seen: (st, v) => { st.seen = st.seen || []; if (!st.seen.includes(+v)) st.seen.push(+v); },
+  paren: (st, v) => { st.paren = v === '1'; },
+  fix: st => { st.fixed = !st.fixed; },
+};
+
+// One shared ticker drives every sequence on the car you're looking at.
+setInterval(() => {
+  document.querySelectorAll('.car.active .v-seq').forEach(seq => {
+    const n = +seq.dataset.n, hold = +seq.dataset.hold;
+    let t = (+seq.dataset.t || 0) + 1;
+    if (t > n + hold) t = 0;
+    seq.dataset.t = t;
+    seq.querySelectorAll('[data-s]').forEach(el => {
+      const s = +el.dataset.s;
+      el.classList.toggle('lit', s === t - 1);
+      el.classList.toggle('shown', s < t);
+    });
+  });
+}, 900);
+
+function vizCard(l, car) {
+  const c = l.cards[car.ci], key = `${l.id}:${car.ci}`, st = (state.viz[key] ??= {});
+  const more = (c.more || []).map(m => m === 'explain' ? l.explain : m === 'how' ? (l.how ?? l.deep) : m).filter(Boolean);
+  const open = state.more[key];
+  return `${car.ci === 0
+      ? `<span class="car-label">Module ${String(l.mi + 1).padStart(2, '0')} · Lesson ${String(l.li + 1).padStart(2, '0')}${l.concept ? ' · ' + escapeHtml(l.concept) : ''}</span><h1 class="car-title big">${escapeHtml(l.title)}</h1>`
+      : `<span class="car-label">${escapeHtml(car.label)}</span>`}
+    <p class="say">${inline(c.say)}</p>
+    <div class="viz">${VIZ[c.viz] ? VIZ[c.viz](key, st) : ''}</div>
+    ${more.length ? `<button class="link-btn more-btn" data-action="more" data-key="${key}" aria-expanded="${!!open}">${open ? '− Less' : '+ Explain more'}</button>
+      ${open ? `<div class="prose more-text">${more.map(rich).join('')}</div>` : ''}` : ''}`;
+}
+
+// =====================================================================
 // The lesson as a TRAIN: each lesson is split into "cars", one screen each.
 // Continue, a swipe, or the arrow keys move the train. Quiz and exercise cars are gates.
 // =====================================================================
 
 function lessonCars(l) {
-  const cars = [{ kind: 'idea', label: 'The idea' }];
-  if (l.how ?? l.deep) cars.push({ kind: 'how', label: 'How it works' });
+  const cars = [];
+  if (l.cards) l.cards.forEach((c, ci) => cars.push({ kind: 'viz', ci, label: c.label || 'The idea' }));
+  else {
+    cars.push({ kind: 'idea', label: 'The idea' });
+    if (l.how ?? l.deep) cars.push({ kind: 'how', label: 'How it works' });
+  }
   if (l.syntax) cars.push({ kind: 'write', label: 'How to write it' });
   if (l.example) cars.push({ kind: 'see', label: 'See it happen' }, { kind: 'try', label: 'Try it' });
   if (l.mistake) cars.push({ kind: 'mistake', label: 'Watch out' });
@@ -2565,6 +2918,8 @@ function carBody(l, car) {
       return `${label(`Module ${String(l.mi + 1).padStart(2, '0')} · Lesson ${String(l.li + 1).padStart(2, '0')}${l.concept ? ' · ' + escapeHtml(l.concept) : ''}`)}
         <h1 class="car-title big">${escapeHtml(l.title)}</h1>
         <div class="prose">${rich(l.explain)}</div>`;
+    case 'viz':
+      return vizCard(l, car);
     case 'how':
       return `${label('How it works')}<div class="prose how">${rich(l.how ?? l.deep)}</div>`;
     case 'write':
@@ -2876,7 +3231,10 @@ function handleEditorKey(e){const el=e.target;if(!['code-input','mastery-input',
  if([')',']','}'].includes(e.key)&&start===end&&val[start]===e.key){e.preventDefault();el.selectionStart=el.selectionEnd=start+1}
 }
 app.addEventListener('keydown',handleEditorKey);
-app.addEventListener('input',e=>{saveSoon();if(e.target.id==='code-input'){if(state.view==='playground')state.playFiles[state.playActive]=e.target.value;else state.code[current().id]=e.target.value}else if(e.target.id==='try-input'){state.tryCode[current().id]=e.target.value}else if(e.target.id==='mastery-input'){if(state.modal)state.modal.code=e.target.value}else if(e.target.id==='ref-search'){const start=e.target.selectionStart;state.search=e.target.value;const list=$('.ref-list');if(list)list.innerHTML=refList();}});
+app.addEventListener('input',e=>{const vi=e.target.dataset.vizinput,vs=e.target.dataset.vizslider;
+ if(vi){const v=e.target.value||' ';(state.viz[vi]??={}).msg=v;document.querySelectorAll(`[data-vizmsg="${vi}"]`).forEach(x=>x.textContent=v);return}
+ if(vs){const st=(state.viz[vs]??={});st[e.target.dataset.f]=+e.target.value;const q=st.q??3,p=st.p??4;document.querySelectorAll(`[data-vizval="${vs}-q"]`).forEach(x=>x.textContent=q);document.querySelectorAll(`[data-vizval="${vs}-p"]`).forEach(x=>x.textContent=p);document.querySelectorAll(`[data-vizval="${vs}-r"]`).forEach(x=>x.textContent=q*p);return}
+ saveSoon();if(e.target.id==='code-input'){if(state.view==='playground')state.playFiles[state.playActive]=e.target.value;else state.code[current().id]=e.target.value}else if(e.target.id==='try-input'){state.tryCode[current().id]=e.target.value}else if(e.target.id==='mastery-input'){if(state.modal)state.modal.code=e.target.value}else if(e.target.id==='ref-search'){const start=e.target.selectionStart;state.search=e.target.value;const list=$('.ref-list');if(list)list.innerHTML=refList();}});
 app.addEventListener('click',async e=>{const button=e.target.closest('[data-action]');if(!button)return;const action=button.dataset.action;
  if(action==='close-modal'&&e.target.closest('.modal')&&e.target.closest('[data-action="close-modal"]')?.classList.contains('modal-cover'))return;
  switch(action){case 'menu':state.mobile=!state.mobile;render();break;
@@ -2895,6 +3253,8 @@ app.addEventListener('click',async e=>{const button=e.target.closest('[data-acti
  case 'car-next':{const l=current();goCar(l,carIndex(l)+1);break}
  case 'car-prev':{const l=current();goCar(l,carIndex(l)-1);break}
  case 'car-go':goCar(current(),+button.dataset.i);break;
+ case 'viz':{const st=(state.viz[button.dataset.key]??={});VIZOPS[button.dataset.op]?.(st,button.dataset.val);render();break}
+ case 'more':state.more[button.dataset.key]=!state.more[button.dataset.key];render();break;
  case 'ex-skip':{const l=current();state.exSkip[l.id]=true;goCar(l,carIndex(l)+1);break}
  case 'sym':{const el=document.getElementById(button.dataset.target);if(el){el.focus();el.setRangeText(button.dataset.sym,el.selectionStart,el.selectionEnd,'end');el.dispatchEvent(new Event('input',{bubbles:true}))}break}
  case 'step-reset':{const id=current().id;delete state.step[id];delete state.stepOut[id];render();break}
@@ -2922,7 +3282,7 @@ window.addEventListener('keydown',e=>{if(state.view!=='lesson'||state.modal||['T
  if(e.key==='ArrowRight'){e.preventDefault();const l=current();goCar(l,carIndex(l)+1)}else if(e.key==='ArrowLeft'){e.preventDefault();const l=current();goCar(l,carIndex(l)-1)}});
 // Swipe left/right on the train (not on code, which can scroll sideways).
 let touchStart=null;
-app.addEventListener('touchstart',e=>{if(!e.target.closest('#stage')||e.target.closest('.editor,.code-block,.console,.anatomy-code'))return;const t=e.touches[0];touchStart={x:t.clientX,y:t.clientY}},{passive:true});
+app.addEventListener('touchstart',e=>{if(!e.target.closest('#stage')||e.target.closest('.editor,.code-block,.console,.anatomy-code,input,.v-slide'))return;const t=e.touches[0];touchStart={x:t.clientX,y:t.clientY}},{passive:true});
 app.addEventListener('touchend',e=>{if(!touchStart)return;const t=e.changedTouches[0],dx=t.clientX-touchStart.x,dy=t.clientY-touchStart.y;touchStart=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){const l=current();goCar(l,carIndex(l)+(dx<0?1:-1))}},{passive:true});
 // Tapping a symbol key shouldn't take focus away from the editor (that would close the phone keyboard).
 app.addEventListener('pointerdown',e=>{if(e.target.closest('.sym'))e.preventDefault()});
