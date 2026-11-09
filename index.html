@@ -377,6 +377,82 @@ button.check-item:hover { color: var(--accent-text); }
   .quiz-q { padding: 16px; }
 }
 
+/* =====================================================================
+   Lesson train: one car per screen, sliding sideways.
+   ===================================================================== */
+.shell-lesson { height: 100vh; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+.main-train { flex: 1; min-height: 0; display: flex; }
+.train { --car-w: min(820px, calc(100vw - 320px)); --car-gap: 28px; flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+.train-top { display: flex; align-items: center; gap: 12px; width: 100%; max-width: 900px; margin: 0 auto; padding: 14px 20px 2px; box-sizing: border-box; }
+.track { flex: 1; display: flex; gap: 4px; }
+.seg { flex: 1; height: 18px; padding: 0; border: 0; background: none; position: relative; cursor: pointer; }
+.seg::after { content: ''; position: absolute; left: 0; right: 0; top: 6px; height: 6px; border-radius: 3px; background: #ECECE8; transition: background .3s, box-shadow .3s; }
+.seg.done::after { background: var(--accent); }
+.seg.current::after { background: linear-gradient(90deg, var(--accent), var(--cyan)); box-shadow: 0 0 10px #06B6D499; }
+.seg:disabled { cursor: default; opacity: 1; }
+.seg:not(:disabled):hover::after { background: #9DB7F5; }
+.seg.current:hover::after, .seg.done:hover::after { filter: brightness(1.1); }
+.track-n { font-family: var(--mono); font-size: 12px; color: var(--muted); min-width: 40px; text-align: right; }
+.train-sub { width: 100%; max-width: 900px; margin: 0 auto; padding: 0 20px 6px 68px; box-sizing: border-box; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.stage { flex: 1; min-height: 0; position: relative; overflow: hidden; }
+.strip { position: relative; display: flex; gap: var(--car-gap); height: 100%; align-items: stretch; transition: transform .5s cubic-bezier(.22, .9, .25, 1); will-change: transform; }
+.car { flex: 0 0 var(--car-w); height: 100%; padding: 14px 0 10px; box-sizing: border-box; }
+.car-inner { height: 100%; box-sizing: border-box; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 18px; padding: 34px 40px; border: 1px solid var(--line); border-radius: 24px; background: var(--bg); box-shadow: 0 1px 2px #0000000A, 0 18px 48px #00000012; transition: opacity .4s, transform .4s, box-shadow .4s; }
+.car:not(.active) .car-inner { opacity: .4; transform: scale(.95); box-shadow: none; background: var(--surface); }
+.car-label { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-text); }
+.car-label.quiet { color: var(--muted); }
+.car-title { font-family: var(--serif); font-size: 30px; line-height: 1.15; font-weight: 700; margin: 0; }
+.car-title.big { font-size: 40px; }
+.car-inner .prose p { font-size: 18px; }
+.car-inner .task.question p { font-family: var(--serif); font-size: 26px; line-height: 1.25; font-weight: 700; color: var(--text); }
+.callout.big p { font-size: 18px; line-height: 1.65; }
+.readonly-note { margin: 0; padding: 10px 14px; border-radius: 10px; background: var(--surface); font-size: 14px; color: var(--muted); }
+.readonly-note strong { color: var(--text); }
+.car-inner .see { margin: 0; }
+
+.train-foot { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 820px; margin: 0 auto; padding: 10px 20px 4px; box-sizing: border-box; }
+.train-foot .btn.wide { flex: 1; width: auto; }
+.btn.locked, .btn.locked:hover:not(:disabled) { background: #ECECE8; border-color: #ECECE8; color: var(--muted); box-shadow: none; font-weight: 500; }
+.btn.nudge { animation: shake .35s; }
+.train-hint { margin: 0; padding: 4px 20px calc(12px + env(safe-area-inset-bottom)); text-align: center; font-size: 12px; color: var(--muted); }
+
+/* Done car */
+.done { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; margin: auto 0; }
+.done-badge { width: 88px; height: 88px; border-radius: 50%; display: grid; place-items: center; color: #FFFFFF; background: linear-gradient(135deg, var(--accent), var(--cyan)); box-shadow: 0 0 0 8px #2563EB1A, 0 12px 36px #06B6D473; animation: pop .5s cubic-bezier(.2, 1.4, .4, 1) both; }
+.done-badge.pending { background: #D9D9D4; box-shadow: none; }
+.done-stats { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.youcan { width: 100%; max-width: 460px; text-align: left; padding: 18px 20px; border: 1px solid var(--line); border-radius: 14px; }
+.youcan ul { margin: 10px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 16px; line-height: 1.45; }
+.youcan li { display: flex; gap: 10px; }
+.youcan li::before { content: '✓'; color: #16A34A; font-weight: 700; }
+@keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Symbol keys under code editors (phones and tablets) */
+.symbols { display: none; gap: 6px; padding: 8px; background: var(--surface-2); border-top: 1px solid var(--line); overflow-x: auto; }
+.sym { flex: 1 0 34px; padding: 8px 0; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--bg); font-family: var(--mono); font-size: 15px; }
+@media (hover: none), (max-width: 820px) { .symbols { display: flex; } }
+
+@media (max-width: 1000px) { .train { --car-w: calc(100vw - 120px); } }
+@media (max-width: 820px) {
+  .train { --car-w: calc(100vw - 40px); --car-gap: 12px; }
+  .train-top { padding: 10px 12px 0; gap: 8px; }
+  .train-sub { padding: 0 16px 4px 58px; }
+  .car { padding: 8px 0 6px; }
+  .car-inner { padding: 24px 20px; gap: 16px; border-radius: 20px; }
+  .car-title { font-size: 26px; }
+  .car-title.big { font-size: 30px; }
+  .car-inner .prose p { font-size: 16.5px; }
+  .car-inner .task.question p { font-size: 22px; }
+  .train-foot { padding: 8px 12px 2px; }
+  .train-hint { padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
+}
+@media (hover: none), (max-width: 820px) {
+  .train-hint .kb { display: none; }
+  .toast-wrap { top: 66px; bottom: auto; left: 16px; right: 16px; }
+}
+
 </style>
 </head>
 <body>
@@ -396,7 +472,8 @@ button.check-item:hover { color: var(--accent-text); }
     stepper   true = show a step-through (Step ▸ runs one line at a time). Only for examples where
               every line is a complete statement.
     exampleShowsError  true if the example is *meant* to show an error.
-    mistake   "Common mistake" note.
+    mistake   "Common mistake" note (its own "Watch out" car).
+    youCan    Short "You can now..." list shown on the lesson's last car.
     quiz      Quick check: [{ question, code?, options, answer, explain, feedback }]
               answer = position of the right option, counting from 0.
               explain = shown when they pick the right answer: say *why* it's right.
@@ -426,6 +503,7 @@ const MODULES = [
       // ───────────────────────── 1 ─────────────────────────
       {
         id: "what-is-programming",
+        youCan: ["Explain what a program is", "Say why the computer does what you *wrote*, not what you *meant*", "Explain why we write in languages like JavaScript"],
         title: "What is programming?",
         concept: "Programs",
         explain: `A computer is incredibly fast, but it has no judgment. It can't figure out what you *meant*. It can only follow instructions.
@@ -472,6 +550,7 @@ console.log("Step 3: Wait 10 minutes");`,
       // ───────────────────────── 2 ─────────────────────────
       {
         id: "what-is-javascript",
+        youCan: ["Say where JavaScript runs: browsers and servers", "Tell JavaScript and Java apart", "Name the engine's first job: reading and checking the grammar"],
         title: "What is JavaScript?",
         concept: "The language",
         explain: `**JavaScript** is the programming language of the web. Every major browser (Chrome, Safari, Firefox, Edge) can run it. When a website reacts to a click, updates without reloading, or shows live data, that's usually JavaScript.
@@ -519,6 +598,7 @@ On this site, your code runs in a sealed-off part of your browser. Nothing you w
       // ───────────────────────── 3 ─────────────────────────
       {
         id: "your-first-instruction",
+        youCan: ["Print a message with `console.log`", "Name the 7 pieces of a statement", "Spot a capital-letter mistake"],
         title: "Your first instruction",
         concept: "console.log",
         explain: `Time to write code. The most useful first instruction is \`console.log\`. It prints a message to the **console**, a panel where programs report what they're doing.
@@ -590,6 +670,7 @@ console.log("I'm learning JavaScript.");`,
       // ───────────────────────── 4 ─────────────────────────
       {
         id: "top-to-bottom",
+        youCan: ["Predict a program's output by reading it top to bottom", "Fix a program whose steps are in the wrong order"],
         title: "Top to bottom",
         concept: "Execution order",
         explain: `JavaScript runs your statements **in order, from top to bottom, one at a time**. It finishes each one before starting the next.
@@ -647,6 +728,7 @@ console.log("Add tea bag");`,
       // ───────────────────────── 5 ─────────────────────────
       {
         id: "comments",
+        youCan: ["Write a comment with `//`", "Switch a line off by commenting it out", "Tell a useful comment from a useless one"],
         title: "Comments: notes for humans",
         concept: "Comments",
         explain: `A **comment** is text that JavaScript ignores completely. It's there for people: to explain *why* the code does something, or to leave notes for later.
@@ -711,6 +793,7 @@ console.log("Thank you!");`,
       // ───────────────────────── 6 ─────────────────────────
       {
         id: "text-vs-numbers",
+        youCan: ["Tell a string from a number at a glance", "Explain why `\"3 + 4\"` prints text, not 7", "Know that JavaScript has one number type for whole numbers and decimals"],
         title: "Text vs numbers",
         concept: "Strings and numbers",
         explain: `Every value in JavaScript has a **type**, meaning what kind of value it is. The first two types you'll use:
@@ -786,6 +869,7 @@ console.log("4");`,
       // ───────────────────────── 7 ─────────────────────────
       {
         id: "doing-math",
+        youCan: ["Calculate with `+ - * /`", "Predict the order of operations, and change it with parentheses", "Let the program do the math instead of typing answers"],
         title: "Doing math",
         concept: "Expressions",
         explain: `An **expression** is any piece of code that produces a value. \`4 * 3\` is an expression that produces \`12\`. Even a plain \`7\` is an expression: it produces 7.
@@ -860,6 +944,7 @@ console.log();`,
       // ───────────────────────── 8 ─────────────────────────
       {
         id: "read-the-error",
+        youCan: ["Read an error's type and description", "Fix a ReferenceError caused by a typo", "Know which lines ran before a runtime error"],
         title: "Reading error messages",
         concept: "Runtime errors",
         explain: `When JavaScript hits a problem it can't get past, it stops and shows an **error message**. Beginners panic at errors. Professionals *read* them, because the message usually says exactly what went wrong.
@@ -925,6 +1010,7 @@ consle.log("Error fixed");`,
       // ───────────────────────── 9 ─────────────────────────
       {
         id: "syntax-errors",
+        youCan: ["Recognize a SyntaxError: nothing runs at all", "Find missing brackets and quotes", "Tell a syntax error from a runtime error"],
         title: "Syntax errors",
         concept: "Grammar",
         explain: `**Syntax** is the grammar of a programming language. A \`SyntaxError\` means JavaScript can't even understand your code, so **nothing runs at all**, not even the lines before the mistake.
@@ -987,6 +1073,7 @@ console.log("Line two);`,
       // ───────────────────────── 10 ─────────────────────────
       {
         id: "review-ai-code",
+        youCan: ["Review code by comparing the request with what the code does", "Catch a logic error that runs without crashing", "Name the three kinds of errors"],
         title: "Review code an AI wrote",
         concept: "Code review",
         explain: `AI tools write code fast, and they're often right. But they can be **confidently wrong**: the code looks professional, runs without errors, and still doesn't do what you asked.
@@ -2147,7 +2234,7 @@ function normalizeLesson(l){
  return {...l,quiz:[],exercise:{task:l.task,starter:l.starter,tests:l.tests,hints:l.hints||[],success:l.success}};
 }
 const flat=MODULES.flatMap((m,mi)=>m.lessons.map((l,li)=>({...normalizeLesson(l),mi,li})));
-const state={view:'lesson',selected:0,completed:new Set(),mastered:new Set(),xp:0,code:{},choice:{},hints:{},outputs:{},feedback:{},deep:new Set(),expanded:0,mobile:false,modal:null,search:'',referenceDetail:null,playFiles:{'main.js':'// Welcome to the Playground!\n// Edit this code and press Run.\n\nconst greeting = "Hello, developer!";\nconsole.log(greeting);','helpers.js':'// Helper functions go here.\nfunction square(number) {\n  return number * number;\n}'},playActive:'main.js',pgOutput:null,pgFeedback:null,attempts:{},exampleOut:{},tryCode:{},tryOut:{},confirmReset:false,quizPick:{},quizRight:{},quizMiss:{},exDone:new Set(),step:{},stepOut:{},lastLesson:null};
+const state={view:'lesson',selected:0,completed:new Set(),mastered:new Set(),xp:0,code:{},choice:{},hints:{},outputs:{},feedback:{},deep:new Set(),expanded:0,mobile:false,modal:null,search:'',referenceDetail:null,playFiles:{'main.js':'// Welcome to the Playground!\n// Edit this code and press Run.\n\nconst greeting = "Hello, developer!";\nconsole.log(greeting);','helpers.js':'// Helper functions go here.\nfunction square(number) {\n  return number * number;\n}'},playActive:'main.js',pgOutput:null,pgFeedback:null,attempts:{},exampleOut:{},tryCode:{},tryOut:{},confirmReset:false,quizPick:{},quizRight:{},quizMiss:{},exDone:new Set(),step:{},stepOut:{},lastLesson:null,car:{},carMax:{},carFrom:null,exSkip:{}};
 const $=s=>document.querySelector(s);
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const attrs=s=>escapeHtml(s);
@@ -2168,13 +2255,13 @@ const safeStr=v=>{try{if(typeof v==='string')return v;if(v===undefined)return 'u
 // ---- Saving ----
 // Progress is stored in this browser only (localStorage). Nothing is sent anywhere.
 const SAVE_KEY='arc-progress-v1';
-function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,selected:current().id,completed:[...state.completed],mastered:[...state.mastered],xp:state.xp,code:state.code,choice:state.choice,hints:state.hints,attempts:state.attempts,quizPick:state.quizPick,quizRight:state.quizRight,quizMiss:state.quizMiss,exDone:[...state.exDone],playFiles:state.playFiles,playActive:state.playActive}))}catch{}}
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({v:1,selected:current().id,completed:[...state.completed],mastered:[...state.mastered],xp:state.xp,code:state.code,choice:state.choice,hints:state.hints,attempts:state.attempts,car:state.car,carMax:state.carMax,quizPick:state.quizPick,quizRight:state.quizRight,quizMiss:state.quizMiss,exDone:[...state.exDone],playFiles:state.playFiles,playActive:state.playActive}))}catch{}}
 function load(){try{
  const d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(!d||d.v!==1)return;
  const ids=new Set(flat.map(l=>l.id));const keep=o=>Object.fromEntries(Object.entries(o||{}).filter(([k])=>ids.has(k)));
  state.completed=new Set((d.completed||[]).filter(id=>ids.has(id)));
  state.mastered=new Set((d.mastered||[]).filter(n=>Number.isInteger(n)&&n>=0&&n<MODULES.length));
- state.xp=Math.max(0,+d.xp||0);state.code=keep(d.code);state.choice=keep(d.choice);state.hints=keep(d.hints);state.attempts=keep(d.attempts);state.quizPick=keep(d.quizPick);state.quizRight=keep(d.quizRight);state.quizMiss=keep(d.quizMiss);
+ state.xp=Math.max(0,+d.xp||0);state.code=keep(d.code);state.choice=keep(d.choice);state.hints=keep(d.hints);state.attempts=keep(d.attempts);state.quizPick=keep(d.quizPick);state.quizRight=keep(d.quizRight);state.quizMiss=keep(d.quizMiss);state.car=keep(d.car);state.carMax=keep(d.carMax);
  state.exDone=new Set([...(d.exDone||[]).filter(id=>ids.has(id)),...[...state.completed].filter(id=>flat.find(l=>l.id===id)?.exercise)]);
  if(d.playFiles&&typeof d.playFiles==='object'&&Object.keys(d.playFiles).length){state.playFiles=d.playFiles;state.playActive=d.playActive in d.playFiles?d.playActive:Object.keys(d.playFiles)[0]}
  const i=flat.findIndex(l=>l.id===d.selected);if(i>=0){state.selected=i;state.expanded=flat[i].mi}
@@ -2183,7 +2270,7 @@ let saveTimer;const saveSoon=()=>{clearTimeout(saveTimer);saveTimer=setTimeout(s
 function resetProgress(){
  if(!state.confirmReset){state.confirmReset=true;render();setTimeout(()=>{if(state.confirmReset){state.confirmReset=false;render()}},4000);return}
  try{localStorage.removeItem(SAVE_KEY)}catch{}
- Object.assign(state,{confirmReset:false,selected:0,expanded:0,completed:new Set(),mastered:new Set(),xp:0,code:{},choice:{},hints:{},outputs:{},feedback:{},attempts:{},deep:new Set(),modal:null,tryCode:{},tryOut:{},quizPick:{},quizRight:{},quizMiss:{},exDone:new Set(),step:{},stepOut:{},playFiles:{'main.js':'console.log("Hello, world!");','helpers.js':'function square(n) {\n  return n * n;\n}'},playActive:'main.js',pgOutput:null,pgFeedback:null});
+ Object.assign(state,{confirmReset:false,selected:0,expanded:0,completed:new Set(),mastered:new Set(),xp:0,code:{},choice:{},hints:{},outputs:{},feedback:{},attempts:{},deep:new Set(),modal:null,tryCode:{},tryOut:{},quizPick:{},quizRight:{},quizMiss:{},exDone:new Set(),step:{},stepOut:{},car:{},carMax:{},exSkip:{},playFiles:{'main.js':'console.log("Hello, world!");','helpers.js':'function square(n) {\n  return n * n;\n}'},playActive:'main.js',pgOutput:null,pgFeedback:null});
  toast('Progress erased');showView('dashboard')}
 load();
 // ---- Code runner ----
@@ -2256,18 +2343,21 @@ function header() {
       </nav>
     </div>
     <div class="topbar-right">
-      ${lessonInfo}
       <span class="xp">${state.xp.toLocaleString()} XP</span>
       <button class="menu-btn" data-action="menu" aria-label="Menu" aria-expanded="${state.mobile}">☰</button>
     </div>
   </header>`;
 }
 
+// Symbol keys shown under editors on phones, where they're hard to find on the keyboard.
+const SYMBOLS = ['(', ')', '"', "'", ';', '.', '{', '}', '=', '+', '*'];
+
 // A code editor box. id decides which piece of state it edits (see the input handler).
 function editor(id, value, filename, rows = 8) {
   return `<div class="editor">
     <div class="editor-head"><span>${escapeHtml(filename)}</span><span>Ctrl/⌘ + Enter to run</span></div>
     <textarea id="${id}" class="editor-text" rows="${rows}" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-label="Code editor">${escapeHtml(value)}</textarea>
+    <div class="symbols" aria-label="Insert a symbol">${SYMBOLS.map(c => `<button type="button" class="sym" data-action="sym" data-sym="${attrs(c)}" data-target="${id}" tabindex="-1">${escapeHtml(c)}</button>`).join('')}</div>
   </div>`;
 }
 
@@ -2293,7 +2383,7 @@ function ensureExample(l) {
   state.exampleOut[l.id] = null;
   runIsolated(l.example).then(result => {
     state.exampleOut[l.id] = result;
-    const box = document.querySelector('#step-see .console');
+    const box = document.getElementById('example-console');
     if (box && current().id === l.id) box.innerHTML = exampleOutput(l);
   });
 }
@@ -2368,25 +2458,21 @@ async function doStep(l, toEnd) {
   render();
 }
 
-// ---------- Quick check: multiple choice with an explanation for every answer ----------
-function quizView(l) {
-  const picks = state.quizPick[l.id] || {}, right = state.quizRight[l.id] || {};
-  return l.quiz.map((q, qi) => {
-    const pick = picks[qi], solved = !!right[qi];
-    const fb = pick === undefined ? ''
-      : pick === q.answer ? `<div class="feedback good"><strong>Correct.</strong>${rich(q.explain || '')}</div>`
-      : `<div class="feedback bad"><strong>Not quite.</strong>${rich(q.feedback?.[pick] || 'Read the code again, one line at a time, then try another answer.')}</div>`;
-    return `<div class="quiz-q ${solved ? 'solved' : ''}">
-      <div class="q-head"><span class="q-num">Question ${qi + 1} of ${l.quiz.length}</span>${solved ? '<span class="badge-done">✓ Answered</span>' : ''}</div>
-      <div class="task">${rich(q.question)}</div>
-      ${q.code ? `<pre class="code-block">${hl(q.code)}</pre>` : ''}
-      <div class="options">${q.options.map((o, oi) => {
-        const cls = pick === oi ? (oi === q.answer ? 'correct' : 'wrong') : '';
-        return `<button class="option ${cls}" data-action="quiz" data-q="${qi}" data-o="${oi}" ${solved ? 'disabled' : ''}><span class="option-key">${String.fromCharCode(65 + oi)}</span><span>${inline(o)}</span></button>`;
-      }).join('')}</div>
-      ${fb}
-    </div>`;
-  }).join('');
+// ---------- Quick check: one multiple-choice question, with an explanation for every answer ----------
+function quizCard(l, qi) {
+  const q = l.quiz[qi], pick = state.quizPick[l.id]?.[qi], solved = !!state.quizRight[l.id]?.[qi];
+  const fb = pick === undefined ? ''
+    : pick === q.answer ? `<div class="feedback good"><strong>Correct.</strong>${rich(q.explain || '')}</div>`
+    : `<div class="feedback bad"><strong>Not quite.</strong>${rich(q.feedback?.[pick] || 'Read the code again, one line at a time, then try another answer.')}</div>`;
+  return `<div class="quiz-q ${solved ? 'solved' : ''}">
+    <div class="task question">${rich(q.question)}</div>
+    ${q.code ? `<pre class="code-block">${hl(q.code)}</pre>` : ''}
+    <div class="options">${q.options.map((o, oi) => {
+      const cls = pick === oi ? (oi === q.answer ? 'correct' : 'wrong') : '';
+      return `<button class="option ${cls}" data-action="quiz" data-q="${qi}" data-o="${oi}" ${solved ? 'disabled' : ''}><span class="option-key">${String.fromCharCode(65 + oi)}</span><span>${inline(o)}</span></button>`;
+    }).join('')}</div>
+    ${fb}
+  </div>`;
 }
 function answerQuiz(l, qi, oi) {
   if (state.quizRight[l.id]?.[qi]) return;
@@ -2411,76 +2497,121 @@ function maybeComplete(l) {
   if (quizDone && exDone) { state.completed.add(l.id); toast('✓ Lesson complete'); }
 }
 
-// ---------- The lesson page ----------
-const SECTIONS = [['step-idea', 'The idea'], ['step-how', 'How it works'], ['step-write', 'How to write it'], ['step-see', 'See it happen'], ['step-try', 'Try it'], ['step-quiz', 'Quick check'], ['step-turn', 'Your turn']];
+// =====================================================================
+// The lesson as a TRAIN: each lesson is split into "cars", one screen each.
+// Continue, a swipe, or the arrow keys move the train. Quiz and exercise cars are gates.
+// =====================================================================
 
-function lessonPage() {
-  const l = current(), mi = l.mi, m = MODULES[mi];
-  const how = l.how ?? l.deep;
-  const has = { 'step-idea': true, 'step-how': !!how, 'step-write': !!l.syntax, 'step-see': !!l.example, 'step-try': !!l.example, 'step-quiz': l.quiz.length > 0, 'step-turn': !!l.exercise };
-  const secs = SECTIONS.filter(([id]) => has[id]);
-  const num = id => String(secs.findIndex(s => s[0] === id) + 1).padStart(2, '0');
-  const heading = (id, label) => `<h2 class="sec-h"><span class="sec-num">${num(id)}</span>${label}</h2>`;
-  const hasPrev = state.selected > 0, hasNext = state.selected < flat.length - 1;
-  const entering = state.lastLesson !== l.id;
-
-  return `<div class="lesson-grid ${entering ? 'enter' : ''}">
-    <article class="lesson-main">
-      <header class="lesson-head">
-        <span class="eyebrow mono">Module ${String(mi + 1).padStart(2, '0')} / Lesson ${String(l.li + 1).padStart(2, '0')}${l.concept ? ' · ' + escapeHtml(l.concept) : ''}</span>
-        <h1 class="lesson-title">${escapeHtml(l.title)}</h1>
-        <nav class="steps" aria-label="Lesson sections">
-          ${secs.map(([id, label]) => `<button class="step" data-action="goto-step" data-target="${id}"><span class="step-n">${num(id)}</span>${label}</button>`).join('')}
-        </nav>
-      </header>
-
-      <section id="step-idea" class="lesson-section">${heading('step-idea', 'The idea')}<div class="prose">${rich(l.explain)}</div></section>
-
-      ${how ? `<section id="step-how" class="lesson-section">${heading('step-how', 'How it works')}<div class="prose how">${rich(how)}</div></section>` : ''}
-
-      ${l.syntax ? `<section id="step-write" class="lesson-section">${heading('step-write', 'How to write it')}${syntaxView(l.syntax)}</section>` : ''}
-
-      ${l.example ? `<section id="step-see" class="lesson-section">${heading('step-see', 'See it happen')}
-        ${l.stepper ? stepperView(l) : `<div class="see">
-          <div class="see-box"><span class="see-label">The code</span><pre class="code-block">${hl(l.example)}</pre></div>
-          <span class="see-arrow" aria-hidden="true">→</span>
-          <div class="see-box"><span class="see-label">What it prints</span><div class="console">${exampleOutput(l)}</div></div>
-        </div>`}
-      </section>
-
-      <section id="step-try" class="lesson-section">${heading('step-try', 'Try it')}
-        <p class="muted">Change the example and run it. This part isn't graded, so experiment freely.</p>
-        ${editor('try-input', state.tryCode[l.id] ?? l.example, 'try.js', 3)}
-        <div class="row">
-          <button class="btn" data-action="try-run">▷ Run</button>
-          ${l.id in state.tryCode ? '<button class="btn ghost" data-action="try-reset">Reset example</button>' : ''}
-        </div>
-        ${state.tryOut[l.id] ? consoleView(state.tryOut[l.id]) : ''}
-      </section>` : ''}
-
-      ${l.mistake ? `<aside class="callout">${rich('**Common mistake:** ' + l.mistake)}</aside>` : ''}
-
-      ${l.quiz.length ? `<section id="step-quiz" class="lesson-section">${heading('step-quiz', 'Quick check')}
-        <p class="muted">Pick an answer. You'll see right away why it's right or wrong.</p>
-        ${quizView(l)}
-      </section>` : ''}
-    </article>
-
-    <aside id="step-turn" class="lesson-side">${lessonSide(l)}</aside>
-  </div>
-
-  <div class="lesson-footer">
-    <button class="btn ghost" data-action="prev" ${hasPrev ? '' : 'disabled'}>← Previous lesson</button>
-    <button class="btn ghost" data-action="next" ${hasNext ? '' : 'disabled'}>Skip ahead →</button>
-  </div>
-  ${nDone(mi) === m.lessons.length ? masteryCard(mi) : ''}`;
+function lessonCars(l) {
+  const cars = [{ kind: 'idea', label: 'The idea' }];
+  if (l.how ?? l.deep) cars.push({ kind: 'how', label: 'How it works' });
+  if (l.syntax) cars.push({ kind: 'write', label: 'How to write it' });
+  if (l.example) cars.push({ kind: 'see', label: 'See it happen' }, { kind: 'try', label: 'Try it' });
+  if (l.mistake) cars.push({ kind: 'mistake', label: 'Watch out' });
+  l.quiz.forEach((_, qi) => cars.push({ kind: 'quiz', qi, label: `Question ${qi + 1}` }));
+  if (l.exercise) cars.push({ kind: 'exercise', label: 'Your turn' });
+  cars.push({ kind: 'done', label: 'Done' });
+  return cars;
 }
 
-// ---------- The side card: the exercise, a checklist, and the Next button ----------
+// Can the student move past this car yet?
+function carUnlocked(l, car) {
+  if (car.kind === 'quiz') return !!state.quizRight[l.id]?.[car.qi];
+  if (car.kind === 'exercise') return state.exDone.has(l.id) || !!state.exSkip[l.id];
+  return true;
+}
+
+function carIndex(l) { return Math.min(state.car[l.id] || 0, lessonCars(l).length - 1); }
+
+function goCar(l, target) {
+  const cars = lessonCars(l), cur = carIndex(l);
+  if (target < 0 || target >= cars.length) return;
+  // Moving forward stops at the first locked gate.
+  for (let k = cur; k < target; k++) if (!carUnlocked(l, cars[k])) { target = k; break; }
+  if (target === cur) { nudgeContinue(cars[cur]); return; }
+  state.carFrom = cur;
+  state.car[l.id] = target;
+  state.carMax[l.id] = Math.max(state.carMax[l.id] || 0, target);
+  render();
+}
+
+function nudgeContinue(car) {
+  const b = document.querySelector('.train-foot .btn.primary');
+  if (b) { b.classList.remove('nudge'); void b.offsetWidth; b.classList.add('nudge'); }
+  if (car?.kind === 'quiz') toast('Pick the right answer to continue');
+  if (car?.kind === 'exercise') toast('Pass the exercise, or skip it for now');
+}
+
+// Slide the strip so the current car is centred. Starts from the previous car, so it animates.
+function positionTrain(animate = true) {
+  const stage = document.getElementById('stage'), strip = document.getElementById('strip');
+  if (!stage || !strip) return;
+  const l = current(), i = carIndex(l);
+  const from = animate && state.carFrom != null ? state.carFrom : i;
+  state.carFrom = null;
+  const offset = k => { const c = strip.children[k]; return stage.clientWidth / 2 - (c.offsetLeft + c.offsetWidth / 2); };
+  strip.style.transition = 'none';
+  strip.style.transform = `translateX(${offset(from)}px)`;
+  void strip.offsetWidth;
+  strip.style.transition = '';
+  strip.style.transform = `translateX(${offset(i)}px)`;
+}
+
+// ---------- What's inside each car ----------
+function carBody(l, car) {
+  const label = (text, extra = '') => `<span class="car-label">${text}</span>${extra}`;
+  switch (car.kind) {
+    case 'idea':
+      return `${label(`Module ${String(l.mi + 1).padStart(2, '0')} · Lesson ${String(l.li + 1).padStart(2, '0')}${l.concept ? ' · ' + escapeHtml(l.concept) : ''}`)}
+        <h1 class="car-title big">${escapeHtml(l.title)}</h1>
+        <div class="prose">${rich(l.explain)}</div>`;
+    case 'how':
+      return `${label('How it works')}<div class="prose how">${rich(l.how ?? l.deep)}</div>`;
+    case 'write':
+      return `${label('How to write it')}${syntaxView(l.syntax)}`;
+    case 'see':
+      return `${label('See it happen')}
+        ${l.stepper ? stepperView(l) : `<div class="see">
+          <div class="see-box"><span class="see-label">The code</span><pre class="code-block">${hl(l.example)}</pre></div>
+          <div class="see-box"><span class="see-label">What it prints</span><div class="console" id="example-console">${exampleOutput(l)}</div></div>
+        </div>`}
+        <p class="readonly-note">This code is <strong>read-only</strong>. You'll edit your own in the next car.</p>`;
+    case 'try':
+      return `${label('Try it')}
+        <p class="muted">Change the example and run it. This part isn't graded, so experiment freely.</p>
+        ${editor('try-input', state.tryCode[l.id] ?? l.example, 'try.js', 4)}
+        <div class="row">
+          <button class="btn primary" data-action="try-run">▷ Run</button>
+          ${l.id in state.tryCode ? '<button class="btn ghost" data-action="try-reset">Reset example</button>' : ''}
+        </div>
+        ${state.tryOut[l.id] ? consoleView(state.tryOut[l.id]) : ''}`;
+    case 'mistake':
+      return `${label('Watch out')}<h2 class="car-title">A common mistake</h2><div class="callout big">${rich(l.mistake)}</div>`;
+    case 'quiz':
+      return `${label(`Quick check · ${car.qi + 1} of ${l.quiz.length}`)}${quizCard(l, car.qi)}`;
+    case 'exercise':
+      return exerciseView(l);
+    case 'done': {
+      const complete = state.completed.has(l.id);
+      const qRight = l.quiz.filter((_, k) => state.quizRight[l.id]?.[k]).length;
+      const exIdx = lessonCars(l).findIndex(c => c.kind === 'exercise');
+      return `<div class="done">
+        <div class="done-badge ${complete ? '' : 'pending'}" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></div>
+        <span class="car-label">${complete ? 'Lesson complete' : 'Almost there'}</span>
+        <h2 class="car-title big">${complete ? `You finished “${escapeHtml(l.title)}”.` : 'Finish the exercise to complete this lesson.'}</h2>
+        <div class="done-stats">${l.quiz.length ? `<span>Quick check ${qRight}/${l.quiz.length}</span>` : ''}${l.exercise ? `<span>Exercise ${state.exDone.has(l.id) ? 'passed' : 'skipped'}</span>` : ''}</div>
+        ${l.youCan?.length ? `<div class="youcan"><span class="car-label quiet">You can now</span><ul>${l.youCan.map(x => `<li>${inline(x)}</li>`).join('')}</ul></div>` : ''}
+        ${!complete && exIdx >= 0 ? `<button class="btn" data-action="car-go" data-i="${exIdx}">Back to the exercise</button>` : ''}
+      </div>`;
+    }
+  }
+  return '';
+}
+
 function exerciseView(l) {
   const ex = l.exercise, passed = state.exDone.has(l.id);
   const shown = state.hints[l.id] || 0, fb = state.feedback[l.id];
-  return `<div class="row between"><span class="eyebrow mono quiet">${l.quiz.length ? 'Exercise' : 'Your turn'}</span>${passed ? '<span class="badge-done">✓ Passed</span>' : ''}</div>
+  return `<div class="row between"><span class="car-label">Your turn · Exercise</span>${passed ? '<span class="badge-done">✓ Passed</span>' : ''}</div>
     <div class="task">${rich(ex.task)}</div>
     ${editor('code-input', getCode(l), 'exercise.js', 5)}
     ${state.outputs[l.id] ? consoleView(state.outputs[l.id]) : ''}
@@ -2490,31 +2621,50 @@ function exerciseView(l) {
       <div class="row">
         ${ex.hints?.length ? `<button class="btn ghost sm" data-action="hint" ${shown >= ex.hints.length ? 'disabled' : ''}>Hint${shown ? ` ${shown}/${ex.hints.length}` : ''}</button>` : ''}
         <button class="btn ghost sm" data-action="reset">Start over</button>
+        ${state.exSkip[l.id] ? '' : '<button class="btn ghost sm" data-action="ex-skip">Skip for now</button>'}
       </div>
       <div class="row"><button class="btn" data-action="run">▷ Run</button><button class="btn primary" data-action="check">Check answer</button></div>
     </div>`}`;
 }
 
-function lessonSide(l) {
-  const ex = l.exercise, exPassed = ex && state.exDone.has(l.id);
-  const qDone = l.quiz.filter((_, i) => state.quizRight[l.id]?.[i]).length, qAll = l.quiz.length;
-  const complete = state.completed.has(l.id);
+function nextLessonButton(l) {
   const moduleDone = nDone(l.mi) === MODULES[l.mi].lessons.length;
   const lastInModule = l.li === MODULES[l.mi].lessons.length - 1;
-  const nextButton = lastInModule && moduleDone && !state.mastered.has(l.mi)
-    ? `<button class="btn primary wide" data-action="mastery" data-mi="${l.mi}">Take the mastery test →</button>`
-    : `<button class="btn primary wide" data-action="next" ${state.selected < flat.length - 1 ? '' : 'disabled'}>Next lesson →</button>`;
-  const todo = [qAll && qDone < qAll ? 'the quick check' : '', ex && !exPassed ? 'the exercise' : ''].filter(Boolean).join(' and ');
+  if (lastInModule && moduleDone && !state.mastered.has(l.mi))
+    return `<button class="btn primary wide" data-action="mastery" data-mi="${l.mi}">Take the mastery test →</button>`;
+  const next = flat[state.selected + 1];
+  return next ? `<button class="btn primary wide" data-action="next">Next lesson: ${escapeHtml(next.title)} →</button>`
+    : '<button class="btn primary wide" disabled>You reached the end</button>';
+}
 
-  return `<div class="turn-card">
-    ${ex ? exerciseView(l) : `<span class="eyebrow mono quiet">This lesson</span>
-      <h3 class="side-title">Read, then check yourself</h3>
-      <p class="muted small">This lesson is about ideas, so there's no code exercise yet. Answer the quick check to finish it.</p>`}
-    <div class="checklist">
-      ${qAll ? `<button class="check-item ${qDone === qAll ? 'done' : ''}" data-action="goto-step" data-target="step-quiz"><span class="check-dot">${qDone === qAll ? '✓' : ''}</span>Quick check<span class="check-meta">${qDone}/${qAll}</span></button>` : ''}
-      ${ex ? `<div class="check-item ${exPassed ? 'done' : ''}"><span class="check-dot">${exPassed ? '✓' : ''}</span>Exercise<span class="check-meta">${exPassed ? 'passed' : 'not yet'}</span></div>` : ''}
+function lessonPage() {
+  const l = current(), cars = lessonCars(l), i = carIndex(l);
+  state.carMax[l.id] = Math.max(state.carMax[l.id] || 0, i);
+  const seen = state.carMax[l.id];
+  const car = cars[i], last = i === cars.length - 1, open = carUnlocked(l, car);
+  const lockedText = car.kind === 'quiz' ? 'Answer correctly to continue' : 'Pass the exercise to continue';
+
+  return `<div class="train">
+    <div class="train-top">
+      <button class="btn ghost icon" data-action="view" data-view="course" aria-label="Close lesson and see all lessons">✕</button>
+      <div class="track">${cars.map((c, k) => `<button class="seg ${k < i ? 'done' : ''} ${k === i ? 'current' : ''}" data-action="car-go" data-i="${k}" ${k > seen ? 'disabled' : ''} aria-label="${attrs(c.label)}" title="${attrs(c.label)}"></button>`).join('')}</div>
+      <span class="track-n">${i + 1}/${cars.length}</span>
     </div>
-    ${complete ? nextButton : `<p class="muted small center">Finish ${todo} to complete this lesson.</p>`}
+    <div class="train-sub">Lesson ${l.li + 1} of ${MODULES[l.mi].lessons.length} · ${escapeHtml(l.title)}</div>
+
+    <div class="stage" id="stage">
+      <div class="strip" id="strip">
+        ${cars.map((c, k) => `<section class="car ${k === i ? 'active' : ''}" ${k === i ? '' : 'aria-hidden="true" inert'}><div class="car-inner">${carBody(l, c)}</div></section>`).join('')}
+      </div>
+    </div>
+
+    <div class="train-foot">
+      <button class="btn ghost" data-action="car-prev" ${i ? '' : 'disabled'}>← Back</button>
+      ${last ? nextLessonButton(l)
+        : open ? '<button class="btn primary wide" data-action="car-next">Continue →</button>'
+        : `<button class="btn primary wide locked" data-action="car-next" aria-disabled="true">${lockedText}</button>`}
+    </div>
+    <p class="train-hint">Swipe or tap Continue<span class="kb">, or use the ← → keys</span></p>
   </div>`;
 }
 
@@ -2690,8 +2840,10 @@ function content() {
 }
 
 function render() {
-  app.innerHTML = `${header()}<main class="main">${content()}</main>${modalContent()}`;
-  if (state.view === 'lesson') { const l = current(); if (l.example && !l.stepper) ensureExample(l); state.lastLesson = l.id; }
+  app.innerHTML = state.view === 'lesson'
+    ? `<div class="shell-lesson">${header()}<main class="main-train">${content()}</main></div>${modalContent()}`
+    : `${header()}<main class="main">${content()}</main>${modalContent()}`;
+  if (state.view === 'lesson') { const l = current(); if (l.example && !l.stepper) ensureExample(l); state.lastLesson = l.id; positionTrain(); }
   save();
 }
 
@@ -2740,6 +2892,11 @@ app.addEventListener('click',async e=>{const button=e.target.closest('[data-acti
  case 'quiz':answerQuiz(current(),+button.dataset.q,+button.dataset.o);break;
  case 'step':await doStep(current(),false);break;
  case 'step-all':await doStep(current(),true);break;
+ case 'car-next':{const l=current();goCar(l,carIndex(l)+1);break}
+ case 'car-prev':{const l=current();goCar(l,carIndex(l)-1);break}
+ case 'car-go':goCar(current(),+button.dataset.i);break;
+ case 'ex-skip':{const l=current();state.exSkip[l.id]=true;goCar(l,carIndex(l)+1);break}
+ case 'sym':{const el=document.getElementById(button.dataset.target);if(el){el.focus();el.setRangeText(button.dataset.sym,el.selectionStart,el.selectionEnd,'end');el.dispatchEvent(new Event('input',{bubbles:true}))}break}
  case 'step-reset':{const id=current().id;delete state.step[id];delete state.stepOut[id];render();break}
  case 'check':await check(current());break;
  case 'run':await check(current(),true);break;
@@ -2760,6 +2917,16 @@ app.addEventListener('click',async e=>{const button=e.target.closest('[data-acti
   case 'reset-progress':resetProgress();break;
  }});
 window.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.modal){state.modal=null;render()}});
+// Arrow keys move the train (but not while typing in an editor).
+window.addEventListener('keydown',e=>{if(state.view!=='lesson'||state.modal||['TEXTAREA','INPUT'].includes(document.activeElement?.tagName))return;
+ if(e.key==='ArrowRight'){e.preventDefault();const l=current();goCar(l,carIndex(l)+1)}else if(e.key==='ArrowLeft'){e.preventDefault();const l=current();goCar(l,carIndex(l)-1)}});
+// Swipe left/right on the train (not on code, which can scroll sideways).
+let touchStart=null;
+app.addEventListener('touchstart',e=>{if(!e.target.closest('#stage')||e.target.closest('.editor,.code-block,.console,.anatomy-code'))return;const t=e.touches[0];touchStart={x:t.clientX,y:t.clientY}},{passive:true});
+app.addEventListener('touchend',e=>{if(!touchStart)return;const t=e.changedTouches[0],dx=t.clientX-touchStart.x,dy=t.clientY-touchStart.y;touchStart=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){const l=current();goCar(l,carIndex(l)+(dx<0?1:-1))}},{passive:true});
+// Tapping a symbol key shouldn't take focus away from the editor (that would close the phone keyboard).
+app.addEventListener('pointerdown',e=>{if(e.target.closest('.sym'))e.preventDefault()});
+window.addEventListener('resize',()=>{if(state.view==='lesson')positionTrain(false)});
 render();
 })();
 
