@@ -3365,7 +3365,8 @@ function handleEditorKey(e){const el=e.target;if(!['code-input','mastery-input',
  if(e.key==='Tab'){e.preventDefault();insert('  ');return}
  if(e.key==='Enter'){e.preventDefault();const before=val.slice(0,start),indent=(before.split('\n').at(-1).match(/^\s*/)||[''])[0];const extra=/\{\s*$/.test(before)?'  ':'';insert('\n'+indent+extra);return}
  const pairs={'(':')','[':']','{':'}','"':'"',"'":"'",'`':'`'};
- if(pairs[e.key]&&!e.ctrlKey&&!e.metaKey&&!e.altKey){if(start!==end&&['(', '[', '{'].includes(e.key)){e.preventDefault();const selected=val.slice(start,end);insert(e.key+selected+pairs[e.key]);return}if(start===end&&['"',"'",'`'].includes(e.key)&&val[start]===e.key){e.preventDefault();el.selectionStart=el.selectionEnd=start+1;return}if(start===end){e.preventDefault();el.setRangeText(e.key+pairs[e.key],start,end,'end');el.selectionStart=el.selectionEnd=start+1;el.dispatchEvent(new Event('input',{bubbles:true}));return}}
+ if(pairs[e.key]&&!e.ctrlKey&&!e.metaKey&&!e.altKey){if(start!==end){e.preventDefault();const selected=val.slice(start,end);el.setRangeText(e.key+selected+pairs[e.key],start,end,'end');el.selectionStart=start+1;el.selectionEnd=end+1;el.dispatchEvent(new Event('input',{bubbles:true}));return}if(start===end&&['"',"'",'`'].includes(e.key)&&val[start]===e.key){e.preventDefault();el.selectionStart=el.selectionEnd=start+1;return}if(start===end){e.preventDefault();el.setRangeText(e.key+pairs[e.key],start,end,'end');el.selectionStart=el.selectionEnd=start+1;el.dispatchEvent(new Event('input',{bubbles:true}));return}}
+ if(e.key==='Backspace'&&start===end&&start>0&&pairs[val[start-1]]===val[start]&&val[start]!==undefined){e.preventDefault();el.setRangeText('',start-1,start+1,'end');el.dispatchEvent(new Event('input',{bubbles:true}));return}
  if([')',']','}'].includes(e.key)&&start===end&&val[start]===e.key){e.preventDefault();el.selectionStart=el.selectionEnd=start+1}
 }
 app.addEventListener('keydown',handleEditorKey);
