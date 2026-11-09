@@ -2677,8 +2677,13 @@ const vseq = (n, inner, hold = 2) => `<div class="v-seq" data-n="${n}" data-hold
 const cap = t => `<span class="v-cap">${t}</span>`;
 
 const VIZ = {
-  steps: () => vseq(3, `<div class="v-col">${['Boil water', 'Add pasta', 'Wait 10 minutes'].map((t, i) =>
-    `<div class="v-step" data-s="${i}"><span class="v-n">${i + 1}</span><span>${t}</span><span class="v-tick">✓</span></div>`).join('')}</div>`),
+  steps: () => {
+    const S = [['boil water', 'Water boiled'], ['add pasta', 'Pasta added'], ['wait 10 minutes', 'Waited 10 minutes']];
+    return vseq(3, `<div class="v-two">
+      <div class="v-code lines">${cap('recipe-program')}${S.map(([t], i) => `<div class="v-line" data-s="${i}"><span class="v-ln">${i + 1}</span><span>${t}</span></div>`).join('')}</div>
+      <div class="v-console">${cap('Computer')}${S.map(([, d], i) => `<div class="v-out" data-s="${i}">✓ ${d}</div>`).join('')}</div>
+    </div>`);
+  },
 
   literal: () => `<div class="v-row v-wrap">
     <div class="v-card dashed">${cap('You meant')}<b>add salt</b></div>
