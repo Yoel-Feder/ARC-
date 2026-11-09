@@ -2761,9 +2761,6 @@ function answerQuiz(l, qi, oi) {
     state.xp += firstTry ? 10 : 5;
     toast(firstTry ? '✦ +10 XP · Correct first try' : '✦ +5 XP · Correct');
     maybeComplete(l);
-    // Move on by itself after a moment, so the green "Correct" is still seen.
-    const at = lessonCars(l).findIndex(c => c.kind === 'quiz' && c.qi === qi);
-    setTimeout(() => { if (state.view === 'lesson' && current().id === l.id && carIndex(l) === at) goCar(l, at + 1); }, 1500);
   } else {
     (state.quizMiss[l.id] ??= {})[qi] = true;
   }
