@@ -398,8 +398,9 @@ button.check-item:hover { color: var(--accent-text); }
 
 .stage { flex: 1; min-height: 0; position: relative; overflow: hidden; }
 .strip { position: relative; display: flex; gap: var(--car-gap); height: 100%; align-items: stretch; transition: transform .5s cubic-bezier(.22, .9, .25, 1); will-change: transform; }
-.car { flex: 0 0 var(--car-w); height: 100%; padding: 14px 0 10px; box-sizing: border-box; }
+.car { flex: 0 0 var(--car-w); width: var(--car-w); min-width: 0; height: 100%; padding: 14px 0 10px; box-sizing: border-box; }
 .car-inner { height: 100%; box-sizing: border-box; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 18px; padding: 34px 40px; border: 1px solid var(--line); border-radius: 24px; background: var(--bg); box-shadow: 0 1px 2px #0000000A, 0 18px 48px #00000012; transition: opacity .4s, transform .4s, box-shadow .4s; }
+.car-inner > * { min-width: 0; max-width: 100%; }
 .car:not(.active) .car-inner { opacity: .4; transform: scale(.95); box-shadow: none; background: var(--surface); }
 .car-label { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-text); }
 .car-label.quiet { color: var(--muted); }
